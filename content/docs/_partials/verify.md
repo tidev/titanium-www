@@ -1,11 +1,11 @@
-## Check it
+## Check the toolchain
 
 ```sh
 ti info
 ```
 
-This reports every toolchain Titanium can find and, at the end, a list of
-problems. A working setup ends with no errors.
+`ti info` lists everything it found, then the problems it hit. A working setup
+reports none.
 
 Warnings are common and usually harmless — a component newer than the SDK
 supports produces one, and so does a missing NDK. When something is wrong,
