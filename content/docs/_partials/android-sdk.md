@@ -41,14 +41,14 @@ platforms/android-36 build-tools/35.0.0`. Both work. `sdkmanager` still ships
 
 :::
 
-## Point Titanium at it
+## Set the Android SDK path
 
 ```sh
 ti setup android
 ```
 
-This finds the SDK and writes the path to the CLI's config, so no environment
-variable has to be right.
+`ti setup android` finds the SDK and writes the path to the CLI's config, so no
+environment variable has to be right.
 
 If you would rather set one, Titanium checks `ANDROID_SDK_ROOT` and
 `ANDROID_SDK`, then looks for `adb` on your `PATH`, then scans the usual install
