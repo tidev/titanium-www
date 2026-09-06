@@ -31,12 +31,13 @@ export const communityNav: NavItem[] = [
   { href: 'https://github.com/tidev/titanium-sdk/discussions', label: 'Discussions' },
   { href: 'https://tidev.slack.com', label: 'Slack' },
   {
-    // Interim target. Contributing is about the software, so its home is
-    // `/contribute` on this site rather than on tidev.io, settled in TI-68,
-    // see `docs/blog-split.md`. That page still has to be written: it pulls
-    // together the CLA, code of conduct, and committer path from
-    // tidev/organization-docs. Point this at `/contribute` when it exists.
-    href: 'https://github.com/tidev/titanium-sdk/blob/main/.github/CONTRIBUTING.md',
+    // Contributing is about the software, so its home is here rather than on
+    // tidev.io. Settled in TI-68, see `docs/blog-split.md`. Pointed here rather
+    // than at the interim GitHub link so it does not have to move twice; TI-76
+    // writes the page, a port of tidev.io/contribute minus the CLA form. The
+    // link out is one-way: our page sends people to tidev.io to sign the CLA,
+    // which is where the legal relationship lives. This 404s until TI-76 lands.
+    href: '/contribute',
     label: 'Contribute',
   },
 ];
