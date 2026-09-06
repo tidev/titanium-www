@@ -16,6 +16,7 @@ export function BuildList({
   branch,
   latest,
   notesHref,
+  apiHref,
 }: {
   /**
    * `prerelease` marks a row the releases page can fold away. It is rendered as
@@ -35,6 +36,14 @@ export function BuildList({
    * the page that knows which is the page that should decide.
    */
   notesHref?: (build: Build & { prerelease?: boolean }) => string | null;
+  /**
+   * Where this build's API reference lives on this site, or null.
+   *
+   * Separate from `notesHref` because the two answer differently: notes go back
+   * to 8.0.0 and the compiled reference only to 12.5.0, so most rows that have
+   * a note have no reference.
+   */
+  apiHref?: (build: Build & { prerelease?: boolean }) => string | null;
 }) {
   return (
     // The rule is on each row rather than `divide-y` on the list: a folded-away
@@ -49,6 +58,7 @@ export function BuildList({
           branch={branch}
           latest={build.name === latest}
           notes={notesHref?.(build) ?? null}
+          api={apiHref?.(build) ?? null}
         />
       ))}
     </ul>
@@ -60,11 +70,13 @@ function BuildRow({
   branch,
   latest,
   notes,
+  api,
 }: {
   build: Build & { prerelease?: boolean };
   branch?: string;
   latest: boolean;
   notes: string | null;
+  api: string | null;
 }) {
   const expiresAt = build.expires ? Date.parse(build.expires) : Number.NaN;
 
@@ -141,6 +153,14 @@ function BuildRow({
             className="text-xs text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Release notes
+          </a>
+        )}
+        {api && (
+          <a
+            href={api}
+            className="text-xs text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          >
+            API reference
           </a>
         )}
       </div>

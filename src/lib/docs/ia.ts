@@ -91,6 +91,21 @@ export type DocSection = {
     /** Slugs from `pages`, drawn under this row. The rest stay beside it. */
     covers?: readonly string[];
   };
+  /**
+   * Destinations that belong in this section but are not pages in it.
+   *
+   * Drawn above the section's pages, in the sidebar and on the section index.
+   * Always links: they are somewhere else on this site, so "not written yet" is
+   * not a state they can be in, and they are absent from `allPaths` because
+   * nothing here routes them.
+   *
+   * The API reference is the only one. It is the largest thing in Reference by
+   * a wide margin and it lives at `/docs/sdk`, outside every section, because
+   * it is generated per SDK version rather than written. A reader looking for
+   * it under Reference is right to; until now it was reachable only from prose
+   * and the header.
+   */
+  links?: readonly { title: string; href: string; blurb?: string }[];
   /** One line, shown on the docs landing page. */
   blurb: string;
   /** Diátaxis-ish, and the reason the section exists rather than a label. */
@@ -319,7 +334,17 @@ export const SECTIONS: DocSection[] = [
   {
     slug: 'reference',
     title: 'Reference',
-    blurb: 'Look-up material: the CLI, tiapp.xml, and compatibility.',
+    // `/docs/sdk/latest` rather than `/docs/sdk`: both redirect to the newest
+    // compiled version, and this is the spelling the prose and the writing
+    // guide already use.
+    links: [
+      {
+        title: 'API reference',
+        href: '/docs/sdk/latest',
+        blurb: 'Every type, method, property and event, for each released version.',
+      },
+    ],
+    blurb: 'Look-up material: the API reference, the CLI, tiapp.xml, and compatibility.',
     kind: 'reference',
     pages: [
       { slug: 'cli', title: 'CLI commands' },

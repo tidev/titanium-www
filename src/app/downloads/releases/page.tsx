@@ -1,5 +1,6 @@
 import { BuildList } from '@/components/downloads/build-list';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
+import { isCompiled } from '@/lib/docs/versions';
 import { allReleases, latestRelease } from '@/lib/downloads/registry';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -71,6 +72,19 @@ export default function ReleasesPage() {
         notesHref={(build) =>
           !build.prerelease && build.version && hasReleaseNote(build.version)
             ? `/docs/sdk/${build.version}/release-notes`
+            : null
+        }
+        // Only nineteen of these rows get one: the reference is compiled from
+        // 12.5.0 onwards and the list goes back to 8.0.0. Absent rather than
+        // dead, for the same reason the notes link is.
+        //
+        // GA rows only, and for the reason the notes callback gives: an RC
+        // carries the version of the GA that follows it, so matching on version
+        // alone would point a prerelease at the reference for a release it
+        // preceded.
+        apiHref={(build) =>
+          !build.prerelease && build.version && isCompiled(build.version)
+            ? `/docs/sdk/${build.version}`
             : null
         }
       />

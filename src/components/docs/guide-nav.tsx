@@ -154,6 +154,19 @@ export function GuideNav({ current, written }: GuideNavProps) {
                       })}
                   </>
                 )}
+                {/* Somewhere else on the site that belongs in this section.
+                    Always a link: `written` tracks pages this route renders,
+                    and these are not among them. */}
+                {section.links?.map((link) => (
+                  <Row
+                    key={link.href}
+                    href={link.href}
+                    title={link.title}
+                    active={false}
+                    written
+                    depth={0}
+                  />
+                ))}
                 {uncovered.map((page: DocPage) => {
                   const path = `${base}/${page.slug}`;
                   return (

@@ -1,6 +1,7 @@
 import { AssetLinks } from '@/components/downloads/asset-links';
 import { InstallCommand } from '@/components/downloads/install-command';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
+import { isCompiled } from '@/lib/docs/versions';
 import { formatDate, installCommand } from '@/lib/downloads/format';
 import { branchList, CHANNELS, latestRelease, releases } from '@/lib/downloads/registry';
 import { SITE_URL } from '@/lib/site';
@@ -103,6 +104,14 @@ export default function DownloadsOverview() {
                   className="text-xs text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   Release notes
+                </Link>
+              )}
+              {latest.version && isCompiled(latest.version) && (
+                <Link
+                  href={`/docs/sdk/${latest.version}`}
+                  className="text-xs text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                >
+                  API reference
                 </Link>
               )}
             </div>

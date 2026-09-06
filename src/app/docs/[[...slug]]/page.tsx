@@ -128,17 +128,26 @@ function crumbsFor(segments: string[]): Crumb[] {
 function PageList({
   base,
   pages,
+  links,
   written,
 }: {
   base: string;
   pages: DocPage[];
+  /** Destinations outside the section, listed first and always ready. */
+  links?: readonly { title: string; href: string; blurb?: string }[];
   written: ReadonlySet<string>;
 }) {
+  const cards = [
+    ...(links ?? []).map((link) => ({ ...link, key: link.href, ready: true })),
+    ...pages.map((page) => {
+      const href = `${base}/${page.slug}`;
+      return { ...page, href, key: page.slug, ready: written.has(href) };
+    }),
+  ];
   return (
     <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-      {pages.map((page) => {
-        const href = `${base}/${page.slug}`;
-        const ready = written.has(href);
+      {cards.map((page) => {
+        const { href, ready } = page;
         const body = (
           <>
             <span className="font-medium text-text">{page.title}</span>
@@ -149,7 +158,7 @@ function PageList({
           </>
         );
         return (
-          <li key={page.slug}>
+          <li key={page.key}>
             {ready ? (
               <Link
                 href={href}
@@ -244,6 +253,9 @@ export default async function DocsPage({ params }: PageProps<'/docs/[[...slug]]'
   // The page's own children, when it has any: a section index lists its pages,
   // and `build/ui` lists the four below it.
   const children = !found ? undefined : found.page ? found.page.pages : found.section.pages;
+  // Only the section's own index lists them. A page inside the section is not
+  // where someone looks for the section's out-links.
+  const sectionLinks = found && !found.page ? found.section.links : undefined;
 
   const title = page?.title ?? found?.page?.title ?? found?.section.title ?? 'Documentation';
 
@@ -286,7 +298,9 @@ export default async function DocsPage({ params }: PageProps<'/docs/[[...slug]]'
           <Pending section={found.section} page={found.page} />
         ) : null}
 
-        {!!children?.length && <PageList base={path} pages={children} written={written} />}
+        {(!!children?.length || !!sectionLinks?.length) && (
+          <PageList base={path} pages={children ?? []} links={sectionLinks} written={written} />
+        )}
         {!segments.length && <SectionList />}
 
         {!!page && <Meta page={page} />}
