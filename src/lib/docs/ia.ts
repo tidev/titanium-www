@@ -131,19 +131,19 @@ export const SECTIONS: DocSection[] = [
       // a Mac is actually required for is building iOS, which each page says.
       {
         slug: 'linux',
-        title: 'Linux',
+        title: 'Linux Setup',
         blurb: 'Titanium CLI and SDK, and the Android SDK.',
         platforms: ['linux', 'android'],
       },
       {
         slug: 'macos',
-        title: 'macOS',
+        title: 'macOS Setup',
         blurb: 'Titanium CLI and SDK, Xcode, the Android SDK, and signing identities.',
         platforms: ['macos', 'ios', 'android'],
       },
       {
         slug: 'windows',
-        title: 'Windows',
+        title: 'Windows Setup',
         blurb: 'Titanium CLI and SDK, and the Android SDK.',
         platforms: ['windows', 'android'],
       },

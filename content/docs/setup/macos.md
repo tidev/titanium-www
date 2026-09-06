@@ -1,5 +1,5 @@
 ---
-title: macOS
+title: macOS Setup
 description: Set up a Mac to build Titanium apps for iOS and Android.
 platforms: [macos, ios, android]
 since: 13.4.0

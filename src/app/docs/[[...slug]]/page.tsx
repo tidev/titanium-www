@@ -66,8 +66,17 @@ export async function generateMetadata({
     found?.section.blurb ??
     'Titanium SDK documentation.';
 
+  // "Windows Setup — Environment Setup — Titanium SDK". The section is what
+  // tells a search result, or a crowded tab strip, which of several Setup pages
+  // this is.
+  //
+  // Consecutive repeats collapse, which is what keeps a section index from
+  // announcing itself twice and what stops `/docs` — whose own title is the
+  // site's — rendering as "Titanium SDK — Titanium SDK".
+  const parts = [title, found?.section.title, 'Titanium SDK'].filter((p) => !!p);
+
   return {
-    title: `${title} — Titanium SDK`,
+    title: parts.filter((part, i) => part !== parts[i + 1]).join(' — '),
     description,
     alternates: { canonical: `${SITE_URL}${path}` },
     // A draft renders so it can be reviewed at its URL, but it is not finished

@@ -1,5 +1,5 @@
 ---
-title: Linux
+title: Linux Setup
 description: Set up a Linux machine to build Titanium apps for Android.
 platforms: [linux, android]
 since: 13.4.0

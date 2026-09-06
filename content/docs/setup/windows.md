@@ -1,5 +1,5 @@
 ---
-title: Windows
+title: Windows Setup
 description: Set up a Windows machine to build Titanium apps for Android.
 platforms: [windows, android]
 since: 13.4.0
