@@ -1,0 +1,75 @@
+name: Cleanup previews
+
+# Vercel's retention policy does not reclaim a merged branch's previews for 30
+# days, and even then it keeps the last 20 non-production deployments whatever
+# their age. That floor is how the free tier's 10 GB of Deployment Storage
+# filled: 114 previews across 30 merged branches, not one of them reachable from
+# anything. Removing them by hand is not subject to either the wait or the
+# floor, so this does it the moment the pull request stops being active.
+#
+# "Active" is Vercel's own word: a branch stops protecting its latest preview
+# once its pull request is merged or closed. This fires on both.
+on:
+  pull_request:
+    types: [closed]
+
+# Two runs for one pull request would race on the same deployments, and whichever
+# lost would fail on URLs the winner had already removed.
+concurrency:
+  group: cleanup-previews-${{ github.event.pull_request.number }}
+
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+
+    # A pull request from a fork is not given secrets, so there would be no token
+    # to authenticate with. Few fork previews exist to clean up in any case: Git
+    # Fork Protection is on, so they only build once someone authorizes them.
+    # Retention still collects those, 30 days later.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    env:
+      # Identifiers, not credentials. They name the project that VERCEL_TOKEN
+      # already grants access to, and both change if it is recreated or moved.
+      VERCEL_ORG_ID: team_av3JbwDsQiwntXs2XWbz7JhJ
+      VERCEL_PROJECT_ID: prj_Emee30vHKLvUjwbyZu4gVAuVaQsC
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # Passed as an environment variable rather than interpolated into the run
+      # block: a branch name is attacker-controlled, and `${{ }}` would splice it
+      # into the script as shell source before bash ever saw it.
+      BRANCH: ${{ github.event.pull_request.head.ref }}
+
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+
+      - name: Remove this branch's preview deployments
+        run: |
+          set -euo pipefail
+
+          if [ -z "${VERCEL_TOKEN:-}" ]; then
+            echo "VERCEL_TOKEN is unset. Add it under Settings, Secrets and variables, Actions."
+            exit 1
+          fi
+
+          # `list` returns at most 100 per call, so ask again until a call comes
+          # back empty. The bound is what stops a removal that silently does
+          # nothing from spinning here forever; reaching it is a real failure.
+          for _ in $(seq 1 10); do
+            urls=$(npx --yes vercel@59 list \
+              --token "$VERCEL_TOKEN" \
+              --environment preview \
+              --meta githubCommitRef="$BRANCH" \
+              --limit 100 --json | jq -r '.deployments[].url')
+
+            if [ -z "$urls" ]; then
+              echo "No preview deployments remain for $BRANCH."
+              exit 0
+            fi
+
+            echo "$urls" | xargs npx --yes vercel@59 remove --yes --token "$VERCEL_TOKEN"
+          done
+
+          echo "$BRANCH still has previews after 10 passes; removal is not taking effect."
+          exit 1
