@@ -4,7 +4,6 @@ description: 'Minor bug fixes related to the 11.0.0.GA release'
 date: '2022-09-26'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_11_1_1_ga'
 social: |-
   Titanium SDK 11.1.1.GA is out!
 

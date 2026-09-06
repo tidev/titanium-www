@@ -4,7 +4,6 @@ description: 'The release candidate of the Titanium SDK 12.1.0.RC is available.'
 date: '2023-04-03'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_1_0_rc'
 social: |-
   Titanium SDK 12.1.0.RC is out!
 

@@ -4,7 +4,6 @@ description: 'Support for Node.js 20, Apple Vision Pro and new Android camera ha
 date: '2024-01-12'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_3_0_rc'
 social: |-
   Titanium SDK 12.3.0.RC is out!
 

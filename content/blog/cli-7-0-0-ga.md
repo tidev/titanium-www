@@ -5,7 +5,6 @@ date: '2024-05-10'
 author: 'Chris Barber'
 category: 'Releases'
 cover: '/blog/cli-7.0.0.png'
-source: 'https://tidev.io/blog/cli_7_0_0_ga'
 social: |-
   Titanium CLI 7.0.0 GA is out!
 

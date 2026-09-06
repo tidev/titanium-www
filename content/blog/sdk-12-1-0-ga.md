@@ -4,7 +4,6 @@ description: 'Support for Node.js 19 and enhances Android 13 / macOS support wit
 date: '2023-04-24'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_1_0_ga'
 social: |-
   Titanium SDK 12.1.0.GA is out!
 

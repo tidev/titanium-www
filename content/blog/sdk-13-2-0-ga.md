@@ -5,7 +5,6 @@ date: '2026-04-08'
 author: 'Hans Knöchel'
 category: 'Releases'
 cover: '/blog/titanium-general.png'
-source: 'https://tidev.io/blog/sdk_13_2_0_ga'
 social: |-
   Titanium SDK 13.2.0.GA is now available!
 

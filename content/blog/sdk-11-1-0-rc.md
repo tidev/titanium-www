@@ -4,7 +4,6 @@ description: 'The first release candidate of the next Titanium SDK 11.1.0.RC is 
 date: '2022-08-29'
 author: 'Michael Gangolf'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_11_1_0_rc'
 social: |-
   Titanium SDK 11.1.0.RC is out!
 

@@ -4,7 +4,6 @@ description: 'Support for Xcode 14, iOS 16 and more now available with Titanium 
 date: '2022-09-08'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_11_1_0_ga'
 social: |-
   Titanium SDK 11.1.0.GA is out!
 

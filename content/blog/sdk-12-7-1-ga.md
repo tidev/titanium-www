@@ -5,7 +5,6 @@ date: '2025-06-09'
 author: 'Hans Knöchel'
 category: 'Releases'
 cover: '/blog/titanium-general.png'
-source: 'https://tidev.io/blog/sdk_12_7_1_ga'
 social: |-
   Titanium SDK 12.7.1.GA is out!
 

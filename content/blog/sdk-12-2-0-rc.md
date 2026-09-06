@@ -4,7 +4,6 @@ description: 'iOS 17 and Xcode 15 support'
 date: '2023-08-11'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_2_0_rc'
 social: |-
   Titanium SDK 12.2.0.RC is out!
 

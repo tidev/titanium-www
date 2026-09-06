@@ -4,7 +4,6 @@ description: 'Soon after the WWDC 2022 and the first Beta version of iOS 16, Tit
 date: '2022-06-28'
 author: 'Hans Knöchel'
 category: 'Community'
-source: 'https://tidev.io/blog/wwdc_2022_test_xcode14_ios16'
 social: |-
   Test iOS 16 & Xcode 14 support in Titanium
 

@@ -4,7 +4,6 @@ description: 'Minor bug fixes and Hyperloop update'
 date: '2023-06-02'
 author: 'Michael Gangolf'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_1_2_ga'
 social: |-
   Titanium SDK 12.1.2.GA is out!
 

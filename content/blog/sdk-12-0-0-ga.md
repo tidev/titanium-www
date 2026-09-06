@@ -4,7 +4,6 @@ description: 'The stable version (GA) of the Titanium SDK 12.0.0 is available.'
 date: '2022-12-30'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_0_0_ga'
 social: |-
   Titanium SDK 12.0.0.GA is out!
 

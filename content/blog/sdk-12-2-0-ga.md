@@ -4,7 +4,6 @@ description: 'Stable iOS 17 and Xcode 15 support'
 date: '2023-09-15'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_2_0_ga'
 social: |-
   Titanium SDK 12.2.0.GA is out!
 

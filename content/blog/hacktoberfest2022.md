@@ -4,7 +4,6 @@ description: 'It is that time of the year again: Hacktoberfest!'
 date: '2022-10-01'
 author: 'Michael Gangolf'
 category: 'Community'
-source: 'https://tidev.io/blog/hacktoberfest2022'
 social: |-
   Hacktoberfest 2022
 

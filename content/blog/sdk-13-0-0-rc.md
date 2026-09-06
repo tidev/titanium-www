@@ -5,7 +5,6 @@ date: '2025-09-10'
 author: 'Hans Knöchel'
 category: 'Releases'
 cover: '/blog/titanium-general.png'
-source: 'https://tidev.io/blog/sdk_13_0_0_rc'
 social: |-
   Titanium SDK 13.0.0.RC is out!
 

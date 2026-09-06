@@ -4,7 +4,6 @@ description: 'Alloy dependency refresh'
 date: '2024-01-15'
 author: 'Michael Gangolf'
 category: 'Releases'
-source: 'https://tidev.io/blog/alloy_2_1_0'
 social: |-
   Alloy 2.1.0 is out!
 

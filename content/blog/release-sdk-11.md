@@ -4,7 +4,6 @@ description: 'We are proud to announce, that we have just release our newest RC 
 date: '2022-05-23'
 author: 'Sebastian Klaus'
 category: 'Releases'
-source: 'https://tidev.io/blog/release_sdk_11'
 social: |-
   Titanium SDK 11.0.0.RC is out!
 

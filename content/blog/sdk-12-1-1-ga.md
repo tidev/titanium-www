@@ -4,7 +4,6 @@ description: 'Restored compatibility for Xcode < 14.3'
 date: '2023-04-28'
 author: 'Hans Knöchel'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_1_1_ga'
 social: |-
   Titanium SDK 12.1.1.GA is out!
 

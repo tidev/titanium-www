@@ -4,7 +4,6 @@ description: 'Fix Android and iOS issues related to 12.2.0.GA'
 date: '2023-10-09'
 author: 'Michael Gangolf'
 category: 'Releases'
-source: 'https://tidev.io/blog/sdk_12_2_1_ga'
 social: |-
   Titanium SDK 12.2.1.GA is out!
 
