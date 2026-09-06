@@ -132,7 +132,7 @@ wrong thing, or is an example app that belongs in a repository.
 
 ## Components
 
-Six of them. Each solves one problem; reach for the plainest one that fits, and
+Seven of them. Each solves one problem; reach for the plainest one that fits, and
 if none fits, write a paragraph.
 
 Every marker needs **a blank line above and below it**. Without one, markdown
@@ -249,6 +249,38 @@ frontmatter instead.
 
 :::
 ```
+
+### Card grids
+
+A chooser at the top of a page that covers two or three things, where the reader
+arrives already knowing which one they want. Each card is an image over a label,
+and the whole card is the link.
+
+```md
+:::cards
+
+@card [Visual Studio Code](#visual-studio-code)
+
+![](/docs/guides/vscode.png)
+
+@card [Pulsar](#pulsar)
+
+![](/docs/guides/pulsar.png)
+
+:::
+```
+
+The `@card` marker is an ordinary markdown link: its text is the label and its
+target is where the card goes, so there is no second syntax to remember. The
+image under it is optional, and a card without one still renders - a chooser is
+useful before its artwork exists.
+
+Two to six cards. One is a link wearing a chooser's costume, and the build says
+so. Nothing but an image may sit under a card: prose there would be rendered
+inside the link.
+
+Images belong in `public/docs/guides/` and are referenced from the site root,
+as above. `public/docs/img/` is the registry's and is gitignored.
 
 ### Platform-scoped source
 

@@ -8,6 +8,7 @@ import { PLATFORM_IDS, platformLabel, type PlatformId } from './ia.ts';
  *   :::platform ios   a block that only applies to some platforms
  *   :::unavailable ios  a block saying something is not possible there
  *   :::since 12.1.0   a block that only applies from an SDK version
+ *   :::cards          a grid of linked cards, each an image over a label
  *
  * ## Why these run after sanitizing, when `:::include` runs before
  *
@@ -53,8 +54,20 @@ const PLATFORM =
   /<p>:::(platform|unavailable)[ \t]+([^<>]{1,80}?)[ \t]*<\/p>([\s\S]*?)<p>:::<\/p>/g;
 const SINCE = /<p>:::since[ \t]+([^<>]{1,40}?)[ \t]*<\/p>([\s\S]*?)<p>:::<\/p>/g;
 
+/**
+ * `:::cards` … `:::`, split on `@card` markers the way a group is split on
+ * `@tab`. The marker carries a markdown link rather than a bare label, so the
+ * card's text and its destination come from one ordinary piece of markdown
+ * instead of a second bespoke syntax.
+ */
+const CARDS = /<p>:::cards<\/p>([\s\S]*?)<p>:::<\/p>/g;
+const CARD = /<p>@card[ \t]+([\s\S]{1,300}?)<\/p>/g;
+/** The whole of a `@card` marker's content has to be the link. */
+const CARD_LINK = /^<a href="([^"]+)"[^>]*>([\s\S]*?)<\/a>$/;
+const CARD_IMG = /<img\b[^>]*>/;
+
 /** Anything that looks like a marker and survived every transform. */
-const LEFTOVER = /<p>(:::[^<]*|@tab[^<]*)<\/p>/g;
+const LEFTOVER = /<p>(:::[^<]*|@tab[^<]*|@card[\s\S]{0,300}?)<\/p>/g;
 
 const VERSION = /^\d+(?:\.\d+){0,3}(?:\.[A-Za-z]+\d*)?$/;
 
@@ -166,6 +179,81 @@ function renderGroup(kind: 'tabs' | 'code-group', panels: Panel[], index: number
   return `<div class="${cls}">` + `<div class="tab-list">${strip}</div>` + bodies + `</div>`;
 }
 
+type Card = { href: string; label: string; img?: string };
+
+/**
+ * Splits a `:::cards` block on its `@card` markers.
+ *
+ * Each marker is a markdown link and each body is the image shown above the
+ * label. The image is optional: a set of cards is a useful chooser before its
+ * artwork exists, and blocking the block on assets would mean writing the page
+ * twice.
+ */
+function cardsOf(inner: string): Card[] {
+  const marks = [...inner.matchAll(CARD)];
+  if (!marks.length) throw new BlockError(':::cards has no @card entries');
+
+  const preamble = inner.slice(0, marks[0].index).trim();
+  if (preamble) throw new BlockError(':::cards has content before its first @card');
+
+  return marks.map((mark, i) => {
+    const link = CARD_LINK.exec(mark[1].trim());
+    if (!link) {
+      throw new BlockError(`:::cards @card is not a single link - write "@card [Label](/target)"`);
+    }
+
+    const start = mark.index + mark[0].length;
+    const end = i + 1 < marks.length ? marks[i + 1].index : inner.length;
+    const body = inner.slice(start, end).trim();
+
+    // Only an image belongs under a card. Prose there would be a paragraph
+    // rendered inside a link, which is both invalid and unreadable.
+    if (body && !/^<p>\s*<img\b[^>]*>\s*<\/p>$/.test(body)) {
+      throw new BlockError(`:::cards card "${link[2]}" holds something other than one image`);
+    }
+
+    const img = body ? (CARD_IMG.exec(body)?.[0] ?? undefined) : undefined;
+    return { href: link[1], label: link[2].trim(), ...(img ? { img } : {}) };
+  });
+}
+
+function checkCards(cards: Card[]): void {
+  // The same reasoning as a one-panel group: a grid of one is a link, and
+  // dressing it as a chooser tells the reader there is a choice when there
+  // is not.
+  if (cards.length < 2) {
+    throw new BlockError(`:::cards needs at least two cards, has ${cards.length}`);
+  }
+  if (cards.length > MAX_PANELS) {
+    throw new BlockError(`:::cards has ${cards.length} cards, more than ${MAX_PANELS}`);
+  }
+
+  const seen = new Set<string>();
+  for (const card of cards) {
+    if (!card.label) throw new BlockError(':::cards has an unlabelled @card');
+    if (seen.has(card.label)) throw new BlockError(`:::cards repeats the card "${card.label}"`);
+    seen.add(card.label);
+  }
+}
+
+function renderCards(cards: Card[]): string {
+  const items = cards
+    .map((card) => {
+      // `alt=""` on the logo: the label directly beneath it is the accessible
+      // name, and repeating it would have a screen reader say it twice.
+      const img = card.img
+        ? card.img.replace(/\salt="[^"]*"/, '').replace(/<img/, '<img alt=""')
+        : '';
+      return (
+        `<li class="card">` +
+        `<a href="${card.href}">${img}<span class="card-label">${card.label}</span></a>` +
+        `</li>`
+      );
+    })
+    .join('');
+  return `<ul class="cards">${items}</ul>`;
+}
+
 /**
  * Rewrites every block marker into markup.
  *
@@ -184,6 +272,12 @@ export function renderBlocks(html: string): string {
     const panels = panelsOf(inner, kind);
     checkPanels(panels, kind);
     return renderGroup(kind, panels, group++);
+  });
+
+  out = out.replace(CARDS, (_whole, inner: string) => {
+    const cards = cardsOf(inner);
+    checkCards(cards);
+    return renderCards(cards);
   });
 
   out = out.replace(

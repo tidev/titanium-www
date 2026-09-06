@@ -227,6 +227,135 @@ describe('version notices', () => {
   });
 });
 
+describe('card grids', () => {
+  const CARDS = `
+:::cards
+
+@card [Visual Studio Code](#vs-code)
+
+![](/docs/guides/vscode.png)
+
+@card [Pulsar](#pulsar)
+
+![](/docs/guides/pulsar.png)
+
+:::
+`;
+
+  test('renders a list of linked cards', () => {
+    const html = render(CARDS);
+    assert.match(html, /<ul class="cards">/);
+    assert.equal((html.match(/<li class="card">/g) ?? []).length, 2);
+    assert.match(html, /<a href="#vs-code">/);
+    assert.match(html, /<span class="card-label">Visual Studio Code<\/span>/);
+  });
+
+  test('keeps the image and empties its alt, since the label names the card', () => {
+    const html = render(CARDS);
+    assert.match(html, /<img alt="" src="\/docs\/guides\/vscode\.png"|<img alt=""[^>]*vscode\.png/);
+    assert.doesNotMatch(html, /alt="Visual Studio Code"/);
+  });
+
+  test('a card without an image is still a card', () => {
+    const html = render(`
+:::cards
+
+@card [One](/one)
+
+@card [Two](/two)
+
+:::
+`);
+    assert.equal((html.match(/<li class="card">/g) ?? []).length, 2);
+    assert.doesNotMatch(html, /<img/);
+  });
+
+  test('leaves no marker behind', () => {
+    assert.deepEqual(unresolvedMarkers(render(CARDS)), []);
+  });
+});
+
+describe('a card grid refuses', () => {
+  const bad = (markdown: string) => () => render(markdown);
+
+  test('a single card, which is a link wearing a chooser costume', () => {
+    assert.throws(
+      bad(`
+:::cards
+
+@card [Only](/only)
+
+:::
+`),
+      BlockError
+    );
+  });
+
+  test('a card whose marker is not a link', () => {
+    assert.throws(
+      bad(`
+:::cards
+
+@card Visual Studio Code
+
+@card [Pulsar](#pulsar)
+
+:::
+`),
+      BlockError
+    );
+  });
+
+  test('prose under a card, which would render inside the link', () => {
+    assert.throws(
+      bad(`
+:::cards
+
+@card [One](/one)
+
+Some prose that does not belong here.
+
+@card [Two](/two)
+
+:::
+`),
+      BlockError
+    );
+  });
+
+  test('two cards with the same label', () => {
+    assert.throws(
+      bad(`
+:::cards
+
+@card [Same](/one)
+
+@card [Same](/two)
+
+:::
+`),
+      BlockError
+    );
+  });
+
+  test('content before the first card', () => {
+    assert.throws(
+      bad(`
+:::cards
+
+Stray text.
+
+@card [One](/one)
+
+@card [Two](/two)
+
+:::
+`),
+      BlockError
+    );
+  });
+});
+
 describe('unresolvedMarkers', () => {
   test('finds a marker that lost its blank line', () => {
     // markdown-it folds `:::tabs` into the paragraph below it, so the block

@@ -738,6 +738,58 @@ body {
     border-top-right-radius: 0;
   }
 
+  /* ---- Card grids (TI-76) ---------------------------------------------
+
+     A chooser: a few destinations shown side by side, each an optional image
+     over its label. Used at the top of a page that covers two things, where
+     a reader arrives knowing which one they want.
+
+     `auto-fit` rather than a fixed column count, so two cards fill the width
+     and six wrap without the block needing to know how many it has. */
+  .prose-docs .cards {
+    margin-block: 1.25em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.75rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prose-docs .cards .card {
+    margin: 0;
+    padding: 0;
+  }
+
+  .prose-docs .cards .card > a {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-text);
+    transition: border-color 120ms;
+  }
+
+  .prose-docs .cards .card > a:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  /* Fixed box rather than a fixed height, so a wide wordmark and a square
+     icon occupy the same space and the labels below them still line up. */
+  .prose-docs .cards .card img {
+    width: 3rem;
+    height: 3rem;
+    margin: 0;
+    object-fit: contain;
+  }
+
   /* ---- Platform and version blocks (TI-32) ----------------------------
 
      Both mark a passage as conditional. They are quieter than a callout on
