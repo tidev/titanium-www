@@ -471,15 +471,43 @@ body {
     letter-spacing: var(--tracking-tight);
     color: var(--color-text);
   }
-  /* The source starts its headings at h4 inside descriptions, so these are
-     sized relative to the surrounding text rather than as page headings. */
+  /* Two audiences share this stylesheet, and they want opposite things.
+
+     On a guide or a blog post, an h2 is the page's structure: the reader
+     scans for it, and the on-this-page rail links to it, so it has to break
+     the column rather than blend into it. At 1.125em it did not - one step
+     over body text reads as bold prose, not as a new section.
+
+     Inside an API description it is the reverse. Those headings enter at h4
+     and sit within a member's card, where a page-heading size would outrank
+     the member name above it. Checked rather than assumed: across the
+     compiled registry the prose uses 251 h4 and 26 h3, and no h2 at all, so
+     giving h2 a section's weight cannot disturb the reference.
+
+     Sized in em, not rem, so a description rendered at a smaller base keeps
+     its proportions. */
   .prose-docs h1,
   .prose-docs h2 {
+    font-size: 1.5em;
+  }
+  .prose-docs h3 {
     font-size: 1.125em;
   }
-  .prose-docs h3,
   .prose-docs h4 {
     font-size: 1em;
+  }
+
+  /* The site header is sticky and 4rem tall, so a heading jumped to from an
+     anchor lands underneath it. `scroll-mt-24` handles this on the headings
+     the reference pages render as JSX; prose headings come out of markdown
+     and cannot carry a class, so the offset is applied here instead. The
+     extra 1rem over the header's height is breathing room, not a fudge.
+
+     Scoped to headings that have an id, because those are the only anchor
+     targets: `headings.ts` gives every h2 and h3 one, and the on-this-page
+     rail and any in-page link both point at them. */
+  .prose-docs :is(h2, h3)[id] {
+    scroll-margin-top: 5rem;
   }
 
   .prose-docs ul,
