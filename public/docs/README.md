@@ -42,6 +42,31 @@ Reference one from a guide by its path:
 
 See `docs/writing-guides.md` for the conventions.
 
+### Third-party marks
+
+Where a guide shows another project's logo, record where it came from here, the
+way `src/components/downloads/os-icon.tsx` records the OS marks it draws.
+
+| File            | Source                                                        |
+| --------------- | ------------------------------------------------------------- |
+| `vscode.png`    | `microsoft/vscode-docs`, `images/logo-stable.png`, unmodified |
+| `pulsar.png`    | `pulsar-edit/pulsar`, `resources/pulsar.png`, scaled to 256px |
+| `jetbrains.svg` | Simple Icons (CC0-1.0), `icons/jetbrains.svg`, given a fill   |
+
+`jetbrains.svg` carries an explicit `fill` because an SVG loaded through `<img>`
+has no parent context: `currentColor` would resolve to black and the mark would
+disappear on the dark canvas. A fixed mid-tone reads on both themes, where a
+`prefers-color-scheme` rule inside the file would be wrong for anyone who has
+set the site's theme toggle against their OS.
+
+Only JetBrains is in Simple Icons, which is where the OS marks come from. That
+library carries no Visual Studio Code icon at all, and its `apachepulsar` is the
+Apache message broker rather than the editor, so those two are the projects' own
+artwork, used to refer to the products they name.
+
+That split shows: the two PNGs are full-colour product logos and the JetBrains
+mark is a monochrome silhouette. Tracked in TI-78.
+
 ---
 
 This file is not served. `next.config.ts` rewrites `/docs/README.md` away

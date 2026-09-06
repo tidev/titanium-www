@@ -32,3 +32,7 @@ later, you need access to a Mac at that point.
 `ti info` reports a working Android SDK, a working Xcode if you are on macOS,
 and no errors. It is worth running again whenever a build starts failing for no
 visible reason.
+
+[IDE Integration](/docs/setup/ide-integration) is optional and comes next if you
+use Visual Studio Code. Otherwise go straight to
+[your first app](/docs/build/first-app).

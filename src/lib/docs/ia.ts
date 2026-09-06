@@ -155,8 +155,8 @@ export const SECTIONS: DocSection[] = [
         platforms: ['windows', 'android'],
       },
       {
-        slug: 'editors',
-        title: 'Editors & IDEs',
+        slug: 'ide-integration',
+        title: 'IDE Integration',
         blurb: 'The VS Code extension, and what else works.',
       },
     ],

@@ -1,5 +1,5 @@
 ---
-title: Editors & IDEs
+title: IDE Integration
 description: Half-written, on purpose.
 draft: true
 ---
