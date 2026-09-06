@@ -219,7 +219,6 @@ export default async function DocsPage({ params }: PageProps<'/docs/[[...slug]]'
   const children = !found ? undefined : found.page ? found.page.pages : found.section.pages;
 
   const title = page?.title ?? found?.page?.title ?? found?.section.title ?? 'Documentation';
-  const description = page?.description ?? found?.page?.blurb ?? found?.section.blurb ?? '';
 
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-x-8 px-4 py-8 sm:px-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:px-8 xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">
@@ -227,8 +226,10 @@ export default async function DocsPage({ params }: PageProps<'/docs/[[...slug]]'
 
       <article className="min-w-0">
         <Breadcrumbs crumbs={crumbsFor(segments)} />
+        {/* No lede under the title: `description` is written for the search
+            result and repeating it above the opening paragraph says the same
+            thing twice. It reaches the reader through `generateMetadata`. */}
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-text">{title}</h1>
-        {!!description && <p className="mt-2 text-lg text-text-muted">{description}</p>}
 
         {(!!page?.platforms?.length || !!page?.since) && (
           <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-subtle">
