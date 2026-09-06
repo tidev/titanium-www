@@ -172,7 +172,11 @@ export const SECTIONS: DocSection[] = [
     blurb: 'Everything between a new project and a working app.',
     kind: 'how-to',
     pages: [
-      { slug: 'first-app', title: 'Your first app' },
+      {
+        slug: 'first-app',
+        title: 'Your first app',
+        blurb: 'Create a project, run it on a simulator, then on a real phone.',
+      },
       {
         slug: 'project-structure',
         title: 'Project structure',
