@@ -54,6 +54,22 @@ export type DocPage = {
 export type DocSection = {
   slug: string;
   title: string;
+  /**
+   * The sidebar label for the section's own page at `/docs/<slug>`, when it has
+   * one written.
+   *
+   * A section heading is a category and never a link, so a section that does
+   * have a page of its own needs somewhere to put it: this names the row, which
+   * the nav renders indented alongside the section's pages. Absent means the
+   * section has no page of its own and `/docs/<slug>` falls back to the
+   * generated index of its children.
+   *
+   * It exists because the label and the heading differ. The heading says
+   * "Getting Started" and the page is "Environment Setup", so neither
+   * `section.title` nor the page's own frontmatter can supply it: the nav is
+   * built from this file rather than from disk, on purpose.
+   */
+  indexTitle?: string;
   /** One line, shown on the docs landing page. */
   blurb: string;
   /** Diátaxis-ish, and the reason the section exists rather than a label. */
@@ -122,16 +138,16 @@ export const MAX_DEPTH = 3;
 export const SECTIONS: DocSection[] = [
   {
     slug: 'setup',
-    title: 'Environment Setup',
+    title: 'Getting Started',
+    indexTitle: 'Environment Setup',
     blurb: 'Get a machine ready to build, on your operating system.',
     kind: 'tutorial',
     pages: [
       // These three carry a shorter title here than the page itself does. A
-      // sidebar row is read under the section heading that already says
-      // "Environment Setup", where "Linux Setup" would repeat it; a tab, a
-      // search result and a bookmark carry no such context, so the page is
-      // "Linux Setup". `title` in frontmatter wins wherever the page speaks for
-      // itself, and this one labels the tree.
+      // sidebar row is read directly under "Environment Setup", where "Linux
+      // Setup" would repeat it; a tab, a search result and a bookmark carry no
+      // such context, so the page is "Linux Setup". `title` in frontmatter wins
+      // wherever the page speaks for itself, and this one labels the tree.
       //
       // The three operating systems are peers and are listed alphabetically.
       // Putting macOS first would read as an endorsement of it: the only thing
@@ -252,7 +268,7 @@ export const SECTIONS: DocSection[] = [
       {
         slug: 'signing',
         title: 'Certificates & provisioning',
-        blurb: 'Distribution identities. Development signing is under Environment Setup.',
+        blurb: 'Distribution identities. Development signing is under Getting Started.',
       },
       // Apple's own name for it is "App Store", but that name only disambiguates
       // in context, and these titles also appear in search results, breadcrumbs

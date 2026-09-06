@@ -116,7 +116,7 @@ describe('platform names', () => {
   });
 });
 
-describe('Environment Setup', () => {
+describe('Getting Started', () => {
   test('lists the operating systems alphabetically', () => {
     // They are peers. Any other order reads as a recommendation, and the one
     // that would lead - macOS - is only required for building iOS.

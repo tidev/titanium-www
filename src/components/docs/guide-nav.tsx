@@ -14,7 +14,7 @@ import Link from 'next/link';
  * disclosure tree over 45,610 types, this one is a fixed list of about forty
  * pages, so they share an idea and no code.
  *
- * ## Three states, three strengths
+ * ## Four states, four strengths
  *
  * A link at rest is full-strength `text`, the page you are on is `link`, and a
  * page nobody has written is `text-subtle`. The first of those used to be
@@ -22,6 +22,10 @@ import Link from 'next/link';
  * article body uses - so an available page read as a disabled one, and the nav
  * read as more body copy. Contrast was never the problem (`text-muted` is 7.3:1
  * on white); the problem was that three different meanings looked alike.
+ *
+ * The fourth is a section heading, which is not a row at all: smaller,
+ * uppercase, and never interactive. Same reasoning applied a second time. See
+ * `SectionHeading`.
  */
 
 export type GuideNavProps = {
@@ -76,6 +80,26 @@ function Row({
   );
 }
 
+/**
+ * A section label.
+ *
+ * Not a link, and not a `Row`. A section is a category rather than a
+ * destination, so it cannot be clickable on the strength of a file happening to
+ * exist at its path - which is how "Environment Setup" came to behave unlike
+ * every other section. A section with a page of its own lists it as a child
+ * instead, through `indexTitle`.
+ *
+ * It gets its own weight for the reason the three link states have theirs: the
+ * unwritten state is `text-subtle`, and a category borrowing it would make a
+ * heading and a missing page look alike. Uppercase at a smaller size reads as a
+ * label rather than as a row you failed to click.
+ */
+function SectionHeading({ title }: { title: string }) {
+  return (
+    <h2 className="py-1 text-xs font-semibold uppercase tracking-wide text-text-muted">{title}</h2>
+  );
+}
+
 export function GuideNav({ current, written }: GuideNavProps) {
   return (
     <aside className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
@@ -84,14 +108,17 @@ export function GuideNav({ current, written }: GuideNavProps) {
           const base = `/docs/${section.slug}`;
           return (
             <div key={section.slug} className="mb-5">
-              <Row
-                href={base}
-                title={section.title}
-                active={current === base}
-                written={written.has(base)}
-                depth={0}
-              />
+              <SectionHeading title={section.title} />
               <ul className="mt-0.5 ml-1.5 border-l border-border pl-2">
+                {!!section.indexTitle && (
+                  <Row
+                    href={base}
+                    title={section.indexTitle}
+                    active={current === base}
+                    written={written.has(base)}
+                    depth={0}
+                  />
+                )}
                 {section.pages.map((page: DocPage) => {
                   const path = `${base}/${page.slug}`;
                   return (

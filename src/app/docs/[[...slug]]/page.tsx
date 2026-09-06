@@ -66,7 +66,7 @@ export async function generateMetadata({
     found?.section.blurb ??
     'Titanium SDK documentation.';
 
-  // "Windows Setup - Environment Setup - Titanium SDK". The section is what
+  // "Windows Setup - Getting Started - Titanium SDK". The section is what
   // tells a search result, or a crowded tab strip, which of several Setup pages
   // this is.
   //
@@ -94,7 +94,16 @@ function crumbsFor(segments: string[]): Crumb[] {
   const found = segments.length ? findPage(segments) : undefined;
   if (!found) return crumbs;
 
-  crumbs.push({ label: found.section.title, href: `/docs/${found.section.slug}` });
+  // A section with a page of its own does not own its path: that page does, and
+  // it is a sibling of the section's other pages rather than their parent. So
+  // the category is a plain label and its page becomes a crumb in its own
+  // right. Without `indexTitle` the path is the generated index of the
+  // section's children, which is a real destination and stays a link.
+  crumbs.push(
+    found.section.indexTitle
+      ? { label: found.section.title }
+      : { label: found.section.title, href: `/docs/${found.section.slug}` }
+  );
   // A third-level page sits under a parent that is itself a page.
   if (segments.length === 3) {
     const parent = found.section.pages.find((p) => p.slug === segments[1]);
@@ -103,6 +112,7 @@ function crumbsFor(segments: string[]): Crumb[] {
     }
   }
   if (found.page) crumbs.push({ label: found.page.title });
+  else if (found.section.indexTitle) crumbs.push({ label: found.section.indexTitle });
   return crumbs;
 }
 
