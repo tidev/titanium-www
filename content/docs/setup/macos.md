@@ -107,16 +107,6 @@ xcode-select -p
 If that names a beta or a version you removed, set it with
 `sudo xcode-select -s`.
 
-## Prove it works
-
-```sh
-ti create
-ti build -p android
-ti build -p ios
-```
-
-If those finish, your environment is done.
-
 ## Next
 
-[Your first app](/docs/build/first-app) covers what `ti create` produced.
+[Your first app](/docs/build/first-app) creates a project and builds it.

@@ -5,13 +5,6 @@ platforms: [windows, android]
 since: 13.4.0
 ---
 
-:::unavailable ios
-
-Building for iOS needs Xcode, and Apple ships Xcode only for macOS. If you need
-iOS, you need a Mac for that half of the work.
-
-:::
-
 Run the commands below in PowerShell.
 
 :::include nodejs
@@ -68,15 +61,6 @@ Check the path for spaces and ampersands. Moving the SDK is the only fix.
 Antivirus scanning the build directory. Exclude your project's `build`
 directory from real-time scanning.
 
-## Prove it works
-
-```sh
-ti create
-ti build -p android
-```
-
-If both finish, your environment is done.
-
 ## Next
 
-[Your first app](/docs/build/first-app) covers what `ti create` produced.
+[Your first app](/docs/build/first-app) creates a project and builds it.

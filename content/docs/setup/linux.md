@@ -78,15 +78,6 @@ The SDK was installed as root:
 sudo chown -R $USER: ~/Android/Sdk
 ```
 
-## Prove it works
-
-```sh
-ti create
-ti build -p android
-```
-
-If both finish, your environment is done.
-
 ## Next
 
-[Your first app](/docs/build/first-app) covers what `ti create` produced.
+[Your first app](/docs/build/first-app) creates a project and builds it.
