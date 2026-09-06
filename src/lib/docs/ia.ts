@@ -156,6 +156,17 @@ export const VERSION_SEGMENT = /^v\d+$/;
  */
 export const MAX_DEPTH = 3;
 
+/**
+ * The sidebar label for `/docs` itself.
+ *
+ * Not a section, and not in `SECTIONS`: it introduces them. It still needs a
+ * row, because it is the one page no section contains and the header's "Docs"
+ * link is not an obvious way to reach it. The name lives here rather than being
+ * read from the page's frontmatter for the same reason every other label does:
+ * the nav is built from this file, not from disk.
+ */
+export const ROOT_TITLE = 'Introduction';
+
 export const SECTIONS: DocSection[] = [
   {
     slug: 'setup',

@@ -1,4 +1,4 @@
-import { SECTIONS, type DocPage } from '@/lib/docs/ia';
+import { ROOT_TITLE, SECTIONS, type DocPage } from '@/lib/docs/ia';
 import Link from 'next/link';
 
 /**
@@ -104,6 +104,19 @@ export function GuideNav({ current, written }: GuideNavProps) {
   return (
     <aside className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
       <nav aria-label="Documentation">
+        {/* `/docs` is a page like any other and the only one no section holds,
+            so without this row the tree cannot reach it. Unindented and with no
+            rule down its left, because it hangs off no category: it sits level
+            with the section labels rather than under one. */}
+        <ul className="mb-5">
+          <Row
+            href="/docs"
+            title={ROOT_TITLE}
+            active={current === '/docs'}
+            written={written.has('/docs')}
+            depth={0}
+          />
+        </ul>
         {SECTIONS.map((section) => {
           const base = `/docs/${section.slug}`;
           const covered = new Set(section.index?.covers ?? []);
