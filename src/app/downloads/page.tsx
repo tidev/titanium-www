@@ -111,7 +111,7 @@ export default function DownloadsOverview() {
                   href={`/docs/sdk/${latest.version}`}
                   className="text-xs text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
-                  API reference
+                  Titanium API
                 </Link>
               )}
             </div>

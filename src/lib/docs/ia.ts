@@ -339,12 +339,17 @@ export const SECTIONS: DocSection[] = [
     // guide already use.
     links: [
       {
-        title: 'API reference',
+        // Not "API reference". It is read under a heading that already says
+        // Reference, and none of its siblings repeat it either: they name what
+        // is being referenced, and so does this. "Titanium" rather than "SDK"
+        // because it sets the API against the CLI rows below it, which is the
+        // distinction someone scanning this list is actually making.
+        title: 'Titanium API',
         href: '/docs/sdk/latest',
         blurb: 'Every type, method, property and event, for each released version.',
       },
     ],
-    blurb: 'Look-up material: the API reference, the CLI, tiapp.xml, and compatibility.',
+    blurb: 'Look-up material: the Titanium API, the CLI, tiapp.xml, and compatibility.',
     kind: 'reference',
     pages: [
       { slug: 'cli', title: 'CLI commands' },
