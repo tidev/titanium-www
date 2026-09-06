@@ -9,7 +9,7 @@ import Link from 'next/link';
  * The frame every module view is drawn in: identity, tabs, and the rail.
  *
  * Four routes rather than one page with anchors. A module's reference is the
- * bulk of it — ti.nfc compiles to 30 types — and a reader who came for the
+ * bulk of it - ti.nfc compiles to 30 types - and a reader who came for the
  * install command should not pay for that, nor scroll past it to reach the
  * release list.
  *
@@ -18,7 +18,7 @@ import Link from 'next/link';
  * which view it is. That keeps the whole shell out of the client bundle.
  *
  * A tab is never hidden for being empty. A module with no compiled reference
- * still has an API Docs tab, which says so — navigation that changes shape from
+ * still has an API Docs tab, which says so - navigation that changes shape from
  * module to module is harder to trust than a tab that admits it has nothing.
  */
 
@@ -65,7 +65,7 @@ export function LatestRelease({
                 </Link>
                 {date && <span className="text-xs text-text-subtle">{date}</span>}
               </p>
-              {/* Verbatim from the manifest, suffix and all — some say
+              {/* Verbatim from the manifest, suffix and all - some say
                   `10.0.0.GA`. Normalising would invent precision. */}
               {minsdk && (
                 <p className="text-xs text-text-subtle">
@@ -85,8 +85,8 @@ export function LatestRelease({
  *
  * The rail is hidden below `xl`, where there is no room for a second column, so
  * the latest release is rendered a second time inside the article for those
- * widths. Both are cheap, and the alternative — one instance moved by grid
- * placement — would put it either above the module's own title or below the
+ * widths. Both are cheap, and the alternative - one instance moved by grid
+ * placement - would put it either above the module's own title or below the
  * whole page, depending on which side of the breakpoint you are on.
  *
  * `rail` is the slot for anything that belongs beside the article; only the API
@@ -143,7 +143,7 @@ export function ModuleLayout({
               // The anchor carries the underline, so it has to be as tall as
               // the row: a flex item stretches, an inline-flex child of a plain
               // li does not. Without this the tallest tab sets the row height
-              // and every other underline floats above the rule — which is what
+              // and every other underline floats above the rule - which is what
               // the count capsule did until it was made small enough to hide it.
               <li key={tab.id} className="flex">
                 <Link

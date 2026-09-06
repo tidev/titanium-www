@@ -6,7 +6,7 @@ import { join } from 'node:path';
  * Vendors the IBM Plex woff2 files into `src/fonts/`.
  *
  * `next/font/google` downloads these during the build, which means a build
- * cannot run without reaching fonts.googleapis.com — verified by building
+ * cannot run without reaching fonts.googleapis.com - verified by building
  * behind a dead proxy, where it fails outright with zero fonts emitted. TI-25
  * requires the build to touch nothing but the local filesystem, so the files
  * are fetched once, here, and committed.
@@ -100,6 +100,6 @@ for (const { file, url } of FAMILIES) {
 }
 
 if (checkOnly && stale.length) {
-  console.error(`\n${stale.length} font file(s) differ from upstream — rerun without --check.`);
+  console.error(`\n${stale.length} font file(s) differ from upstream - rerun without --check.`);
   process.exit(1);
 }

@@ -18,14 +18,14 @@ import './globals.css';
  *     chose. THEME_INIT is re-run here for that reason, from the shared
  *     constant rather than a second copy.
  *
- * It also cannot export `metadata` — error boundaries are Client Components —
+ * It also cannot export `metadata` - error boundaries are Client Components -
  * so the title is React's `<title>` element instead.
  *
  * Fonts are deliberately not loaded: `next/font` here would pull a second copy
  * of the family into a page that renders when everything else has already
  * failed. The system stack is the right trade in that situation.
  *
- * The prop is `retry`, not `reset` — Next 16 renamed it, and the rename is
+ * The prop is `retry`, not `reset` - Next 16 renamed it, and the rename is
  * silent if you get it wrong.
  *
  * ## What this does and does not catch
@@ -51,7 +51,7 @@ export default function GlobalError({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Something went wrong — Titanium SDK</title>
+        <title>Something went wrong - Titanium SDK</title>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
       </head>
       <body className="min-h-full bg-bg text-text">

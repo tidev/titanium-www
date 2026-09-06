@@ -19,7 +19,7 @@ export function BuildList({
 }: {
   /**
    * `prerelease` marks a row the releases page can fold away. It is rendered as
-   * a `data-prerelease` attribute and nothing else — which rows are visible is
+   * a `data-prerelease` attribute and nothing else - which rows are visible is
    * the page's business, not this component's.
    */
   builds: readonly (Build & { prerelease?: boolean })[];
@@ -31,7 +31,7 @@ export function BuildList({
    * Where this build's release notes live on this site, or null.
    *
    * A callback rather than a flag because this list also renders CI builds,
-   * which have none, and because only 56 of the 71 GA releases have a note —
+   * which have none, and because only 56 of the 71 GA releases have a note -
    * the page that knows which is the page that should decide.
    */
   notesHref?: (build: Build & { prerelease?: boolean }) => string | null;
@@ -39,7 +39,7 @@ export function BuildList({
   return (
     // The rule is on each row rather than `divide-y` on the list: a folded-away
     // prerelease still counts for `:first-child`, so the divider would land in
-    // the wrong place — or double up against the list's own top border —
+    // the wrong place - or double up against the list's own top border -
     // whenever the hidden row happens to be the first one.
     <ul className="mt-4">
       {builds.map((build) => (
@@ -73,7 +73,7 @@ function BuildRow({
       {/* Wrap, rather than two columns. A grid gives the archives whatever is
           left over once the command has taken what it needs, and a CI build's
           command is long enough that what is left is narrower than three chips
-          — so they stacked into a column. Here the chips are one item that
+          - so they stacked into a column. Here the chips are one item that
           either fits beside the command or moves to its own line intact.
 
           `min-w-max` is what forces that choice: it stops the group being
@@ -128,8 +128,8 @@ function BuildRow({
           // tag for a release, the workflow run for a CI build.
           //
           // Not "release notes": every GA release body on GitHub is either
-          // empty or a link back to this site — measured across all 71 in
-          // TI-72 — so that title promised something the page does not have.
+          // empty or a link back to this site - measured across all 71 in
+          // TI-72 - so that title promised something the page does not have.
           title={branch ? 'Workflow run on GitHub' : 'Release tag on GitHub'}
           className="text-xs text-text-subtle hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >

@@ -7,7 +7,7 @@ import { join } from 'node:path';
  * `scripts/sync-doc-assets.ts` mirrors the registry's images into `public/` as
  * one file per *distinct* image rather than one per version, because every
  * compiled release carries its own byte-identical copy of the same 54
- * screenshots — measured unchanged across the 13 months from 12.8.0 to 13.4.1.
+ * screenshots - measured unchanged across the 13 months from 12.8.0 to 13.4.1.
  * Without this, nineteen releases would deploy the same 9MB nineteen times.
  *
  * Pages still build the logical URL for their own version. This maps it onto
@@ -25,7 +25,7 @@ let table: Record<string, string> | undefined;
 
 function manifest(): Record<string, string> {
   if (table) return table;
-  // Absent before the first sync — during `next dev` on a clean checkout, say.
+  // Absent before the first sync - during `next dev` on a clean checkout, say.
   table = existsSync(MANIFEST)
     ? (JSON.parse(readFileSync(MANIFEST, 'utf8')) as Record<string, string>)
     : {};

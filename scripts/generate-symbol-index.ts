@@ -9,13 +9,13 @@ import { brotliCompressSync } from 'node:zlib';
  * The symbol payload behind the exact-name lookup (TI-70).
  *
  * Pagefind ranks pages, and TI-46 measured the two failures that follow from
- * that — both of them the most common shapes of query on an API reference:
+ * that - both of them the most common shapes of query on an API reference:
  * `addEventListener` returns 205 results and nothing relevant, because every
  * proxy inherits it; and Pagefind has no typo tolerance at all, so
  * `creatWindow` returns nothing useful. Neither is fixable by tuning the index.
  *
  * So symbol matching is done separately, in the browser, against every name in
- * the corpus. Names are small — this is a list of identifiers, not of prose —
+ * the corpus. Names are small - this is a list of identifiers, not of prose -
  * which is what makes shipping all of them viable.
  *
  * ## Shape
@@ -24,8 +24,8 @@ import { brotliCompressSync } from 'node:zlib';
  *
  * Hrefs are derived rather than stored, since they are mechanical: a type is
  * `/docs/sdk/<sdk>/<name>`, a member is that plus `#<anchor>`. The anchor is
- * usually the member's name, so it is written bare; where it is not — Window
- * has a method `open()` and an event `open`, and 41 types collide this way —
+ * usually the member's name, so it is written bare; where it is not - Window
+ * has a method `open()` and an event `open`, and 41 types collide this way -
  * the member is written `name>anchor`. One character of overhead, only where
  * the collision is real.
  *
@@ -61,7 +61,7 @@ for (const entry of index.types) {
   const members: string[] = [];
   for (const group of groups) {
     // Declared only. Indexing the inherited copies is what makes
-    // `addEventListener` useless in the first place — it would put the same
+    // `addEventListener` useless in the first place - it would put the same
     // name on 200 types here too, and the whole point is to answer with one.
     for (const member of group.filter((m) => !m.inheritedFrom)) {
       const id = anchor(member);

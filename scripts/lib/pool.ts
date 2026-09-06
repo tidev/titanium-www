@@ -53,7 +53,7 @@ export function putBlob(
  *
  * Retention removes a version by deleting its manifest, which orphans whatever
  * only that version used. Nothing else collects those, so this runs after any
- * operation that can drop a reference — and it takes the full wanted set rather
+ * operation that can drop a reference - and it takes the full wanted set rather
  * than a delta, because a blob shared by fifteen versions must survive fourteen
  * of them going away.
  */

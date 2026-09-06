@@ -4,7 +4,7 @@ import { notFoundJson } from '@/lib/registry-api/not-found';
  * Anything under /registry that no other route claims.
  *
  * The compatibility files declare `dynamicParams = false`, so a name that was
- * not generated never reaches their handler — without this it would fall to the
+ * not generated never reaches their handler - without this it would fall to the
  * site's HTML error page, in a namespace where every other answer is JSON. The
  * versioned API has its own catch-all one level down; this covers the rest.
  */

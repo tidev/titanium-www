@@ -4,7 +4,7 @@ import { SITE_URL } from '@/lib/site';
 /**
  * The API's own index: what it serves and how to read it.
  *
- * Self-describing because the CLI is not the only client — the ticket assumes
+ * Self-describing because the CLI is not the only client - the ticket assumes
  * third parties, and a bare 404 at the root of a versioned API tells them
  * nothing about what they got wrong.
  */

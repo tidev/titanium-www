@@ -7,7 +7,7 @@ import { execFileSync } from 'node:child_process';
  * page in the legacy corpus that carried one is now years out of step with its
  * content. The commit date cannot drift from the file it describes.
  *
- * Returns undefined rather than a guess when git cannot answer — a shallow
+ * Returns undefined rather than a guess when git cannot answer - a shallow
  * clone with no history for the file, an untracked page during `next dev`, or
  * no git at all. The page then shows no date, which is honest; showing today's
  * date for a page written in 2019 would not be.

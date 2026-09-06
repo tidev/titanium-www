@@ -11,8 +11,8 @@ import { describe, test } from 'node:test';
 /**
  * The rules that decide what a module release contains.
  *
- * Every case here is one the 16 repos actually contain — 400 releases, 400
- * assets, eleven years of release managers — so a "tidier" parser fails against
+ * Every case here is one the 16 repos actually contain - 400 releases, 400
+ * assets, eleven years of release managers - so a "tidier" parser fails against
  * the real history rather than against invented input. The filename is the only
  * reliable key: tags have been spelled 18 different ways and are never read.
  */

@@ -2,7 +2,7 @@
  * The Titanium mark, inlined so it can read the theme.
  *
  * Page CSS custom properties do not reach an SVG loaded through <img> or as a
- * favicon — that renders as a separate document. Inlining is what lets
+ * favicon - that renders as a separate document. Inlining is what lets
  * --logo-outer / --logo-inner apply. The standalone public/ti-logo.svg carries
  * its own fallbacks and media query for those other contexts.
  *

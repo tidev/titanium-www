@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Compiled API reference — one file per type, everything already resolved.
+ * Compiled API reference - one file per type, everything already resolved.
  *
  * This describes docgen's *output*, not the apidoc YAML it reads. The source is
  * 15 years of hand-written YAML and is inconsistent in ways a strict schema
@@ -16,7 +16,7 @@ export const API_SCHEMA_VERSION = 1;
 
 /**
  * API availability. Deliberately a different vocabulary from the `android`/`ios`
- * of module packaging in packages.ts — a module ships for a platform, but an API
+ * of module packaging in packages.ts - a module ships for a platform, but an API
  * can be iPad-only or macOS-only. Do not reconcile the two.
  */
 export const ApiPlatformSchema = z.enum(['android', 'iphone', 'ipad', 'macos']);
@@ -24,7 +24,7 @@ export const ApiPlatformSchema = z.enum(['android', 'iphone', 'ipad', 'macos']);
 /**
  * `since` is a bare version on most members and a per-platform map on 441 of
  * them. Both forms are emitted as authored rather than normalised, so consumers
- * must handle the union — ignoring the map form silently mis-renders them.
+ * must handle the union - ignoring the map form silently mis-renders them.
  */
 const Since = z.union([z.string(), z.record(z.string(), z.string())]);
 
@@ -161,8 +161,8 @@ export const ApiTypeSchema = z.strictObject({
   methods: z.array(MemberSchema),
   events: z.array(MemberSchema),
   /**
-   * Inherited members by reference. Already resolved — excludes applied down
-   * the chain, unreachable platforms dropped — so a consumer never reimplements
+   * Inherited members by reference. Already resolved - excludes applied down
+   * the chain, unreachable platforms dropped - so a consumer never reimplements
    * those rules, it only looks up the bodies on the declaring types.
    */
   inherited: z.strictObject({
@@ -178,7 +178,7 @@ export const ApiTypeSchema = z.strictObject({
   source: z.string(),
 });
 
-/** `index.json` beside `types/` — enough for nav and search without reading every type. */
+/** `index.json` beside `types/` - enough for nav and search without reading every type. */
 export const ApiIndexSchema = z.strictObject({
   schemaVersion: z.literal(API_SCHEMA_VERSION),
   counts: z.strictObject({

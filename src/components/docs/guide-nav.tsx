@@ -10,7 +10,7 @@ import Link from 'next/link';
  * every time a page landed, and a reader would have no way to tell "not written"
  * from "does not exist". Unwritten pages are visibly dimmed and not links.
  *
- * Sibling of `ApiNav`, which does the same job for `/docs/sdk` — that one is a
+ * Sibling of `ApiNav`, which does the same job for `/docs/sdk` - that one is a
  * disclosure tree over 45,610 types, this one is a fixed list of about forty
  * pages, so they share an idea and no code.
  *
@@ -19,7 +19,7 @@ import Link from 'next/link';
  * A link at rest is full-strength `text`, the page you are on is `link`, and a
  * page nobody has written is `text-subtle`. The first of those used to be
  * `text-muted`, one small step from the unwritten state and the same token the
- * article body uses — so an available page read as a disabled one, and the nav
+ * article body uses - so an available page read as a disabled one, and the nav
  * read as more body copy. Contrast was never the problem (`text-muted` is 7.3:1
  * on white); the problem was that three different meanings looked alike.
  */

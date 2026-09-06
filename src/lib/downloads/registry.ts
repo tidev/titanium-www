@@ -13,7 +13,7 @@ import { join } from 'node:path';
  *
  * Same contract as the docs reader: no network at build time, everything
  * resolves against `registry/` in the repo. The parsed files are cached, but
- * nothing time-dependent is — every caller re-derives what is still live from
+ * nothing time-dependent is - every caller re-derives what is still live from
  * its own clock. See `liveBuilds` for why that matters.
  */
 
@@ -27,8 +27,8 @@ export const MAIN_BRANCH = 'main';
 /**
  * Branches worth publishing: `main` and the release lines.
  *
- * `branches.json` also carries names the SDK's CI produced in passing —
- * `backport-14489-13_3_X`, `android34_12_6_X` — which are work in progress on
+ * `branches.json` also carries names the SDK's CI produced in passing -
+ * `backport-14489-13_3_X`, `android34_12_6_X` - which are work in progress on
  * somebody's fix, not something to offer as a download. They reach the file
  * because the generator merges into the counts it inherited and never drops a
  * key, so a name that once qualified stays forever.
@@ -52,7 +52,7 @@ export type Channel = (typeof CHANNELS)[number];
 /**
  * GA first within a version: `13.0.0.RC1` is what `13.0.0.GA` superseded, so
  * listing the release above the candidates it replaced is the order a reader
- * needs. Across versions this rank never applies — 12.8.0.GA sorts below
+ * needs. Across versions this rank never applies - 12.8.0.GA sorts below
  * 13.0.0.Beta1 because 13 is the newer line.
  */
 const CHANNEL_RANK: Record<Channel, number> = { ga: 0, rc: 1, beta: 2 };
@@ -62,7 +62,7 @@ export type Release = Build & { channel: Channel; prerelease: boolean };
 
 export type BranchSummary = {
   name: string;
-  /** Live builds only — the count in `branches.json` is as of the last sweep. */
+  /** Live builds only - the count in `branches.json` is as of the last sweep. */
   count: number;
   /** Date of the newest live build, for ordering. Null when the branch is empty. */
   latest: string | null;
@@ -92,7 +92,7 @@ export function byDateDesc(builds: readonly Build[]): Build[] {
  * whatever the committed data claims.
  *
  * `scripts/prune-builds.ts` sweeps lapsed builds into tombstones before every
- * deploy, so this should be a no-op — but the registry is regenerated on
+ * deploy, so this should be a no-op - but the registry is regenerated on
  * dispatch, not on a schedule, and a build can lapse between a regen and the
  * render that consumes it. Trusting the file would advertise a nightly.link
  * URL that 404s, which is the failure the sweep exists to prevent.
@@ -105,7 +105,7 @@ export function liveBuilds(builds: readonly Build[], now = Date.now()): Build[] 
  * main first, then the branches with the most recent activity.
  *
  * `branches.json` is written in the generator's own order, which is neither
- * chronological nor alphabetical — it appends whatever the last sweep saw.
+ * chronological nor alphabetical - it appends whatever the last sweep saw.
  * Ordering here on the data means the rail reads the same way whatever the
  * generator does next.
  */
@@ -136,7 +136,7 @@ export function latestRelease(channel: Channel = 'ga'): Build | null {
  * `13.4.1` from `13.4.1.RC2`, as four numbers to compare on.
  *
  * The registry carries a `version` field, but it is a string, so `13.10.0`
- * would sort under `13.9.0` — and it does not hold the candidate number, which
+ * would sort under `13.9.0` - and it does not hold the candidate number, which
  * is what separates RC2 from RC1. A name that does not parse sorts last rather
  * than throwing: it is a generator bug, not a reason to blank the page.
  */
@@ -188,13 +188,13 @@ export function branchCounts(): Branches {
 
 /**
  * A branch name is a URL segment, so it must not be able to escape the builds
- * directory. Branch names are the SDK's own — `main`, `13_4_X`,
+ * directory. Branch names are the SDK's own - `main`, `13_4_X`,
  * `backport-14489-13_3_X`.
  *
  * `Object.hasOwn` rather than `in`: branches.json is parsed into an ordinary
  * object, so `in` answers true for `constructor` and `toString` and this would
  * hand a prototype key to readFileSync. The pattern rejects a name that is only
- * dots for the same reason — neither can reach outside the directory, since `/`
+ * dots for the same reason - neither can reach outside the directory, since `/`
  * is excluded and the name is suffixed, but a lookup that lies about what the
  * registry contains is worth closing on its own.
  */
@@ -221,7 +221,7 @@ export function branchBuilds(branch: string, now = Date.now()): Build[] | null {
  * Branches worth linking to: the ones with something downloadable, plus main.
  *
  * Counts are recomputed from the build files rather than read from
- * `branches.json`, for the same reason `liveBuilds` exists — the committed
+ * `branches.json`, for the same reason `liveBuilds` exists - the committed
  * count is as of the last sweep, and a rail that promises 5 builds and shows 4
  * is worse than no rail.
  */

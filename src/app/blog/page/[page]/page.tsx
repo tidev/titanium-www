@@ -7,7 +7,7 @@ import { notFound, redirect } from 'next/navigation';
 /**
  * Pages two and up.
  *
- * Page one is `/blog`, not `/blog/page/1` — one canonical URL for the same
+ * Page one is `/blog`, not `/blog/page/1` - one canonical URL for the same
  * list. `/blog/page/1` redirects rather than 404ing, since it is the obvious
  * thing to type after seeing page 2.
  */
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }: PageProps<'/blog/page/[page]'>): Promise<Metadata> {
   const { page } = await params;
   return {
-    title: `Blog, page ${page} — Titanium SDK`,
+    title: `Blog, page ${page} - Titanium SDK`,
     alternates: { canonical: `${SITE_URL}/blog/page/${page}` },
   };
 }

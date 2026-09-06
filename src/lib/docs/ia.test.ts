@@ -119,7 +119,7 @@ describe('platform names', () => {
 describe('Environment Setup', () => {
   test('lists the operating systems alphabetically', () => {
     // They are peers. Any other order reads as a recommendation, and the one
-    // that would lead — macOS — is only required for building iOS.
+    // that would lead - macOS - is only required for building iOS.
     const os = SECTIONS.find((s) => s.slug === 'setup')!
       .pages.filter((p) => ['linux', 'macos', 'windows'].includes(p.slug))
       .map((p) => p.slug);

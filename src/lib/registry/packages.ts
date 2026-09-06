@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * SDK versions and modules — the entries that carry documentation.
+ * SDK versions and modules - the entries that carry documentation.
  *
  * Downloadable build data lives in `./builds.ts` and a separate `registry/builds/`
  * tree: CI builds number in the thousands, expire after 90 days, and have no
@@ -76,7 +76,7 @@ export const ModuleAssetSchema = z
   .loose();
 
 /**
- * One release. Carries one *or both* platforms — 52 version strings ship on both,
+ * One release. Carries one *or both* platforms - 52 version strings ship on both,
  * across 10 of the 16 modules, so a version is the unit, not a platform-version pair.
  */
 export const ModuleVersionSchema = z
@@ -87,7 +87,7 @@ export const ModuleVersionSchema = z
     mutable: z.boolean().default(false),
     platforms: z.array(PlatformSchema).min(1),
     publishedAt: z.string().optional(),
-    /** Opaque reference. Four tag formats exist across ti.map alone — never pattern-match it. */
+    /** Opaque reference. Four tag formats exist across ti.map alone - never pattern-match it. */
     tag: z.string().optional(),
     manifests: z.array(ModuleManifestSchema),
     assets: z.array(ModuleAssetSchema),
@@ -106,7 +106,7 @@ export const ModuleIndexSchema = z
      * Canonical key, and the module's only identity.
      *
      * Differs from the repo name for 5 of 16. There is deliberately no separate
-     * display name: a module's manifest `name` is a build label nothing reads —
+     * display name: a module's manifest `name` is a build label nothing reads -
      * the install directory is the moduleid (`modules/android/ti.map/5.7.0`),
      * node-appc keys every lookup on it, and `tiapp.xml` references it. A second
      * identifier could only drift from the one developers actually type.
@@ -145,7 +145,7 @@ export const ModuleIndexSchema = z
  *
  * Deliberately not `ModuleIndexSchema`. There is no module id, no version list
  * and no manifest here, because none of that can be known without cloning the
- * repo — see `scripts/generate-community-modules.ts`. Giving these the same
+ * repo - see `scripts/generate-community-modules.ts`. Giving these the same
  * shape would only make the two look interchangeable at the call site.
  */
 export const CommunityModuleSchema = z.strictObject({

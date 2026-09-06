@@ -13,7 +13,7 @@ export const BUILDS_DIR = 'registry/builds';
  * Published modules, one directory per manifest `moduleid`.
  *
  * Keyed on the module id rather than the repository name because the two differ
- * for 5 of the 16 repos — tidev/titanium-identity publishes `ti.identity` — and
+ * for 5 of the 16 repos - tidev/titanium-identity publishes `ti.identity` - and
  * the id is what an app's tiapp.xml names.
  */
 export const MODULES_DIR = 'registry/modules';
@@ -25,7 +25,7 @@ export const moduleVersionDir = (moduleId: string, version: string) =>
 /**
  * Runs whose artifacts no longer exist.
  *
- * Not build data — a negative-result cache, so a regen skips re-fetching
+ * Not build data - a negative-result cache, so a regen skips re-fetching
  * artifact metadata for runs it already knows are dead. Both the directory
  * and the `.pruned.json` suffix say so, because an editor tab shows only the
  * filename.

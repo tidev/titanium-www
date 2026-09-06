@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url';
  * ## Written once per distinct image, not once per version
  *
  * Every version references the same screenshots. Measured across a 13-month
- * span — 12.8.0 against 13.4.1 — all 54 are byte-identical, so mirroring per
+ * span - 12.8.0 against 13.4.1 - all 54 are byte-identical, so mirroring per
  * version would deploy the same 9MB once for each release compiled.
  *
  * The registry already stores them content-addressed in its pool, so this is
@@ -38,7 +38,7 @@ import { fileURLToPath } from 'node:url';
  *
  * It owns `public/docs/img/` and `public/docs/assets.json`, both gitignored and
  * both rebuilt from scratch. Everything else under `public/docs/` belongs to
- * whoever put it there — `public/docs/guides/` holds images an author added to a
+ * whoever put it there - `public/docs/guides/` holds images an author added to a
  * guide, committed under names they chose. The prune below is scoped
  * accordingly.
  *
@@ -128,8 +128,8 @@ writeFileSync(
 // layout this replaced.
 //
 // Scoped to the pool this script owns, not to all of `public/docs`. It used to
-// walk the whole directory, which meant anything a human put beside the pool —
-// an image for a guide, a note explaining where the pool comes from — was
+// walk the whole directory, which meant anything a human put beside the pool -
+// an image for a guide, a note explaining where the pool comes from - was
 // deleted by the next build, silently and without appearing in any diff.
 let removed = 0;
 for (const file of walk(POOL)) {

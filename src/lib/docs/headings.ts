@@ -35,8 +35,8 @@ function textOf(html: string): string {
 /**
  * Adds an `id` to every h2 and h3 and returns the contents list.
  *
- * A heading that already carries an `id` keeps it — the source may have set one
- * deliberately to hold an inbound link stable — and that id still takes part in
+ * A heading that already carries an `id` keeps it - the source may have set one
+ * deliberately to hold an inbound link stable - and that id still takes part in
  * uniqueness, so a later duplicate is suffixed rather than colliding with it.
  *
  * Two headings with the same words get `-2`, `-3`, and so on. Silently emitting

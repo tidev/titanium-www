@@ -22,7 +22,7 @@ import githubLight from 'shiki/themes/github-light.mjs';
  * Shiki colours each token with an inline `style`, and `renderMarkdown` also
  * renders third-party README markdown. Allowing `span[style]` through the
  * sanitizer to let Shiki's output survive would equally let a module author
- * write their own — arbitrary CSS on a page we serve. So the sanitizer never
+ * write their own - arbitrary CSS on a page we serve. So the sanitizer never
  * sees this: markdown is rendered and sanitized first, and the escaped code
  * inside the surviving `<pre><code>` blocks is highlighted afterwards, from
  * text that has already been through the allowlist.
@@ -49,7 +49,7 @@ import githubLight from 'shiki/themes/github-light.mjs';
  * PowerShell joined them for the Windows setup page: `sh` is not a shell
  * Windows has, and an unhighlighted block next to a highlighted one on the
  * macOS page reads as a rendering bug rather than a language choice. fish
- * joined for the same reason, once the JAVA_HOME step grew a tab per shell —
+ * joined for the same reason, once the JAVA_HOME step grew a tab per shell -
  * its syntax is different enough from POSIX that tagging it `sh` would colour
  * it wrongly rather than not at all.
  */
@@ -107,7 +107,7 @@ function ratio(a: string, b: string): number {
  *
  * Whichever direction the background is not: on a light surface colours darken,
  * on a dark one they lighten. Blending in sRGB holds the hue steady enough that
- * GitHub's palette still reads as itself — this nudges the two light colours by
+ * GitHub's palette still reads as itself - this nudges the two light colours by
  * a few percent and lifts the dark comment grey, rather than restyling anything.
  */
 function correct(hex: string, bg: string): string {
@@ -189,8 +189,8 @@ const decode = (s: string) => s.replace(/&(?:amp|lt|gt|quot|#39);/g, (m) => UNES
  * Replaces every `<pre><code>` block in already-sanitized HTML with a
  * highlighted one.
  *
- * A block whose language is unknown — or absent, which 44 blocks in the corpus
- * are — is left alone rather than guessed at. The untagged ones are a mix of
+ * A block whose language is unknown - or absent, which 44 blocks in the corpus
+ * are - is left alone rather than guessed at. The untagged ones are a mix of
  * JavaScript, Alloy XML and prose fragments, so picking a default would
  * mis-colour some of them with more confidence than the source supports. They
  * still get the surrounding treatment, just no token colours.

@@ -2,8 +2,8 @@
  * Validates everything under registry/ against the Zod schemas, plus the
  * build-data shapes inherited from tidev/downloads-www.
  *
- * The schemas are a public contract — the Titanium CLI reads them through the
- * registry API — so a malformed entry has to fail CI rather than ship.
+ * The schemas are a public contract - the Titanium CLI reads them through the
+ * registry API - so a malformed entry has to fail CI rather than ship.
  *
  *   node scripts/validate-registry.ts [dir]
  */
@@ -59,7 +59,7 @@ function schemaFor(rel: string): ZodType | null {
     if (parts.length === 2 && file === 'community.json') return CommunityIndexSchema;
 
     // modules/<id>/index.json describes the package: versions, platforms, repo.
-    // The compiled API reference for a version no longer collides with it —
+    // The compiled API reference for a version no longer collides with it -
     // that lives in the pool and is validated below, by the role its manifest
     // gives it rather than by where it sits.
     if (parts.length === 3 && file === 'index.json') return ModuleIndexSchema;
@@ -135,8 +135,8 @@ for (const file of walk(root).sort()) {
 /**
  * Pooled documents, under the schema the manifest that names them implies.
  *
- * A blob's path says nothing about what it holds — that is the point of content
- * addressing — so the role has to come from the manifest. This is stronger than
+ * A blob's path says nothing about what it holds - that is the point of content
+ * addressing - so the role has to come from the manifest. This is stronger than
  * the depth rule it replaces: a document is checked as whatever a reader will
  * actually load it as, and a manifest naming the wrong kind of file fails here
  * rather than at render time. Each distinct blob is checked once however many

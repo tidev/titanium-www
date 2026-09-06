@@ -18,7 +18,7 @@ pnpm add -g titanium
 
 :::only macos, linux
 
-Prefix that with `sudo` if you installed Node with apt or the installer — their
+Prefix that with `sudo` if you installed Node with apt or the installer: their
 global directory is owned by root.
 
 :::

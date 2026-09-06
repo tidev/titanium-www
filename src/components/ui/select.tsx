@@ -6,7 +6,7 @@ import * as RadixSelect from '@radix-ui/react-select';
  * A dropdown that renders in the page rather than by the browser.
  *
  * This was a native `<select>`, which is the better control on almost every
- * count — it needs no JavaScript, and on a phone it opens the OS picker rather
+ * count - it needs no JavaScript, and on a phone it opens the OS picker rather
  * than a listbox pretending to be one. What it cannot do is be positioned by
  * us: its popup is drawn by the browser outside the document, so in Chrome's
  * device emulation it anchors to the real viewport instead of the emulated one
@@ -35,8 +35,8 @@ export function Select<T extends string>({
   /**
    * Drops the visible label while keeping the accessible one.
    *
-   * For a menu whose options already say what it selects — "All modules",
-   * "Official", "Community" — where a word in front of it only costs width.
+   * For a menu whose options already say what it selects - "All modules",
+   * "Official", "Community" - where a word in front of it only costs width.
    */
   hideLabel?: boolean;
   /**
@@ -67,7 +67,7 @@ export function Select<T extends string>({
       <RadixSelect.Root value={value} onValueChange={(next) => onChange(next as T)}>
         {/* Every option's label, stacked in one grid cell and hidden, with the
             trigger in the same cell. The cell is as wide as the widest label,
-            so choosing a shorter one cannot shrink the control — which it did,
+            so choosing a shorter one cannot shrink the control - which it did,
             and the filter row reflowed onto two lines when you picked Android.
 
             Rendering the labels rather than measuring them in `ch` keeps this
@@ -88,7 +88,7 @@ export function Select<T extends string>({
           </span>
 
           {/* The trigger is a button, so it cannot be wrapped in a label the way
-              the native control was — the name comes from `aria-label` instead. */}
+              the native control was - the name comes from `aria-label` instead. */}
           <RadixSelect.Trigger
             aria-label={label}
             className="col-start-1 row-start-1 inline-flex w-full items-center gap-2 rounded-md border border-border bg-field py-2 pr-2 pl-2.5 text-sm text-text transition-colors hover:border-border-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
@@ -96,7 +96,7 @@ export function Select<T extends string>({
             {/* The current label is passed in rather than left to Radix to look
               up from its items. Radix resolves it on the client, so the trigger
               renders empty on the server and the three menus are blank boxes
-              until hydration — which the native control it replaced never was. */}
+              until hydration - which the native control it replaced never was. */}
             <RadixSelect.Value>{options.find((o) => o.value === value)?.label}</RadixSelect.Value>
             {/* `ml-auto` so the chevron sits at the right edge whatever the
                 selected label's length, now that the box no longer hugs it. */}
@@ -118,8 +118,8 @@ export function Select<T extends string>({
             sideOffset={4}
             // Never narrower than the trigger it belongs to, so the menu reads
             // as attached to it rather than as a floating panel.
-            // The menu is raised, not recessed — it sits above the page rather than
-            // being typed into — but on `surface` rather than `surface-raised`,
+            // The menu is raised, not recessed - it sits above the page rather than
+            // being typed into - but on `surface` rather than `surface-raised`,
             // which is light enough to glare against the page in dark mode.
             className="z-50 min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-md border border-border bg-surface shadow-lg"
           >

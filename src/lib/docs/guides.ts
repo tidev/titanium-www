@@ -24,7 +24,7 @@ import { z } from 'zod';
  * The ticket is titled "MDX content pipeline", and this is not MDX. That is
  * deliberate and worth stating plainly rather than discovering later.
  *
- * This repository already has a markdown pipeline — markdown-it, a
+ * This repository already has a markdown pipeline - markdown-it, a
  * sanitize-html allowlist, Shiki, and post-render transforms for callouts and
  * heading anchors. It renders the API reference prose, module READMEs, release
  * notes and the blog. TI-53 considered MDX for the blog and rejected it in as
@@ -32,8 +32,8 @@ import { z } from 'zod';
  * create exactly the split that decision avoided, and would mean a guide and an
  * API page rendered the same callout through different code.
  *
- * Everything the ticket asks content authors to be able to do — callouts, tabs,
- * code groups, platform badges, version notices — is a block-level construct,
+ * Everything the ticket asks content authors to be able to do - callouts, tabs,
+ * code groups, platform badges, version notices - is a block-level construct,
  * not arbitrary React. Those are `:::` directives, which is one small parser
  * against a whole second toolchain. If a page ever genuinely needs a component
  * with state, that is the moment to revisit this, and the decision should be
@@ -76,8 +76,8 @@ const FrontmatterSchema = z
      */
     since: z.string().optional(),
     /**
-     * Work in progress. The page still renders at its URL — that is what makes
-     * it reviewable — but it is not linked from the sidebar or a section index,
+     * Work in progress. The page still renders at its URL - that is what makes
+     * it reviewable - but it is not linked from the sidebar or a section index,
      * it says so at the top, and it asks search engines not to index it.
      */
     draft: z.boolean().default(false),
@@ -156,7 +156,7 @@ function parse(root: string, segments: string[], file: string, text: string): Gu
   }
 
   // A marker no transform consumed is a mistake that would otherwise ship as
-  // literal `:::` in the prose — usually a missing blank line around it, which
+  // literal `:::` in the prose - usually a missing blank line around it, which
   // makes markdown-it fold the marker into the paragraph below.
   const stray = unresolvedMarkers(rendered);
   if (stray.length) {
@@ -252,7 +252,7 @@ export function contentFiles(root = CONTENT): string[][] {
  * The nav shows the whole approved structure including pages nobody has written
  * yet, so it needs to know which of them to render as links. Derived from the
  * filesystem rather than from the IA, because that is exactly the difference it
- * is being asked about — and then filtered by frontmatter, because a draft is a
+ * is being asked about - and then filtered by frontmatter, because a draft is a
  * file that exists and a page that is not ready to be sent anyone.
  */
 export function writtenPaths(root = CONTENT): Set<string> {
@@ -388,7 +388,7 @@ export function validateGuides(root = CONTENT): Problem[] {
  * carries no `language-` class, and leaves everything else exactly as it found
  * it. A surviving class is therefore the highlighter saying it did not know the
  * language, which renders as a plain block beside coloured ones and reads as a
- * bug rather than a choice — that is how `fish` shipped grey next to `sh`.
+ * bug rather than a choice - that is how `fish` shipped grey next to `sh`.
  *
  * An untagged fence is not reported. 44 blocks in the corpus have no language
  * on purpose, and `highlightCodeBlocks` documents why it will not guess.

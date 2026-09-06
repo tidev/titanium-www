@@ -53,6 +53,10 @@ jobs:
       - name: Docs
         run: pnpm check:docs
 
+      # Removing 630 of these was a one-off. Keeping them out is not.
+      - name: Em dashes
+        run: pnpm check:em-dash
+
       # The build reads the whole registry and renders from it, so it is also
       # the broadest check that the compiled corpus is intact.
       - name: Build

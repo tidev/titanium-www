@@ -1,13 +1,13 @@
 # Writing guides
 
 How to write the prose under `content/docs`. The API reference is generated from
-the SDK's own YAML and is not covered here — nothing in this file applies to it.
+the SDK's own YAML and is not covered here - nothing in this file applies to it.
 
 Read this before writing a page. Most of these rules exist because the docs
 being replaced did the opposite, and the audit in
 [`docs/legacy-guide-audit.md`](legacy-guide-audit.md) records what that cost:
 of 336 pages, **69 said something factually wrong** and 92 were worth archiving
-rather than moving. Nearly all of that is drift — prose that was true when it
+rather than moving. Nearly all of that is drift - prose that was true when it
 was written and was never revisited.
 
 ## Voice
@@ -18,7 +18,7 @@ need, so each section has to stand up alone.
 
 **Second person, present tense, active voice.** "Run `ti build`", not "the build
 can then be run". Say _you_ for the reader and _Titanium_ for the software. Do
-not say _we_ — there is no we on a documentation page, and it usually smuggles
+not say _we_ - there is no we on a documentation page, and it usually smuggles
 in an opinion the reader cannot evaluate.
 
 **Say what is true on the reader's machine.** Not what is true in principle.
@@ -41,7 +41,13 @@ Write `12.1.0`, and use `:::since` when a passage only applies from a release.
 plainly and say what to do instead. If it is broken, that is an issue, not a
 paragraph.
 
-**Spelling:** American — `color`, not `colour`, matching `backgroundColor` and
+**No em dashes.** Not in prose, not in headings, not in a page title. Use the
+punctuation the sentence actually wants: a colon before an explanation, a comma
+or parentheses around an aside, a full stop between two thoughts. Where none of
+those fit, a spaced hyphen does. `pnpm check:em-dash` fails the build on one, so
+this is enforced rather than remembered.
+
+**Spelling:** American - `color`, not `colour`, matching `backgroundColor` and
 every other API name a reader will type. Where prose and an API name disagree,
 write the API name exactly as it appears in code, in backticks.
 
@@ -52,7 +58,7 @@ approved before any of this was written. **You cannot add a page by adding a
 file.** A file with no entry in `ia.ts` fails the build, because a page that
 appears in no sidebar is a page nobody finds.
 
-To add a page, add it to `ia.ts` first — which is a change to the approved
+To add a page, add it to `ia.ts` first - which is a change to the approved
 structure, so raise it rather than doing it in passing.
 
 ```
@@ -79,7 +85,7 @@ draft: false
 | Key           | Required | Meaning                                                                                                                                                    |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `title`       | yes      | The `<h1>`, the tab title, and the breadcrumb. Do not repeat it as a heading in the body.                                                                  |
-| `description` | no       | One sentence, for the search result and the tab preview. It is not shown on the page, so do not write it as a lede — the body's opening paragraph is that. |
+| `description` | no       | One sentence, for the search result and the tab preview. It is not shown on the page, so do not write it as a lede - the body's opening paragraph is that. |
 | `platforms`   | no       | What the page applies to: `macos`, `windows`, `linux`, `ios`, `android`. Absent means all of them. Drives `:::only`.                                       |
 | `since`       | no       | The SDK version the page's content assumes. Renders as a line under the title.                                                                             |
 | `draft`       | no       | Renders at its URL, is not linked from the sidebar, says so at the top, and asks search engines to skip it.                                                |
@@ -94,7 +100,7 @@ anything below `###` produces a contents list too fine to navigate.
 
 Write headings a reader could scan as a list and know what the page does:
 "Install the Android SDK", not "Installation". Ids are generated from the text,
-so renaming a heading breaks any link to it — search the repo before you do.
+so renaming a heading breaks any link to it - search the repo before you do.
 
 ## Code samples
 
@@ -108,11 +114,11 @@ them and nobody has ever gone back to fix one. The tags that work:
 `powershell` `ps1` `java` `swift` `objc`
 
 Use `xml` for Alloy views and `tss` for styles. Use `sh` for macOS and Linux
-shells and `powershell` for Windows — an unhighlighted Windows block sitting
+shells and `powershell` for Windows - an unhighlighted Windows block sitting
 next to a highlighted macOS one reads as a bug rather than as a choice.
 
 **Program output is the exception.** A block that quotes what a command printed
-is not a language, and tagging it colours it as one — leave those untagged. The
+is not a language, and tagging it colours it as one - leave those untagged. The
 rule is about code the reader will run.
 
 **Shell samples show the command, not the prompt.** No leading `$`. The page has
@@ -130,7 +136,7 @@ Six of them. Each solves one problem; reach for the plainest one that fits, and
 if none fits, write a paragraph.
 
 Every marker needs **a blank line above and below it**. Without one, markdown
-folds the marker into the paragraph and the block does not render — the build
+folds the marker into the paragraph and the block does not render - the build
 catches this and names the marker, so it cannot reach a live page.
 
 ### Callouts
@@ -146,7 +152,7 @@ GitHub's alert syntax, so an editor previews it and a README can be pasted in.
 
 Use one for something the reader would otherwise miss and then have to undo.
 Use `WARNING` for losing work or money, not for inconvenience. **Two callouts in
-a row means neither is worth reading** — merge them, or turn one into a
+a row means neither is worth reading** - merge them, or turn one into a
 sentence.
 
 ### Tabs
@@ -168,7 +174,7 @@ Classic gives you one `app.js`.
 :::
 ```
 
-Two to six panels. No headings inside a panel — it would appear in the contents
+Two to six panels. No headings inside a panel - it would appear in the contents
 list pointing at something hidden.
 
 **Picking a tab switches every group on the page with a tab of that name**, and
@@ -176,7 +182,7 @@ is remembered on the next page. So label consistently: a group offering
 `npm` / `Yarn` and another offering `npm` / `Yarn` / `pnpm` still move together,
 but `Yarn` and `yarn` do not.
 
-Do not use tabs for content the reader needs to compare — they can only see one
+Do not use tabs for content the reader needs to compare - they can only see one
 at a time. Use a table.
 
 ### Code groups
@@ -202,7 +208,7 @@ yarn global add titanium
 :::
 ````
 
-A panel with prose in it is rejected — that is `:::tabs`.
+A panel with prose in it is rejected - that is `:::tabs`.
 
 ### Platform blocks
 
@@ -247,7 +253,7 @@ frontmatter instead.
 ### Platform-scoped source
 
 `:::only` removes a block before rendering, based on the page's `platforms`. It
-is not a component — the reader never sees that it happened.
+is not a component - the reader never sees that it happened.
 
 ````md
 :::only macos, linux
@@ -304,7 +310,7 @@ which.
 with Build-Tools 35.0.0 checked" is useful to someone who cannot see it; "SDK
 Manager screenshot" is not.
 
-A screenshot of a third-party UI dates faster than anything else on a page —
+A screenshot of a third-party UI dates faster than anything else on a page -
 Android Studio and Xcode both rearrange their settings panes between releases.
 Use one where the UI is genuinely hard to describe, and say what to look for in
 prose as well, so the page still works when the screenshot is a year stale.
@@ -315,8 +321,9 @@ Internal links are root-relative and have no extension: `/docs/build/ui/layout`.
 A link to a `/docs` path the structure does not define **fails the build**, so
 you can link a page that is not written yet as long as it exists in `ia.ts`.
 
-Link to the API reference by its real URL — `/docs/sdk/latest/Titanium.UI.Window`
-— and write the type name as the link text.
+Link to the API reference by its real URL - `/docs/sdk/latest/Titanium.UI.Window`
+
+- and write the type name as the link text.
 
 Do not write "click here", and do not link a bare URL. The link text should say
 where it goes when read on its own, because that is how it is read aloud.

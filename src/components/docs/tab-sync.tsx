@@ -22,7 +22,7 @@ import { useEffect } from 'react';
  * ## Syncing by label, not by group
  *
  * A choice applies to every group that offers a tab with that name. The obvious
- * alternative — match groups whose label sets are identical — looks equivalent
+ * alternative - match groups whose label sets are identical - looks equivalent
  * and is not: an install group offering npm, Yarn and pnpm would fail to sync
  * with a build group offering only npm and Yarn, which is exactly the pair a
  * reader most expects to move together. Matching one label at a time also
@@ -30,7 +30,7 @@ import { useEffect } from 'react';
  * tab by that name.
  *
  * Choices are stored most-recent-first and per label, because they are facts
- * about the reader — they use Yarn, they are on Android — rather than about the
+ * about the reader - they use Yarn, they are on Android - rather than about the
  * page being read.
  */
 

@@ -16,7 +16,7 @@ import { notFound } from 'next/navigation';
  * A module's whole compiled API.
  *
  * The reference is the union of the latest release per platform, because there
- * is no single latest — ti.map is android 5.7.0 and iOS 7.3.1 at the same time.
+ * is no single latest - ti.map is android 5.7.0 and iOS 7.3.1 at the same time.
  *
  * No aliases in `generateStaticParams`, unlike the readme route: an alias only
  * ever appears as `/modules/<alias>`, which redirects before it can get here.
@@ -36,7 +36,7 @@ export async function generateMetadata({
   if (!index) return {};
 
   return {
-    title: `${index.moduleId} API — Titanium modules`,
+    title: `${index.moduleId} API - Titanium modules`,
     description: `The compiled API reference for the ${index.moduleId} Titanium module.`,
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/api` },
   };
@@ -90,7 +90,7 @@ export default async function ModuleApiPage({ params }: PageProps<'/modules/[mod
  * newest release on each platform" made the reader match numbers to platforms
  * from word order, and for ti.map the obvious guess is wrong twice over: the
  * iOS release is the higher version *and* the older build. Set out as rows it
- * needs no explaining, and it is the shape the version pages already use —
+ * needs no explaining, and it is the shape the version pages already use -
  * version, then the platforms it shipped for.
  */
 function ReferenceSources({

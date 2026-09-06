@@ -14,8 +14,8 @@ import { describe, test } from 'node:test';
 /**
  * The rules that decide what a visitor is offered as a download.
  *
- * Expiry is the one that has already gone wrong in production — an audit found
- * 292 builds advertised with dead nightly.link URLs — so the boundary
+ * Expiry is the one that has already gone wrong in production - an audit found
+ * 292 builds advertised with dead nightly.link URLs - so the boundary
  * conditions are pinned here rather than left to a screenshot.
  */
 
@@ -56,7 +56,7 @@ describe('liveBuilds', () => {
 
   test('keeps a build whose expiry is null or unparseable', () => {
     // The generator writes null when a run reports no artifact expiry, and a
-    // garbled date is a generator bug — neither is evidence the file is gone.
+    // garbled date is a generator bug - neither is evidence the file is gone.
     const builds = [
       build('14.0.0.v1', '2026-08-01T00:00:00Z', null),
       build('14.0.0.v2', '2026-08-01T00:00:00Z', 'not a date'),

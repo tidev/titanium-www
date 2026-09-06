@@ -5,7 +5,7 @@ import type { ApiType } from '../../src/lib/registry/index.ts';
  * Maps every legacy titanium-docs `/api/*` URL onto the new structure.
  *
  * The old site is VuePress serving a static export, so its live URLs are the
- * file tree with `.html` on the end — `docs/api/titanium/ui/view.md` is
+ * file tree with `.html` on the end - `docs/api/titanium/ui/view.md` is
  * `/api/titanium/ui/view.html`, and the extension-less form 404s. That is what
  * search engines indexed, so that is what the `source` patterns look like; the
  * one exception is described on `legacyUrls`.
@@ -14,8 +14,8 @@ import type { ApiType } from '../../src/lib/registry/index.ts';
  * `global/` and most of `structs/` are the SDK, which compiles into
  * `registry/sdk/` and renders at `/docs/sdk/<version>/<Type>`. The rest is the
  * native modules, which compile per repo and render at `/modules/<moduleid>`.
- * Nothing in the old path distinguishes them — `structs/coremotionacceleration.md`
- * looks exactly like `structs/font.md` — so the split is decided by whether the
+ * Nothing in the old path distinguishes them - `structs/coremotionacceleration.md`
+ * looks exactly like `structs/font.md` - so the split is decided by whether the
  * compiled SDK corpus contains the type.
  */
 
@@ -24,7 +24,7 @@ import type { ApiType } from '../../src/lib/registry/index.ts';
  *
  * The old URLs carry no version, so there is no version to preserve, and a
  * committed map naming today's release would be wrong the day the next one
- * ships. The caller substitutes a concrete version at build time — see
+ * ships. The caller substitutes a concrete version at build time - see
  * next.config.ts, which must not leave `latest` in a served destination or
  * every one of these becomes a two-hop redirect.
  */
@@ -71,7 +71,7 @@ export type LegacyPage = {
   name: string;
   /** apidoc source below `apidoc/`, from the `editUrl` front matter. */
   yml: string;
-  /** Whether a directory of the same name sits beside it — see `legacyUrls`. */
+  /** Whether a directory of the same name sits beside it - see `legacyUrls`. */
   section?: boolean;
 };
 
@@ -94,8 +94,8 @@ export type InlineSite = { owner: string; member: string };
  * serves for the bare directory, so the section index owns two URLs.
  *
  * A page that heads a section gets an extension-less alias as well. The old
- * sidebar links those without `.html` — `/api/titanium/ui`, on every one of the
- * 581 pages — and the static host answers with a 301 to a directory that has no
+ * sidebar links those without `.html` - `/api/titanium/ui`, on every one of the
+ * 581 pages - and the static host answers with a 301 to a directory that has no
  * index, so the link is dead today and only crawlers still follow it. Claiming
  * the path costs one rule and turns a 404 into the page the reader wanted.
  */
@@ -111,7 +111,7 @@ export function legacyUrls(page: Pick<LegacyPage, 'rel' | 'section'>): string[] 
  * Which module each shared apidoc file belongs to.
  *
  * Module-owned pseudo-types were flattened into the SDK's `structs/` directory,
- * losing every trace of their owner except the `editUrl` — and that points at
+ * losing every trace of their owner except the `editUrl` - and that points at
  * the SDK repo for all of them, so the file name is the only signal. It is
  * enough because the pages that *did* keep their namespace in the path
  * (`modules/<ns>/…` and `structs/modules/<ns>/…`) name the same files, so the
@@ -120,7 +120,7 @@ export function legacyUrls(page: Pick<LegacyPage, 'rel' | 'section'>): string[] 
  * A file claimed by two namespaces is dropped: both Apple Sign-In and Facebook
  * ship a `LoginButton.yml`, and a coin flip between them is worse than
  * refusing to guess. Nothing in `structs/` depends on an ambiguous file, so
- * this costs no redirects — `assertAttributed` fails the run if that changes.
+ * this costs no redirects - `assertAttributed` fails the run if that changes.
  */
 export function ymlNamespaces(pages: LegacyPage[]): Map<string, string> {
   const claims = new Map<string, Set<string>>();
@@ -152,7 +152,7 @@ function namespaceFromPath(rel: string): string | null {
  * Where each inlined pseudo-type can be read now.
  *
  * docgen folds a pseudo-type into its referent when exactly one type names it,
- * so it has no page of its own but its fields are still on screen — inside the
+ * so it has no page of its own but its fields are still on screen - inside the
  * member whose parameter or return type mentioned it. Redirecting to that
  * member rather than to the top of a page with hundreds of properties is the
  * difference between answering the deep link and merely not 404ing.

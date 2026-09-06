@@ -5,21 +5,21 @@ import { CopyButton } from '@/components/downloads/copy-button';
  *
  * Dark in both themes, on its own `--terminal-*` roles rather than the page's
  * surfaces. That is the point of it: a light-mode terminal reads as another
- * code sample, and these are not code — they are things you type. Looking like
+ * code sample, and these are not code - they are things you type. Looking like
  * a shell is also what lets the block go without a title bar, since nothing
  * needs to announce what it is.
  *
  * It sits on `--terminal-window`, a step darker than the `--terminal-bg` band
  * around it, so the window has an edge without needing a border drawn on it.
  *
- * Each row copies on its own. The commands are a sequence, not alternatives —
- * `ti build` is useless without the three before it — so copying all five at
+ * Each row copies on its own. The commands are a sequence, not alternatives -
+ * `ti build` is useless without the three before it - so copying all five at
  * once would produce a paste that half-fails.
  */
 export function Terminal({ commands }: { commands: string[] }) {
   return (
     // A window inside the band, cut out of it by being darker rather than by a
-    // border — the section is already `--terminal-bg`, so an outline on top of
+    // border - the section is already `--terminal-bg`, so an outline on top of
     // that would be a second edge doing the same job.
     <div className="overflow-hidden rounded-lg bg-terminal-window py-2">
       {commands.map((command) => (

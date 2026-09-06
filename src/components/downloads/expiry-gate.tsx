@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
  * The page filters expired builds out when it renders, but it renders once and
  * is then served until the next deploy. A build whose 90 days run out in that
  * window would keep offering nightly.link URLs that 404, and an install command
- * the CLI can no longer resolve — the exact failure an audit found 292 times on
+ * the CLI can no longer resolve - the exact failure an audit found 292 times on
  * the old site. This is the only check that runs on the reader's clock rather
  * than the build machine's.
  *
@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
  * `children` is server-rendered and passed through, so the rows cost nothing
  * extra in the client bundle; this component decides whether to show them, it
  * does not build them. The first client render assumes not-expired, matching
- * the server, and the effect corrects it — the alternative is a hydration
+ * the server, and the effect corrects it - the alternative is a hydration
  * mismatch on every row.
  */
 export function ExpiryGate({ at, children }: { at: number; children: React.ReactNode }) {

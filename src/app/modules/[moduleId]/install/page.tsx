@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!index) return {};
 
   return {
-    title: `Install ${index.moduleId} — Titanium modules`,
+    title: `Install ${index.moduleId} - Titanium modules`,
     description: `How to install the ${index.moduleId} Titanium module into a project.`,
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/install` },
   };

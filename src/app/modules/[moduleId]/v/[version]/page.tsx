@@ -23,7 +23,7 @@ import { notFound } from 'next/navigation';
  * module, which keeps `registry/modules/<id>/<version>/` uniform with the SDK's
  * tree; in a URL a bare `/modules/ti.map/5.7.0` would be indistinguishable from
  * a module whose id happens to look like a version, so the address says which
- * it is — the same reason npm writes `/package/ti.map/v/5.7.0`.
+ * it is - the same reason npm writes `/package/ti.map/v/5.7.0`.
  *
  * 292 of the 339 version directories carry no compiled reference. That is the
  * normal case, not a gap to apologise for: a release is a zip and a manifest,
@@ -31,7 +31,7 @@ import { notFound } from 'next/navigation';
  */
 
 /**
- * Rendered on first request, for the reason the SDK reference is — see
+ * Rendered on first request, for the reason the SDK reference is - see
  * `src/app/docs/sdk/[version]/[type]/page.tsx`. These 339 pages are 139MB of
  * the 154MB that `/modules` prerendered, and the deployment has 100MB for
  * everything.
@@ -56,7 +56,7 @@ export async function generateMetadata({
   if (!index || !release) return {};
 
   return {
-    title: `${index.moduleId} ${version} — Titanium modules`,
+    title: `${index.moduleId} ${version} - Titanium modules`,
     description: index.description,
     alternates: { canonical: `${SITE_URL}/modules/${moduleId}/v/${version}` },
   };
@@ -138,7 +138,7 @@ export default async function ModuleVersionPage({
         {release.mutable ? (
           <p className="mt-8 text-text-muted">
             Compiled from the module&rsquo;s default branch, so it can describe APIs that no release
-            ships yet. Nothing is published for it — install a release from{' '}
+            ships yet. Nothing is published for it - install a release from{' '}
             <a href={`/modules/${moduleId}`} className="text-link hover:underline">
               the module page
             </a>
@@ -215,7 +215,7 @@ export default async function ModuleVersionPage({
 function NoReference({ moduleId }: { moduleId: string }) {
   return (
     <p className="mt-2 text-text-muted">
-      This release was published without compiled API documentation — most were. The{' '}
+      This release was published without compiled API documentation - most were. The{' '}
       <a href={`/modules/${moduleId}`} className="text-link hover:underline">
         module&rsquo;s current reference
       </a>{' '}

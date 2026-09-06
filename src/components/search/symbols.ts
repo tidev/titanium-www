@@ -2,7 +2,7 @@
  * Exact-and-near name matching over every symbol in the corpus (TI-70).
  *
  * Pagefind ranks pages, which is the right model for prose and the wrong one
- * for `addEventListener` — a name every proxy inherits, so it appears on 205
+ * for `addEventListener` - a name every proxy inherits, so it appears on 205
  * pages and none of them is the answer. Pagefind also has no typo tolerance.
  * TI-46 measured both. This runs first and answers the name questions; Pagefind
  * keeps the prose ones.
@@ -10,7 +10,7 @@
  * Four rules, tried in order, each stronger evidence than the next:
  *
  *   exact    the query is the whole qualified name
- *   segment  the query is the last segment — `createWindow`, `open`
+ *   segment  the query is the last segment - `createWindow`, `open`
  *   tokens   every token of the query begins a segment of the name
  *   fuzzy    the last segment is within a small edit distance
  *
@@ -21,7 +21,7 @@
 
 export type SymbolPayload = {
   sdk: string;
-  /** [type, [member, ...]] — a member is `name` or `name>anchor`. */
+  /** [type, [member, ...]] - a member is `name` or `name>anchor`. */
   t: [string, string[]][];
   /** [moduleId, [type, ...]] */
   m: [string, string[]][];
@@ -39,7 +39,7 @@ export type SymbolHit = {
 type Entry = {
   title: string;
   lower: string;
-  /** Last dotted segment, lowercased — the part people actually type. */
+  /** Last dotted segment, lowercased - the part people actually type. */
   segment: string;
   /** Every dotted segment, for the token rule. */
   segments: string[];
@@ -73,7 +73,7 @@ export function buildSymbolTable(payload: SymbolPayload): Entry[] {
     }
   }
   for (const [id, types] of payload.m) {
-    // The module's own id, which is what people type — `ti.map`, not
+    // The module's own id, which is what people type - `ti.map`, not
     // `Modules.Map.View`.
     push(id, `/modules/${id}`, 'module');
     for (const type of types) push(type, `/modules/${id}/api#${type}`, 'module');
@@ -134,7 +134,7 @@ export function lookupSymbols(table: Entry[], query: string, limit = 8): SymbolH
     if (entry.lower === q) buckets.exact.push(entry);
     else if (entry.segment === q) buckets.segment.push(entry);
     // Each token must begin a segment, not merely occur somewhere. Matching
-    // anywhere made `ti.map` find `util.types.isMap` — `ti` inside `util` —
+    // anywhere made `ti.map` find `util.types.isMap` - `ti` inside `util` -
     // and let `window open` prefer `openWindowParams` over
     // `Titanium.UI.Window.open`.
     else if (

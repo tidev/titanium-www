@@ -10,7 +10,7 @@ import './globals.css';
 
 /**
  * IBM Plex rather than a neutral geometric sans. Every framework in this
- * category — React, React Native, Cordova — uses the same characterless
+ * category - React, React Native, Cordova - uses the same characterless
  * default, so the typeface is the cheapest way to not look like them. Plex was
  * drawn for a hardware company and its mono sibling shares the same skeleton,
  * so prose and code read as one system rather than two.
@@ -18,7 +18,7 @@ import './globals.css';
 /*
  * Served from `src/fonts` rather than `next/font/google`. The Google loader
  * downloads the woff2 files during the build, so a build could not run without
- * reaching fonts.googleapis.com — behind a dead proxy it fails outright with
+ * reaching fonts.googleapis.com - behind a dead proxy it fails outright with
  * zero fonts emitted. TI-25 requires the build to read nothing but the local
  * filesystem. `scripts/fetch-fonts.ts` vendors them; `--check` re-verifies
  * them against upstream.

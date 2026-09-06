@@ -4,7 +4,7 @@ import Link from 'next/link';
 /**
  * The branches with builds left to download.
  *
- * Chips that wrap on a phone and a rail at `lg`, from one list — the branch
+ * Chips that wrap on a phone and a rail at `lg`, from one list - the branch
  * names are long enough (`backport-14489-13_3_X`) that a fixed-width rail at
  * 320px would either truncate them or push the builds off screen.
  */

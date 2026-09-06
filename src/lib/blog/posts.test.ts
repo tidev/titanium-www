@@ -47,7 +47,7 @@ describe('posts', () => {
 
   test('never take a slug the routes already claim', () => {
     // `/blog/page/2` and `/blog/[slug]` share a namespace, and a static segment
-    // wins — a post called `page` would silently never render.
+    // wins - a post called `page` would silently never render.
     for (const post of posts) {
       assert.ok(!RESERVED_SLUGS.includes(post.slug as never), `${post.slug} is a reserved route`);
     }

@@ -6,8 +6,8 @@ import { describe, test } from 'node:test';
 /**
  * The grouping rules the sidebar depends on.
  *
- * These are the decisions a registry regen could quietly invalidate — where a
- * name with no namespace lands, and which branch a page expands — so they are
+ * These are the decisions a registry regen could quietly invalidate - where a
+ * name with no namespace lands, and which branch a page expands - so they are
  * pinned here rather than left to be noticed in a screenshot.
  */
 

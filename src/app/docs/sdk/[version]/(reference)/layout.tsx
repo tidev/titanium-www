@@ -7,8 +7,8 @@ import { navTypes } from '@/lib/docs/tree';
  *
  * A grid rather than a flex row so the nav's own parts can place themselves:
  * below `lg` it is one column with the disclosure toggle above the content, and
- * at `lg` the toggle goes `display: none` — which drops it out of the grid
- * altogether — leaving the rail in column one.
+ * at `lg` the toggle goes `display: none` - which drops it out of the grid
+ * altogether - leaving the rail in column one.
  */
 export default async function SdkLayout({ children, params }: LayoutProps<'/docs/sdk/[version]'>) {
   const { version } = await params;

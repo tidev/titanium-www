@@ -8,15 +8,15 @@ import type { Metadata } from 'next';
  *
  * The curated ones have pages here. The community ones are GitHub repositories
  * carrying the `titanium` topic, which is the closest thing Titanium has to a
- * module registry — the list is what tidev/module-search-www served, taken over
+ * module registry - the list is what tidev/module-search-www served, taken over
  * so there is one place to look rather than two.
  *
- * Read from `registry/modules/` on disk — no network at build time, which is
+ * Read from `registry/modules/` on disk - no network at build time, which is
  * what keeps rebuilds fast and preview deploys reproducible.
  */
 
 export const metadata: Metadata = {
-  title: 'Modules — Titanium SDK',
+  title: 'Modules - Titanium SDK',
   description:
     'Native modules for Titanium: Maps, Bluetooth, NFC, Facebook, biometrics, and more, for iOS and Android.',
   alternates: { canonical: `${SITE_URL}/modules` },

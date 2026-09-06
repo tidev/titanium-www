@@ -6,7 +6,7 @@ import { parse as parseYaml } from 'yaml';
  * The captured SDK release notes (TI-72).
  *
  * Written by `scripts/capture-release-notes.ts` from `tidev/titanium-docs`,
- * which is where they actually live — the GitHub releases carry none, and the
+ * which is where they actually live - the GitHub releases carry none, and the
  * in-repo changelogs stop in 2014. See that script for the full account.
  *
  * ## They sit with their version
@@ -16,7 +16,7 @@ import { parse as parseYaml } from 'yaml';
  * notes go back to 8.0.0 and only twenty versions are compiled. A directory
  * holding nothing but a note is inert to everything else, because
  * `sdkVersions()` keys on `contents.json` rather than on the directory
- * existing — checked, not assumed.
+ * existing - checked, not assumed.
  *
  * A release candidate shares its version with the GA that follows, so it sits
  * in the same directory under `release-notes.rc.md`. Nothing renders those yet.

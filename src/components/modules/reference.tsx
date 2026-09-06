@@ -12,8 +12,8 @@ import type { ResolvedMember, TypeView } from '@/lib/docs/type-view';
  *
  * One page rather than one per type, because that is the address the module is
  * known by: `moduleid` is what a developer writes in `tiapp.xml`, and every one
- * of the 174 legacy `/api/modules/**` URLs — `ble/peripheral.html`,
- * `nfc/ndefrecord.html` — points at the module, not at a type inside it. A
+ * of the 174 legacy `/api/modules/**` URLs - `ble/peripheral.html`,
+ * `nfc/ndefrecord.html` - points at the module, not at a type inside it. A
  * module is also small enough for it: the largest is 284 members, roughly one
  * mid-sized SDK type.
  *
@@ -31,7 +31,7 @@ import type { ResolvedMember, TypeView } from '@/lib/docs/type-view';
  *
  * The qualification is what `memberAnchor` used to do: `Modules.Map`'s
  * `NORMAL_TYPE` and `Modules.Map.View`'s `mapType` share a document, so a bare
- * member name is not unique here. The group suffix is the other half —
+ * member name is not unique here. The group suffix is the other half -
  * ti.map's `View` has both a `userLocation` property and a `userLocation`
  * event, which collided even once qualified.
  */

@@ -10,7 +10,7 @@ import tls from 'node:tls';
  *
  *   NODE_OPTIONS="--import ./scripts/assert-offline.ts" pnpm build
  *
- * Patching the socket layer rather than `fetch` catches every client —
+ * Patching the socket layer rather than `fetch` catches every client -
  * undici, node:http, and any dependency reaching out on its own.
  */
 

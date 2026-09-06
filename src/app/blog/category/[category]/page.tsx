@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 /**
  * One category's archive.
  *
- * Only categories with posts in them get a page — an empty archive is a dead
+ * Only categories with posts in them get a page - an empty archive is a dead
  * end that still appears in the sitemap.
  */
 
@@ -27,7 +27,7 @@ export async function generateMetadata({
   if (!name) return {};
 
   return {
-    title: `${name} — Titanium SDK blog`,
+    title: `${name} - Titanium SDK blog`,
     description: `Blog posts filed under ${name}.`,
     alternates: { canonical: `${SITE_URL}/blog/category/${category}` },
   };

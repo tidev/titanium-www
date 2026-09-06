@@ -28,7 +28,7 @@ const headers = (accept = 'application/vnd.github+json') => ({
  * Pulls the page of results out of a response body.
  *
  * Most list endpoints return a bare array, but some wrap it in an envelope
- * beside `total_count` — `/actions/runs` yields `{ total_count, workflow_runs }`
+ * beside `total_count` - `/actions/runs` yields `{ total_count, workflow_runs }`
  * and `/actions/artifacts` yields `{ total_count, artifacts }`. Unwrapping the
  * single array property here means no call site has to know which style its
  * endpoint uses, and adding one cannot reintroduce the mistake.

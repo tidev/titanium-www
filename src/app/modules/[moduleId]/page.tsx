@@ -18,9 +18,9 @@ import { notFound, permanentRedirect } from 'next/navigation';
  * What a module's authors wrote about it, rendered as written.
  *
  * The install steps, the reference and the release list are each their own
- * route — see `components/modules/shell.tsx` for why.
+ * route - see `components/modules/shell.tsx` for why.
  *
- * Everything is read from `registry/modules/` on disk — no network at build
+ * Everything is read from `registry/modules/` on disk - no network at build
  * time, which is what keeps rebuilds fast and preview deploys reproducible.
  */
 
@@ -43,7 +43,7 @@ export async function generateMetadata({
   if (!index) return {};
 
   return {
-    title: `${index.moduleId} — Titanium modules`,
+    title: `${index.moduleId} - Titanium modules`,
     description: index.description,
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}` },
   };

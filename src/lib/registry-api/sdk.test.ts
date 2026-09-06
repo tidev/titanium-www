@@ -14,7 +14,7 @@ import { describe, test } from 'node:test';
  * The SDK half of the API, and the promise the shipped CLI depends on.
  *
  * `tidev/titanium-cli` hard-codes five paths on downloads.titaniumsdk.com and
- * cannot be fixed retroactively — old copies stay in the wild for years. These
+ * cannot be fixed retroactively - old copies stay in the wild for years. These
  * pin the legacy shapes so a refactor here cannot quietly break `ti sdk
  * install` for people who never upgrade.
  */

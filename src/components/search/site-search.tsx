@@ -13,7 +13,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
  * to the trigger on close. All of that is the accessibility criterion, and all
  * of it is behaviour we would otherwise write and get subtly wrong.
  *
- * The runtime is loaded on first open, not on page load — 116 KB that most
+ * The runtime is loaded on first open, not on page load - 116 KB that most
  * visitors never need.
  */
 
@@ -31,7 +31,7 @@ type Hit = {
  * Group order and labels. Guides join this when TI-32 lands.
  *
  * The first group is named for how its results matched rather than for what
- * they are. Everything below it is a section — API reference, Modules, Blog —
+ * they are. Everything below it is a section - API reference, Modules, Blog -
  * but a name match crosses those: `ti.map` and `Titanium.UI.Window` arrive
  * together. Calling it "Symbols" implied a category that overlapped "API
  * reference", which is what those results also are.
@@ -51,7 +51,7 @@ const GROUPS: { kind: Kind; label: string }[] = [
  * every page that inherits it, and a misspelt one, which Pagefind has no
  * tolerance for at all. Both were measured in TI-46.
  *
- * A failure here is not a failure of search — the Pagefind half still answers —
+ * A failure here is not a failure of search - the Pagefind half still answers -
  * so this resolves to an empty table rather than rejecting.
  */
 let symbolTable: Promise<ReturnType<typeof buildSymbolTable>> | undefined;
@@ -81,7 +81,7 @@ let runtime: Promise<Pagefind> | undefined;
 /**
  * Loads `/_pagefind/pagefind.js` at runtime.
  *
- * The path is built at call time so the bundler cannot statically resolve it —
+ * The path is built at call time so the bundler cannot statically resolve it -
  * the file is a build artifact that does not exist when the app is compiled,
  * and a static import would fail the build.
  */
@@ -292,7 +292,7 @@ export function SiteSearch() {
               onKeyDown={onKeyDown}
               // `type="text"`, not `search`: browsers make Escape clear a
               // search field instead of reaching the dialog, so Escape stopped
-              // closing the dialog — verified, not theorised.
+              // closing the dialog - verified, not theorised.
               type="text"
               placeholder="Search"
               aria-label="Search query"
@@ -359,7 +359,7 @@ export function SiteSearch() {
               })}
 
             {/* Nothing at all until something is typed, so an unused search is
-                just a field — the panel has no advice to give before there is
+                just a field - the panel has no advice to give before there is
                 a query, and inventing some only makes it taller. Everything
                 below needs a term to be worth saying. */}
             {open && !ordered.length && term.trim() && (

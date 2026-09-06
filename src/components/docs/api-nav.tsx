@@ -7,13 +7,13 @@ import { useEffect, useRef } from 'react';
 /**
  * The API reference sidebar: every type in the version, grouped by namespace.
  *
- * A client component for exactly one reason — the current type. `params` stops
+ * A client component for exactly one reason - the current type. `params` stops
  * at the segment that owns the layout, so a layout at `[version]` never sees
  * `[type]`, and no CSS selector can open a `<details>`. `usePathname()` is the
  * only way to read it.
  *
  * It is not a client-rendered tree, though. Type pages render on the server for
- * one concrete URL — at build time before, on first request now — so either way
+ * one concrete URL - at build time before, on first request now - so either way
  * the pathname resolves during that render and the `open` attributes and
  * `aria-current` ship inside the HTML. The tree expands to the right branch and
  * marks the current page with scripting turned off, and hydration has nothing
@@ -44,7 +44,7 @@ export function ApiNav({
   const open = new Set(branchIds(active, roots));
 
   // The rail holds 284 rows and starts at the top, so the branch that was
-  // expanded for you is often below the fold. Enhancement only — the rail is
+  // expanded for you is often below the fold. Enhancement only - the rail is
   // correct without it, just scrolled to the wrong place. Measured against the
   // rail's own box rather than scrollIntoView(), which would drag the document
   // along with it.
@@ -61,8 +61,8 @@ export function ApiNav({
     <>
       {/*
         A checkbox drives the phone disclosure so the tree is in the document
-        once. The obvious markup — a <details> for phones and an <aside> for
-        desktop — renders all 283 rows twice, which measured at +58 kB per page;
+        once. The obvious markup - a <details> for phones and an <aside> for
+        desktop - renders all 283 rows twice, which measured at +58 kB per page;
         and a <details> cannot be talked into staying open at one breakpoint and
         shut at another, since `open` is an attribute and no CSS reaches it.
         The cost is that assistive tech announces a checkbox rather than a
@@ -128,7 +128,7 @@ function Node({
       <details open={open.has(node.id)}>
         {/* The namespace's own page is a link inside the summary. Clicking it
             toggles the details as well, which nobody sees because every link
-            here is a full page load — and it buys one row per namespace
+            here is a full page load - and it buys one row per namespace
             instead of two. */}
         <summary className="flex cursor-pointer list-none items-center gap-1.5 py-1 [&::-webkit-details-marker]:hidden">
           <Chevron className="transition-transform" />
@@ -151,7 +151,7 @@ function Node({
   );
 }
 
-/** A node's label — a link when it has a page of its own, plain text otherwise. */
+/** A node's label - a link when it has a page of its own, plain text otherwise. */
 function Label({ node, base, current }: { node: NavNode; base: string; current: boolean }) {
   if (!node.name) {
     return <span className="py-1 font-medium text-text-muted">{node.label}</span>;

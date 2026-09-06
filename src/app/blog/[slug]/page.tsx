@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
   if (!post) return {};
 
   return {
-    title: `${post.title} — Titanium SDK`,
+    title: `${post.title} - Titanium SDK`,
     description: post.description,
     alternates: { canonical: `${SITE_URL}/blog/${post.slug}` },
     // Excluded from search results while it is a draft, wherever it leaks from.

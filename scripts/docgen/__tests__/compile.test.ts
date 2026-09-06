@@ -12,7 +12,7 @@ import { after, before, describe, test } from 'node:test';
  * The guarantees the regen pipeline depends on.
  *
  * The commit step decides by diffing what docgen wrote, so "identical input
- * produces identical bytes" is not a nicety — it is what stops this repo
+ * produces identical bytes" is not a nicety - it is what stops this repo
  * growing with CI runs the way titanium-docs grew to 1.7 GB.
  */
 
@@ -168,7 +168,7 @@ describe('compile', () => {
 /**
  * Cross-repo resolution, compiled the way CI does it: one repo, then another
  * against the first one's emitted index. Going through the index rather than a
- * hand-built corpus is the point — it is the only thing a module's compile has,
+ * hand-built corpus is the point - it is the only thing a module's compile has,
  * and if it stopped carrying member names this would be the test that noticed.
  */
 const SDK_APIDOC = `

@@ -4,7 +4,7 @@
  * One crumb per namespace segment rather than the whole name in a single crumb:
  * `Titanium.UI.iOS.PreviewContext` is four levels deep, and the intermediate
  * namespaces are pages worth reaching. An ordered list so the nesting is
- * announced, and it wraps rather than scrolls — the longest name in main is 38
+ * announced, and it wraps rather than scrolls - the longest name in main is 38
  * characters, which does not fit one 320px line whatever the markup.
  *
  * The crumbs are handed in already resolved. The SDK builds them from a dotted

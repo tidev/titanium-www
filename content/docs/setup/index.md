@@ -14,9 +14,9 @@ Budget an hour on a clean machine. Most of it is downloads.
 Follow the page for your operating system. Each one covers that machine end to
 end: Node.js, a JDK, the Titanium CLI and SDK, and the native tooling.
 
-- [Linux](/docs/setup/linux) — Android only
-- [macOS](/docs/setup/macos) — Android and iOS
-- [Windows](/docs/setup/windows) — Android only
+- [Linux](/docs/setup/linux) (Android only)
+- [macOS](/docs/setup/macos) (Android and iOS)
+- [Windows](/docs/setup/windows) (Android only)
 
 ## Why macOS is different
 

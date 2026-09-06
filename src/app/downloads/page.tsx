@@ -11,12 +11,12 @@ import Link from 'next/link';
  * What to run to get the SDK, and the one release almost everybody wants.
  *
  * Replaces the downloads-www home page, which was the install instructions and
- * nothing else — the latest GA was named in the command but not downloadable
+ * nothing else - the latest GA was named in the command but not downloadable
  * without a second click.
  */
 
 export const metadata: Metadata = {
-  title: 'Downloads — Titanium SDK',
+  title: 'Downloads - Titanium SDK',
   description:
     'Install the Titanium SDK with the Titanium CLI, or download a GA, RC, beta, or CI build directly.',
   alternates: { canonical: `${SITE_URL}/downloads` },

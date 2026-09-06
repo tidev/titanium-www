@@ -7,7 +7,7 @@ import type { ResolvedMember } from '@/lib/docs/type-view';
 import type { ApiPlatform } from '@/lib/registry';
 
 /**
- * One group of members — properties, methods, or events.
+ * One group of members - properties, methods, or events.
  *
  * Definition list rather than a table: the old site generated markup inside
  * markdown to force API tables, and they are what breaks on a phone. A list of
@@ -21,7 +21,7 @@ import type { ApiPlatform } from '@/lib/registry';
  * `anchor` is separate from `link` because a member's own id depends on what
  * else is on the page: the SDK gives a type a page to itself, so the member
  * name is unique there, while a module renders its whole namespace at once and
- * has to qualify. Passed in rather than inferred — a wrong default here is a
+ * has to qualify. Passed in rather than inferred - a wrong default here is a
  * silently broken deep link.
  */
 type Addressing = {
@@ -107,8 +107,8 @@ function Member({
     <article id={id} className="scroll-mt-24 py-6">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
         {/* `min-w-0` is what lets `break-words` do anything: a flex item
-            defaults to `min-width: auto`, so the longest member names —
-            activitySharedElementReenterTransition and friends — held the row
+            defaults to `min-width: auto`, so the longest member names -
+            activitySharedElementReenterTransition and friends - held the row
             open at 324px inside a 288px column and scrolled the page. */}
         <Heading className="min-w-0 font-mono text-base font-semibold break-words">
           <a href={`#${id}`} className="hover:text-link">

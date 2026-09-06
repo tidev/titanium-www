@@ -26,7 +26,7 @@ export async function generateMetadata({
 }: PageProps<'/downloads/builds/[branch]'>): Promise<Metadata> {
   const { branch } = await params;
   return {
-    title: `CI builds on ${branch} — Titanium SDK`,
+    title: `CI builds on ${branch} - Titanium SDK`,
     description: `Continuous integration builds of the Titanium SDK from the ${branch} branch.`,
     alternates: { canonical: `${SITE_URL}/downloads/builds/${branch}` },
   };

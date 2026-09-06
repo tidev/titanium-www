@@ -8,7 +8,7 @@ import { z } from 'zod';
  * ## Why
  *
  * Twenty compiled SDK releases held 6,843 files and 291MB, of which 32MB was
- * distinct — 89% of the registry was byte-identical copies. Images were the
+ * distinct - 89% of the registry was byte-identical copies. Images were the
  * worst of it: the same 54 screenshots stored twenty times, 178MB to say 8.9MB.
  * Types were next: 5,679 files, 522 distinct, because a mature API changes very
  * little between point releases and an untouched type emits identical bytes.
@@ -24,7 +24,7 @@ import { z } from 'zod';
  *   registry/sdk/13.4.1/contents.json    names the ones this version uses
  *
  * A version directory is therefore a manifest rather than a tree. It names its
- * blobs and nothing else — where the pool sits is found by looking upward for
+ * blobs and nothing else - where the pool sits is found by looking upward for
  * `_pool`, since `registry/sdk/<version>/` and
  * `registry/modules/<id>/<version>/` sit at different depths and share these
  * readers. See `poolRoot`.
@@ -32,7 +32,7 @@ import { z } from 'zod';
  * Immutability survives the change, and arguably improves: a published version's
  * manifest is written once and frozen, and a pooled blob cannot change at all
  * without changing its own name. Retention deletes a manifest; the pool is then
- * swept for blobs nothing names — see `scripts/pack-registry.ts`.
+ * swept for blobs nothing names - see `scripts/pack-registry.ts`.
  */
 
 export const CONTENTS = 'contents.json';

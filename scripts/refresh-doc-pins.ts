@@ -80,7 +80,7 @@ for (const pin of PINS) {
     const { text, found } = repin(source, pin, version);
 
     if (!found.length) {
-      throw new Error(`${pin.name}: nothing matched in ${file} — the pin no longer names it`);
+      throw new Error(`${pin.name}: nothing matched in ${file} - the pin no longer names it`);
     }
     for (const was of found) {
       if (was !== version) replaced.add(was);
@@ -89,7 +89,7 @@ for (const pin of PINS) {
   }
 
   if (!replaced.size) {
-    console.log(`${pin.name} ${version} — current`);
+    console.log(`${pin.name} ${version} - current`);
     continue;
   }
 

@@ -18,7 +18,7 @@ import { notFound } from 'next/navigation';
 /**
  * One page per compiled type.
  *
- * Everything is read from `registry/` on disk — no network at build time or at
+ * Everything is read from `registry/` on disk - no network at build time or at
  * request time, which is what keeps rebuilds fast and preview deploys
  * reproducible.
  *
@@ -28,7 +28,7 @@ import { notFound } from 'next/navigation';
  * runtime rendering. Here they are. One SDK version is 190MB of HTML and RSC
  * payload across 284 pages; twenty versions are 3.8GB. Vercel caps a
  * deployment's static files at 100MB, so even a single version overshoots by
- * 90MB — this was never a question of how many releases to keep.
+ * 90MB - this was never a question of how many releases to keep.
  *
  * Page weight is not the cause and trimming it is not the fix: brotli takes the
  * largest page from 1053KB to 71KB, because what makes the file big is 152
@@ -36,10 +36,10 @@ import { notFound } from 'next/navigation';
  * for this change. What moves is when the file is written.
  *
  * `generateStaticParams` returns nothing, so a page is rendered the first time
- * someone asks for it and then cached indefinitely — `revalidate = false`,
+ * someone asks for it and then cached indefinitely - `revalidate = false`,
  * which is honest rather than lazy. A published version is frozen, so there is
- * nothing for a revalidation window to catch, and even `main` — the one tree
- * that does move — is safe: the cache is per-deployment, and `main` only
+ * nothing for a revalidation window to catch, and even `main` - the one tree
+ * that does move - is safe: the cache is per-deployment, and `main` only
  * changes when a recompile is deployed.
  *
  * `dynamicParams` is therefore on, which makes `notFound()` below the thing
@@ -70,7 +70,7 @@ export async function generateMetadata({
   if (!view) return {};
 
   return {
-    title: `${view.type.name} — Titanium SDK`,
+    title: `${view.type.name} - Titanium SDK`,
     description: view.type.summary?.replace(/<[^>]+>/g, '').slice(0, 160),
     // The versioned path is canonical; /latest redirects here rather than
     // duplicating pages, so the two never compete in search results.
@@ -92,7 +92,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
   const types = sdkIndex(resolved)?.types ?? [];
 
   // Every type with a page in this tree lives under `base`, so a reference to
-  // one is always a path — but not every name in a signature has a page, and
+  // one is always a path - but not every name in a signature has a page, and
   // linking the ones that do not produced 1,023 dead links. See pathLinker.
   const link = pathLinker(base, new Set(types.map((t) => t.name)));
   const { type: api } = view;
@@ -150,7 +150,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
           {/* Below `xl` there is no rail, so this is the far end of the row
               and lines up with the switcher on the version index. At `xl` the
               rail appears and the article's right edge moves ~192px inward, so
-              the copy in the rail column takes over — see below. */}
+              the copy in the rail column takes over - see below. */}
           <VersionSwitcher
             current={resolved}
             options={versionOptions(api.name)}
@@ -178,7 +178,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
               Extends{' '}
               {api.inheritanceChain.map((parent, i) => {
                 // Through the linker, not `${base}/${parent}`: a chain can end
-                // at a host built-in — assert.AssertionError extends `Error` —
+                // at a host built-in - assert.AssertionError extends `Error` -
                 // which is a real ancestor with no page in this tree.
                 const href = link(parent);
                 return (
@@ -292,7 +292,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
 }
 
 /**
- * The types that extend this one — the edge the registry does not store.
+ * The types that extend this one - the edge the registry does not store.
  *
  * Collapsed past a dozen because the roots are enormous: 109 types extend
  * `Titanium.Proxy` and 45 extend `Titanium.UI.View`, and inline that would push

@@ -9,7 +9,7 @@ import { parse as parseYaml } from 'yaml';
  *
  * Not in the GitHub releases. Of the 71 GA releases in `registry/sdk/ga.json`,
  * 51 have an empty body and the other 20 carry nothing but a link back to the
- * old site — not one holds release notes. The in-repo changelogs are not it
+ * old site - not one holds release notes. The in-repo changelogs are not it
  * either: `apidoc/Titanium/CHANGELOG/` stops at 3.4.0 in 2014.
  *
  * They live in `tidev/titanium-docs`, as generated markdown with frontmatter,
@@ -17,7 +17,7 @@ import { parse as parseYaml } from 'yaml';
  * in TI-52, so the notes are copied here rather than read across.
  *
  * Stored beside the version they describe, at
- * `registry/sdk/<version>/release-notes.md` — a release candidate shares its
+ * `registry/sdk/<version>/release-notes.md` - a release candidate shares its
  * version with the GA that follows, so it takes `release-notes.rc.md` in the
  * same directory. A directory holding only a note is inert to everything else,
  * because `sdkVersions()` keys on `contents.json` rather than on the directory
@@ -27,8 +27,8 @@ import { parse as parseYaml } from 'yaml';
  * the next capture a diff. Two things are changed: links are rewritten, see
  * `rewrite` below, and the frontmatter gains `date`, `version` and `channel`.
  *
- * The date matters because the source bakes it into the title — "Titanium SDK
- * 13.4.1.GA - 25 August 2026" — so a page could only show it inside a heading.
+ * The date matters because the source bakes it into the title - "Titanium SDK
+ * 13.4.1.GA - 25 August 2026" - so a page could only show it inside a heading.
  * It is taken from the release registry, which is the GitHub publish timestamp
  * and what the rest of the site already shows, and parsed out of the title for
  * the ten notes the registry does not list. Two of them disagreed with the
@@ -65,7 +65,7 @@ const tree = await api<{ tree: TreeEntry[] }>(`repos/${REPO}/git/trees/main?recu
  * `Titanium_SDK_13.4.1.GA_Release_Note.md` -> `13.4.1.GA`.
  *
  * The separator before the channel is a dot in most files and an underscore in
- * six of them — 9.2.0, 9.3.0 and 9.3.1 are all written `9.2.0_GA` — and 12.3.0
+ * six of them - 9.2.0, 9.3.0 and 9.3.1 are all written `9.2.0_GA` - and 12.3.0
  * has an `RC2`. Matching only the common shape silently dropped those six,
  * which is how three of them came to be reported as having no release notes at
  * all. Both separators, and a numbered RC.
@@ -92,8 +92,8 @@ console.log(
  *
  * Only two rules, because only two shapes occur. Counted across all 79 source
  * files: 1,042 links to `github.com/tidev/titanium_mobile`, the repository's
- * name before it was renamed `titanium-sdk` — GitHub redirects those, but the
- * old name outlives the redirect's usefulness — and zero links into the old
+ * name before it was renamed `titanium-sdk` - GitHub redirects those, but the
+ * old name outlives the redirect's usefulness - and zero links into the old
  * site's `/guide` tree, which is why there is no rule rewriting those.
  *
  * The absolute-origin rule catches whatever else points at titaniumsdk.com, so
@@ -123,7 +123,7 @@ function rewrite(body: string): string {
 }
 
 if (!write) {
-  console.log('\ndry run — pass --write to fetch and store');
+  console.log('\ndry run - pass --write to fetch and store');
   process.exit(0);
 }
 

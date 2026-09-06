@@ -7,7 +7,7 @@
  *   > [!NOTE]
  *   > Windows are not modal by default.
  *
- * `DEPRECATED` is ours — TI-10 asks for it and GitHub has no equivalent. The
+ * `DEPRECATED` is ours - TI-10 asks for it and GitHub has no equivalent. The
  * other five are GitHub's exactly, so a guide pasted from a README keeps
  * working.
  *
@@ -15,7 +15,7 @@
  *
  * The same reason highlighting does. Emitting `<div class="callout">` from the
  * markdown renderer would mean allowing `class` on `div` through the sanitizer,
- * and `renderMarkdown` also renders module READMEs written by other people —
+ * and `renderMarkdown` also renders module READMEs written by other people -
  * that would hand them every class the site defines. Rewriting afterwards means
  * the sanitizer stays as tight as it was and the only classes that can appear
  * are the six below.

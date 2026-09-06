@@ -3,7 +3,7 @@ import { MAIN, latestSdkVersion, sdkIndex, sdkTypeNames, sdkVersions } from './r
 /**
  * What the SDK version switcher needs to know (TI-27).
  *
- * The version lives in the path — `/docs/sdk/13.4.1/Titanium.UI.Window` — so
+ * The version lives in the path - `/docs/sdk/13.4.1/Titanium.UI.Window` - so
  * switching version is a navigation, not client state. That is what makes a
  * pinned version linkable, and it means every destination can be worked out on
  * the server, including whether it exists.
@@ -21,7 +21,7 @@ export type VersionOption = {
   present: boolean;
   /** The newest compiled release. `main` is never this. */
   latest: boolean;
-  /** `main` — compiled from the development branch, not a release. */
+  /** `main` - compiled from the development branch, not a release. */
   unreleased: boolean;
 };
 
@@ -65,5 +65,5 @@ export function newerVersion(
   };
 }
 
-/** True when the version has a compiled index — i.e. it is one we can switch to. */
+/** True when the version has a compiled index - i.e. it is one we can switch to. */
 export const isCompiled = (version: string): boolean => sdkIndex(version) !== null;

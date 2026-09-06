@@ -34,7 +34,7 @@ import { notFound } from 'next/navigation';
  * for a while most of these paths have no file. They still resolve, and say
  * plainly that the page is not written yet with links to what is. A 404 would
  * tell a reader the page does not exist, which is a different and untrue claim
- * — and would make every link written ahead of its target a build failure.
+ * - and would make every link written ahead of its target a build failure.
  *
  * A path the IA does *not* define is a genuine 404.
  */
@@ -66,17 +66,17 @@ export async function generateMetadata({
     found?.section.blurb ??
     'Titanium SDK documentation.';
 
-  // "Windows Setup — Environment Setup — Titanium SDK". The section is what
+  // "Windows Setup - Environment Setup - Titanium SDK". The section is what
   // tells a search result, or a crowded tab strip, which of several Setup pages
   // this is.
   //
   // Consecutive repeats collapse, which is what keeps a section index from
-  // announcing itself twice and what stops `/docs` — whose own title is the
-  // site's — rendering as "Titanium SDK — Titanium SDK".
+  // announcing itself twice and what stops `/docs` - whose own title is the
+  // site's - rendering as "Titanium SDK - Titanium SDK".
   const parts = [title, found?.section.title, 'Titanium SDK'].filter((p) => !!p);
 
   return {
-    title: parts.filter((part, i) => part !== parts[i + 1]).join(' — '),
+    title: parts.filter((part, i) => part !== parts[i + 1]).join(' - '),
     description,
     alternates: { canonical: `${SITE_URL}${path}` },
     // A draft renders so it can be reviewed at its URL, but it is not finished
@@ -157,7 +157,7 @@ function PageList({
  * Deliberately carries no "N of M pages written" counter. That is our progress,
  * not the reader's business, and a page advertising how unfinished it is invites
  * them to leave. Which individual pages are pending is visible where it is
- * actionable — in the sidebar and on the section index.
+ * actionable - in the sidebar and on the section index.
  */
 function SectionList() {
   return (

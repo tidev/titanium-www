@@ -19,7 +19,7 @@ export function anchorFor(member: string): string {
  *
  * A member name is unique within its group but not across them. On
  * `Titanium.UI.Window` the method `open()` and the event `open` are different
- * members with the same name, and both emitted `id="open"` — two elements
+ * members with the same name, and both emitted `id="open"` - two elements
  * sharing an id, which is invalid, and `#open` reaching whichever came first,
  * so the event was not deep-linkable at all. 41 types in the registry declare a
  * property and an event under one name; `toc.tsx` already keyed its list by
@@ -28,8 +28,8 @@ export function anchorFor(member: string): string {
  * Keyed on the member itself rather than its name, because the name is exactly
  * what is ambiguous. The first group to claim a name keeps the bare anchor and
  * later ones take a suffix: a cross-reference arriving from another page has
- * only the name to go on — `module-view.ts` builds `Titanium.UI.Window#open`
- * with no idea which kind it means — so the bare anchor has to keep existing
+ * only the name to go on - `module-view.ts` builds `Titanium.UI.Window#open`
+ * with no idea which kind it means - so the bare anchor has to keep existing
  * and keep pointing somewhere sensible. Groups are rendered properties,
  * methods, events, which also ranks them by how likely a bare reference means
  * that one.
@@ -74,7 +74,7 @@ export function memberAnchor(type: string, member: string): string {
 }
 
 /**
- * Resolves a type — optionally a member on it — to an href.
+ * Resolves a type - optionally a member on it - to an href.
  *
  * Returns null when the target has no page. That is not a failure: a docgen
  * pseudo-type folded into its referent is a real reference to something the
@@ -84,7 +84,7 @@ export function memberAnchor(type: string, member: string): string {
 export type ApiLinker = (type: string, member?: string) => string | null;
 
 /**
- * One type per page under `base` — the SDK reference's own arrangement.
+ * One type per page under `base` - the SDK reference's own arrangement.
  *
  * `known` is the set of types that actually have a page. Pass it and anything
  * outside it resolves to null, which is what the callers need: docgen folds
@@ -93,8 +93,8 @@ export type ApiLinker = (type: string, member?: string) => string | null;
  * blindly they were 1,023 links to pages that do not exist, `Titanium.Event`
  * alone accounting for 606 of them.
  *
- * Optional rather than required so prose that has no index to hand — the
- * markdown renderer given a bare base string — still resolves the common case.
+ * Optional rather than required so prose that has no index to hand - the
+ * markdown renderer given a bare base string - still resolves the common case.
  */
 export function pathLinker(base: string, known?: ReadonlySet<string>): ApiLinker {
   return (type, member) =>

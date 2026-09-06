@@ -46,8 +46,8 @@ export function resolveSource(repo: string): Source {
 /**
  * Reads a module's id from its manifest.
  *
- * Not derivable from the repository name — tidev/titanium-identity publishes as
- * `ti.identity` — so it is read from the checkout rather than guessed. Android
+ * Not derivable from the repository name - tidev/titanium-identity publishes as
+ * `ti.identity` - so it is read from the checkout rather than guessed. Android
  * and iOS manifests carry the same `moduleid`; whichever exists is fine.
  */
 export function moduleIdFrom(checkout: string): string {

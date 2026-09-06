@@ -11,7 +11,7 @@ import { SITE_URL } from '@/lib/site';
  *
  * The text is the post's `social` frontmatter when it has one. That already
  * carries its own `Blog:` line, so the URL is only appended to the title
- * fallback — appending it to both would post the link twice.
+ * fallback - appending it to both would post the link twice.
  */
 export function Share({ post }: { post: Post }) {
   const url = `${SITE_URL}/blog/${post.slug}`;

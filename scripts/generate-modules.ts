@@ -75,7 +75,7 @@ type GhAsset = {
   browser_download_url: string;
   /**
    * `sha256:<hex>`, computed by GitHub on upload. Only present on assets
-   * uploaded since the feature shipped — GitHub does not backfill — so most of
+   * uploaded since the feature shipped - GitHub does not backfill - so most of
    * this archive has none (TI-65).
    */
   digest?: string | null;
@@ -286,8 +286,8 @@ function checksumFor(asset: GhAsset): { checksum?: string } {
 
 /**
  * Every key this script decides. Anything else in an existing metadata.json is
- * someone else's — docgen adds a `source` block once it has compiled the
- * version's API reference — and is carried through untouched.
+ * someone else's - docgen adds a `source` block once it has compiled the
+ * version's API reference - and is carried through untouched.
  */
 const OWNED = new Set([
   'schemaVersion',
@@ -410,8 +410,8 @@ function latestPerPlatform(versions: ModuleVersion[]): Partial<Record<Platform, 
 /**
  * The `main` version directory, when docgen has compiled one.
  *
- * docgen refuses to create this file — platforms, manifests and assets are
- * release data a docs compile does not have — so it has to be seeded here or
+ * docgen refuses to create this file - platforms, manifests and assets are
+ * release data a docs compile does not have - so it has to be seeded here or
  * the compiled tree sits beside nothing that describes it. Seeded from the
  * default branch, since that is what `main` was compiled from.
  */
@@ -457,7 +457,7 @@ function prune(moduleId: string, keep: Set<string>): string[] {
     const full = join(dir, name);
     if (name === MUTABLE || keep.has(name) || !statSync(full).isDirectory()) continue;
     if (existsSync(join(full, CONTENTS))) {
-      notes.push(`${moduleId}@${name}: no release, but it has compiled docs — left in place`);
+      notes.push(`${moduleId}@${name}: no release, but it has compiled docs - left in place`);
       continue;
     }
     rmSync(full, { recursive: true, force: true });
@@ -483,7 +483,7 @@ for (const source of moduleSources) {
  * Nothing is written until every asset in every repo has parsed.
  *
  * An unrecognised filename means the packaging convention moved, and the right
- * answer is a person looking at it — not a registry that is silently missing
+ * answer is a person looking at it - not a registry that is silently missing
  * whichever releases happened to be affected.
  */
 if (failures.length) {

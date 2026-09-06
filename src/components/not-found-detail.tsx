@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 /**
  * What the 404 can say once it knows the address that missed.
  *
- * A client component because `not-found.tsx` is handed no params and no URL —
+ * A client component because `not-found.tsx` is handed no params and no URL -
  * `usePathname()` is the only way to read what was asked for, the same reason
  * `api-nav.tsx` is one.
  *
@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation';
  * would also have kept the type sidebar. It does not engage: placed in either
  * that segment or in `[type]` itself, `notFound()` from the type page still
  * resolves to the root boundary. Since TI-25 these routes render on demand with
- * `dynamicParams` on, and that is the likely reason — not established, so it is
+ * `dynamicParams` on, and that is the likely reason - not established, so it is
  * recorded as observed behaviour rather than explained.
  *
  * Adapting the root page gets the part that matters: naming the version and the
@@ -55,7 +55,7 @@ export function NotFoundDetail() {
           )}
         </p>
         <p className="mt-3 text-text-muted">
-          Search covers every version, which is the faster way in when only the spelling is wrong —
+          Search covers every version, which is the faster way in when only the spelling is wrong -
           press{' '}
           <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-xs">⌘K</kbd>.
         </p>
@@ -68,8 +68,8 @@ export function NotFoundDetail() {
     return (
       <p className="mt-3 text-text-muted">
         That is an address from the old documentation. Most of those pages have been retired or
-        rewritten; the reference below is where the API documentation lives now. Search —{' '}
-        <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> —
+        rewritten; the reference below is where the API documentation lives now. Search -{' '}
+        <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> -
         finds anything by name.
       </p>
     );
@@ -78,7 +78,7 @@ export function NotFoundDetail() {
   return (
     <p className="mt-3 text-text-muted">
       The address may be from the old documentation, or the page may have moved. Search finds
-      anything in the reference by name — press{' '}
+      anything in the reference by name - press{' '}
       <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-xs">⌘K</kbd> or use
       the search box in the header.
     </p>

@@ -13,7 +13,7 @@ import * as pagefind from 'pagefind';
  *
  * Pagefind normally indexes rendered HTML, and TI-46 measured that: it scores
  * 3/7 on a realistic query set, because it ranks *pages*. `addEventListener`
- * is on ~200 of them — every proxy inherits it — so page-level scoring cannot
+ * is on ~200 of them - every proxy inherits it - so page-level scoring cannot
  * say which one is meant. Indexing each symbol as its own record instead takes
  * the same query set to 6/7, and it is cheaper per query: a symbol's fragment
  * is a line, where a page's fragment carries the whole page.
@@ -22,7 +22,7 @@ import * as pagefind from 'pagefind';
  *
  * `public/` is collected during the build, so an index written afterwards is
  * never deployed. Custom records are built from `registry/` and `content/`
- * rather than from rendered HTML, which means this can run first — and the
+ * rather than from rendered HTML, which means this can run first - and the
  * pages render from exactly the same source, so the index still cannot
  * describe something the site does not have.
  *
@@ -47,7 +47,7 @@ type Entry = {
    * Shown under the title instead of Pagefind's excerpt.
    *
    * The excerpt is drawn from `body`, which starts with the name so that a name
-   * match ranks — so the excerpt reads "util.types.isMap isMap Returns true…",
+   * match ranks - so the excerpt reads "util.types.isMap isMap Returns true…",
    * repeating the title directly beneath it. This is the sentence a reader
    * actually wants. Blog posts have none and keep the excerpt, where a snippet
    * around the match is the useful thing.
@@ -63,7 +63,7 @@ const records: Entry[] = [];
  * Link targets go first and deliberately: summaries are full of
  * `[Titanium.UI.Window](api:Titanium.UI.Window)`, and stripping the brackets
  * before the targets leaves `Titanium.UI.Window api:Titanium.UI.Window` in
- * every excerpt — the cross-reference syntax read as content.
+ * every excerpt - the cross-reference syntax read as content.
  */
 const plain = (s: string | undefined) =>
   (s ?? '')
@@ -111,7 +111,7 @@ for (const entry of sdkIndex.types) {
     // Declared members only, as before: every proxy inherits addEventListener,
     // and indexing the inherited copies is precisely the "205 results, none
     // relevant" failure TI-46 measured. Taken from the view rather than from
-    // the type because the view rebuilds each member as a new object — an
+    // the type because the view rebuilds each member as a new object - an
     // identity the allocator needs, and which a declared-member loop would not
     // have, falling back silently to an anchor the page does not render.
     for (const member of members.filter((m) => !m.inheritedFrom)) {
@@ -122,7 +122,7 @@ for (const entry of sdkIndex.types) {
         // The bare name as well as the qualified one, and it is load-bearing:
         // Pagefind keeps `Titanium.Proxy.addEventListener` whole, so without
         // the bare token a search for `addEventListener` matches the wrong
-        // records. Measured — dropping it turned an exact hit into
+        // records. Measured - dropping it turned an exact hit into
         // `Titanium.UI.ListItem`.
         body: `${entry.name}.${member.name} ${member.name} ${plain(member.summary)}`,
         summary: plain(member.summary),
@@ -203,7 +203,7 @@ for (const entry of records) {
     content: entry.body,
     language: 'en',
     // Only what the result list needs to render. Pagefind indexes meta values
-    // as well as content — verified with a token present only in meta — so a
+    // as well as content - verified with a token present only in meta - so a
     // summary here would be indexed twice and dilute name matches.
     meta: { title: entry.title, kind: entry.kind },
     filters: { kind: [entry.kind] },

@@ -42,7 +42,7 @@ function walk(dir: string, out: string[] = []): string[] {
  *
  * The marker is `docgen-manifest.json`, which only docgen writes. `index.json`
  * would be wrong and destructively so: `registry/modules/<id>/index.json` is
- * the module descriptor — id, repo, aliases — sitting one level above the
+ * the module descriptor - id, repo, aliases - sitting one level above the
  * compiled versions, and matching on it packs sixteen module descriptors as if
  * they were API indexes and then deletes them.
  */
@@ -171,7 +171,7 @@ for (const rel of ROOTS) {
 
   const mb = (n: number) => `${(n / 1048576).toFixed(1)} MB`;
   console.log(
-    `${rel}: ${dirs.length} version(s) — ${packed} packed, ${already} already` +
+    `${rel}: ${dirs.length} version(s) - ${packed} packed, ${already} already` +
       `\n  pool ${after.files} blobs, ${mb(after.bytes)}` +
       (swept ? ` (${swept} orphan(s) swept)` : '') +
       // `before` counts the sources this run would replace, so on an already
@@ -184,6 +184,6 @@ const mb = (n: number) => `${(n / 1048576).toFixed(1)} MB`;
 console.log(
   (totalBefore > totalAfter
     ? `\ntotal ${mb(totalBefore)} -> ${mb(totalAfter)}`
-    : `\ntotal ${mb(totalAfter)} on disk — nothing to pack`) +
-    (write ? '' : '  (dry run — pass --write to apply)')
+    : `\ntotal ${mb(totalAfter)} on disk - nothing to pack`) +
+    (write ? '' : '  (dry run - pass --write to apply)')
 );

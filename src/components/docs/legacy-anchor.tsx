@@ -10,7 +10,7 @@ import { useEffect } from 'react';
  * real casing, and 70% of the 4,954 members are mixed-case, so those links land
  * on the right page and scroll nowhere.
  *
- * A fragment is never sent to the server, so a redirect cannot fix this — the
+ * A fragment is never sent to the server, so a redirect cannot fix this - the
  * browser is the only thing that ever sees it.
  *
  * Runs only when the fragment matches nothing, so a correct link is untouched.

@@ -17,7 +17,7 @@ import type { ModuleIndex, ModuleVersion, Platform } from '../registry/index.ts'
  * registry schema, which is free to change underneath.
  *
  * Built as plain values rather than written straight into a Response so the
- * rules below — above all which release a platform resolves to — can be tested
+ * rules below - above all which release a platform resolves to - can be tested
  * without going through the router.
  */
 
@@ -33,7 +33,7 @@ export type ListedModule =
       repo?: string;
       /** Platforms with at least one published release. */
       platforms: Platform[];
-      /** The current release per platform. Never one value — see `resolve`. */
+      /** The current release per platform. Never one value - see `resolve`. */
       latest: Partial<Record<Platform, string>>;
       /** `minsdk` of each platform's current release, where its manifest says. */
       minsdk: Partial<Record<Platform, string>>;
@@ -46,7 +46,7 @@ export type ListedModule =
       name: string;
       owner: string;
       description?: string;
-      /** Its repository. There is nothing here to install — see the notes. */
+      /** Its repository. There is nothing here to install - see the notes. */
       url: string;
       platforms: Platform[];
       stars: number;
@@ -65,7 +65,7 @@ export const RESOLUTION_RULES = [
   'A release may carry both platforms. When it does, the same version appears under each key.',
   '`minsdk` is the Titanium SDK a release requires, copied verbatim from that platform manifest. It is not normalised: expect both "12.7.0" and "10.0.0.GA", sometimes on the same module, so strip any suffix before comparing. Absent means the manifest did not declare one.',
   'Entries with `"kind": "community"` are repositories, not packages. They carry no version list and nothing to install.',
-  '`kind` is whether this site has a page for a module; `source` is who stands behind it. They agree for every module today, but they are not the same question — a repository owned by TiDev that nothing here documents is `"kind": "community"` with no `source` at all.',
+  '`kind` is whether this site has a page for a module; `source` is who stands behind it. They agree for every module today, but they are not the same question - a repository owned by TiDev that nothing here documents is `"kind": "community"` with no `source` at all.',
 ] as const;
 
 function minsdkPerPlatform(index: ModuleIndex): Partial<Record<Platform, string>> {
@@ -111,7 +111,7 @@ export function listModules(): ListedModule[] {
   }));
 
   // Registry modules by id, so the file is byte-stable between builds that
-  // changed nothing. Community keeps the generator's order, which is by stars —
+  // changed nothing. Community keeps the generator's order, which is by stars -
   // that is a ranking a search client would otherwise have to reconstruct.
   registry.sort((a, b) => a.id.localeCompare(b.id));
   return [...registry, ...community];
@@ -164,7 +164,7 @@ export type ReleaseDetail = {
   version: string;
   platforms: Platform[];
   publishedAt?: string;
-  /** Opaque. Four tag formats exist across ti.map alone — never pattern-match it. */
+  /** Opaque. Four tag formats exist across ti.map alone - never pattern-match it. */
   tag?: string;
   /** True for the development branch, which is not a published release. */
   mutable: boolean;
@@ -177,7 +177,7 @@ export type ReleaseDetail = {
     size?: number;
     /**
      * `sha256:…` when GitHub recorded one. Absent for anything uploaded before
-     * GitHub began digesting release assets, which is most of the archive — a
+     * GitHub began digesting release assets, which is most of the archive - a
      * client must treat this as "cannot verify", not "verified".
      */
     checksum?: string;

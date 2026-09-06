@@ -23,7 +23,7 @@ import { dirname, join } from 'node:path';
  * One apidoc tree in, one registry directory out.
  *
  * Shared by the developer CLI (index.ts) and the CI regen (regen.ts) so the two
- * cannot drift — what runs unattended against 17 repos is the same code path a
+ * cannot drift - what runs unattended against 17 repos is the same code path a
  * developer exercises locally.
  */
 
@@ -49,7 +49,7 @@ export type CompileOptions = {
    * Which source this tree came from, e.g. `tidev/ti.map`.
    *
    * Selects that repo's slice of the known-broken allowlist. Omitted, every
-   * entry is allowed but none is reported stale — a compile that does not know
+   * entry is allowed but none is reported stale - a compile that does not know
    * whose corpus it is holding cannot tell a fixed reference from an absent one.
    */
   sourceRepo?: string;
@@ -79,7 +79,7 @@ export type CompileResult = {
   knownBroken: number;
   /** Distinct types in the external corpus that this compile linked to. */
   crossRepo: number;
-  /** Allowlist entries that no longer occur — upstream fixed them. */
+  /** Allowlist entries that no longer occur - upstream fixed them. */
   staleAllowlist: string[];
   /**
    * What this version carries, for `contents.json`.
@@ -101,7 +101,7 @@ const refOf = (reason: string) => /<(.+)>/.exec(reason)?.[1] ?? reason;
  *
  * `historical` is for references broken only in published releases. A tag is
  * immutable, so "fix the source" is not available and the entry can never
- * legitimately be removed — reporting it stale on every `main` compile would
+ * legitimately be removed - reporting it stale on every `main` compile would
  * train people to ignore the staleness message, which is the one thing keeping
  * the live list honest. So these are allowed and never reported.
  */
@@ -208,7 +208,7 @@ export function compile(options: CompileOptions): CompileResult {
   const stale = sourceRepo ? Object.keys(live).filter((r) => !hit.has(r)) : [];
   if (stale.length) {
     // Upstream fixed something. Say so, so the allowlist shrinks instead of rotting.
-    log(`\n${stale.length} entr(ies) in known-broken-refs.json no longer occur — remove them:`);
+    log(`\n${stale.length} entr(ies) in known-broken-refs.json no longer occur - remove them:`);
     for (const r of stale) log(`  ${r}`);
   }
   if (resolved.problems.length) {

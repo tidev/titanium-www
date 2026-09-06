@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
 /**
- * Fills in each post's `social` frontmatter — the text the share buttons
+ * Fills in each post's `social` frontmatter - the text the share buttons
  * pre-fill (TI-53).
  *
  * Prefers what was actually posted. The Bluesky account is public, so its feed
@@ -43,7 +43,7 @@ const versionOf = (title: string) => title.match(/\d+\.\d+\.\d+(\.(GA|RC|Beta)\d
 
 /**
  * How each kind is installed. The template's `ti sdk i` line is right for an
- * SDK release and wrong for everything else — the CLI and Alloy come from npm,
+ * SDK release and wrong for everything else - the CLI and Alloy come from npm,
  * and a post like Hacktoberfest has nothing to install at all.
  */
 function installLine(kind: Kind, version: string | undefined) {
@@ -66,7 +66,7 @@ function installLine(kind: Kind, version: string | undefined) {
  * A post's `description` is the default, but roughly half of them are either
  * a title-cased fragment ("Gradle 8 Support") or pure boilerplate ("The stable
  * version (GA) ... is now available") that says nothing. These are written from
- * each post's own body — the substance is in the prose, not in a field a script
+ * each post's own body - the substance is in the prose, not in a field a script
  * can lift.
  */
 const HIGHLIGHTS = new Map([
@@ -181,7 +181,7 @@ const HIGHLIGHTS = new Map([
   ],
   [
     'cli-7-0-0-rc',
-    'The first major CLI release in two years — an ESM refactor that unblocks dependency and SDK build updates.',
+    'The first major CLI release in two years - an ESM refactor that unblocks dependency and SDK build updates.',
   ],
   [
     'cli-7-1-0-ga',
@@ -217,7 +217,7 @@ function generate(title: string, description: string, slug: string) {
     .join('\n');
 }
 
-/** Repoint the blog line at this site — the originals link to tidev.io. */
+/** Repoint the blog line at this site - the originals link to tidev.io. */
 const repoint = (text: string, slug: string) =>
   text
     .replace(/^Blog: \S+$/m, `Blog: ${SITE}/blog/${slug}`)
@@ -303,6 +303,6 @@ console.log(`  ${stale.length} ${checkOnly ? 'stale' : 'updated'}`);
 for (const post of overLong) console.warn(`  ! over ${MAX} characters: ${post}`);
 
 if (checkOnly && stale.length) {
-  console.error('Committed social text is stale — rerun without --check.');
+  console.error('Committed social text is stale - rerun without --check.');
   process.exit(1);
 }

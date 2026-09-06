@@ -72,7 +72,7 @@ if (!existsSync(apidoc)) {
  * The compiled SDK a module's `Titanium.*` references resolve into.
  *
  * Nothing here is guessed. The SDK is found in the source table rather than
- * spelled out, and which version to resolve against comes from the caller —
+ * spelled out, and which version to resolve against comes from the caller -
  * a module compiled against a different SDK links to different pages, so that
  * belongs in the dispatch, not in a default here.
  */
@@ -277,7 +277,7 @@ try {
       // directory holds a manifest naming blobs that live in the shared pool
       // beside it, so committing only `outRel` publishes references to files
       // that were never committed. That is exactly what happened to
-      // ti.map@main — the manifest landed, its four new blobs did not, and
+      // ti.map@main - the manifest landed, its four new blobs did not, and
       // the workflow's own validation could not see it because it runs before
       // the commit, while the blobs are still in the runner's tree.
       `changed=${changed > 0}\npaths=${outRel} ${join(registryRoot, POOL_DIR)}\nsummary=${repo}@${version}: ` +

@@ -21,7 +21,7 @@ export async function generateMetadata({
   const resolved = resolveVersion(version);
   if (!resolved) return {};
   return {
-    title: `SDK API reference ${resolved} — Titanium SDK`,
+    title: `SDK API reference ${resolved} - Titanium SDK`,
     description: `Every Titanium SDK type, method, property, and event in ${resolved}.`,
     alternates: { canonical: `${SITE_URL}/docs/sdk/${resolved}` },
   };
@@ -62,7 +62,7 @@ export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[ver
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h1 className="text-3xl font-semibold tracking-tight">SDK API reference</h1>
             {/* Below `xl` there is no second column, so this is the end of the
-              heading row — which is where a type page puts it at that width too. */}
+              heading row - which is where a type page puts it at that width too. */}
             <VersionSwitcher
               current={resolved}
               options={versionOptions()}
@@ -71,7 +71,7 @@ export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[ver
           </div>
           <p className="mt-2 text-text-muted">
             <span className="font-mono">{resolved}</span>
-            {resolved === MAIN && ' — compiled from the development branch, not a release'}
+            {resolved === MAIN && ' - compiled from the development branch, not a release'}
             {' · '}
             {index.counts.types} types, {index.counts.members.toLocaleString()} declared members
             {hasReleaseNote(resolved) && (

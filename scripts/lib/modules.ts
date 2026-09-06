@@ -5,8 +5,8 @@ import type { ModuleManifest, Platform } from '../../src/lib/registry/index.ts';
  * to it, and the manifest committed at its tag.
  *
  * Both are parsed here, away from the fetching, because both are where the
- * history is awkward — a dotted camelCase module id, a package that is neither
- * platform, a manifest format that predates the repo's YAML — and none of that
+ * history is awkward - a dotted camelCase module id, a package that is neither
+ * platform, a manifest format that predates the repo's YAML - and none of that
  * should need the network to test.
  *
  * Tags are deliberately absent. They are opaque references and nothing here

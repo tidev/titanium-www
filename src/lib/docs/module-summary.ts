@@ -3,7 +3,7 @@ import type { ModuleSource, ModuleIndex, Platform } from '../registry/index.ts';
 /**
  * The module shapes derived from `index.json` alone.
  *
- * Nothing here touches the filesystem — same reason as `./tree.ts`. The browse
+ * Nothing here touches the filesystem - same reason as `./tree.ts`. The browse
  * page filters in the browser, so its component and everything it imports end
  * up in the client bundle, and one `node:fs` import anywhere in that graph
  * fails the build rather than tree-shaking away.
@@ -57,7 +57,7 @@ export type ModuleSummary = {
  */
 export type CommunityListing = {
   kind: 'community';
-  /** `owner/name` — a community module has no manifest id to key on. */
+  /** `owner/name` - a community module has no manifest id to key on. */
   id: string;
   name: string;
   owner: string;
@@ -79,7 +79,7 @@ export type SortKey = 'default' | 'name' | 'updated';
  *
  * A registry module's key is its id and that is also its name. A community
  * module is keyed `owner/name`, because a repository slug is the only stable
- * identity it has — but sorting on that key sorts by author, which puts
+ * identity it has - but sorting on that key sorts by author, which puts
  * `av.imageview` under A for AndreaVitale and `ti.animation` under M for m1ga.
  * Nobody scanning an alphabetical list of modules is looking for the author.
  */
@@ -91,7 +91,7 @@ export function listingName(listing: ModuleListing): string {
  * When a listing last moved.
  *
  * A registry module's newest release date; a community repository's last push.
- * Different events, but the same question — is anyone still working on this.
+ * Different events, but the same question - is anyone still working on this.
  */
 export function listingUpdatedAt(listing: ModuleListing): string | undefined {
   if (listing.kind === 'community') return listing.pushedAt;

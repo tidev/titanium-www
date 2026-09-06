@@ -9,8 +9,8 @@ import type { ModuleManifest } from '@/lib/registry';
  * wants 10.0.0.GA and apiversion 2, and `minsdk` is the field that decides
  * whether the module builds at all.
  *
- * A release can also carry fewer manifests than platforms — ti.nfc 2.0.0 shipped
- * for both and only committed the android one — so this renders what exists
+ * A release can also carry fewer manifests than platforms - ti.nfc 2.0.0 shipped
+ * for both and only committed the android one - so this renders what exists
  * rather than a row per platform.
  */
 

@@ -31,7 +31,7 @@ export async function generateMetadata({
   const note = releaseNote(version);
   if (!note) return {};
   return {
-    title: `${note.title} — Titanium SDK`,
+    title: `${note.title} - Titanium SDK`,
     description: `Release notes for Titanium SDK ${version}.`,
     alternates: { canonical: `${SITE_URL}/docs/sdk/${version}/release-notes` },
   };

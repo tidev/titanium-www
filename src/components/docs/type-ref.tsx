@@ -42,7 +42,7 @@ function One({ ref_, link }: { ref_: TypeRef; link: ApiLinker }) {
 
   if (ref_.kind === 'type') {
     const href = link(ref_.name);
-    // A type the tree does not render — a pseudo-type folded into its referent —
+    // A type the tree does not render - a pseudo-type folded into its referent -
     // still names something real, so the name stays and the link goes.
     if (href) {
       return (

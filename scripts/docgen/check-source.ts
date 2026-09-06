@@ -8,7 +8,7 @@ import { resolveSource } from './sources.ts';
  *   node scripts/docgen/check-source.ts tidev/ti.map
  *
  * Reports the kind on GITHUB_OUTPUT as well, since the workflow has to know it
- * to decide whether the compile needs an SDK to resolve against — and this step
+ * to decide whether the compile needs an SDK to resolve against - and this step
  * has already resolved the source, so deriving it twice would be a second place
  * for the answer to be wrong.
  */

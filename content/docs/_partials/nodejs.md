@@ -80,7 +80,7 @@ Debian and Ubuntu ship a Node too old for Titanium, so this adds
 winget install OpenJS.NodeJS.LTS
 ```
 
-`.LTS` follows whatever is LTS at the time — confirm the version below.
+`.LTS` follows whatever is LTS at the time, so confirm the version below.
 
 @tab nvm
 

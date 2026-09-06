@@ -35,7 +35,7 @@ const IMAGES_OUT = join(root, 'public/blog');
  * The taxonomy, defined rather than inherited.
  *
  * The source has 49 "Release" and one "RC", which is not a taxonomy so much as
- * a field nobody revisited — two posts filed under Release are a Hacktoberfest
+ * a field nobody revisited - two posts filed under Release are a Hacktoberfest
  * call for contributors and a WWDC testing notice. Those two move to Community
  * and the one-off RC folds into Releases; everything else is genuinely a
  * release announcement. Recorded here so the remapping is reviewable rather
@@ -142,7 +142,6 @@ for (const file of posts) {
     `author: ${JSON.stringify(String(data.author))}`,
     `category: ${JSON.stringify(category)}`,
     ...(cover ? [`cover: ${JSON.stringify(cover)}`] : []),
-    `source: ${JSON.stringify(`https://tidev.io/blog/${basename(file, '.md')}`)}`,
     '---',
   ].join('\n');
 

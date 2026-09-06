@@ -4,8 +4,8 @@ export type Detail = { html: string } | { text: string } | null;
 /**
  * Turns Pagefind's excerpt into the line shown under a result.
  *
- * A symbol's indexed text starts with its own name, twice — qualified and
- * bare — because that is what makes a search for `addEventListener` find the
+ * A symbol's indexed text starts with its own name, twice - qualified and
+ * bare - because that is what makes a search for `addEventListener` find the
  * member rather than a page mentioning it. The excerpt therefore opens by
  * repeating the title that is already on the line above. Where that happens
  * the prefix is dropped and the rest shown as plain text; the title is the

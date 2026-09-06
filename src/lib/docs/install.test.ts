@@ -7,7 +7,7 @@ import { describe, test } from 'node:test';
  *
  * These are the facts a reader pastes into a terminal, so getting one wrong is
  * worse than saying nothing. `iphone` in particular is checked from three
- * directions — the path, the tiapp entry, and the archive name — because it is
+ * directions - the path, the tiapp entry, and the archive name - because it is
  * the detail most likely to be "corrected" to `ios` by someone reading the
  * registry's own platform vocabulary.
  */

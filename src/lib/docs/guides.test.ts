@@ -14,8 +14,8 @@ import { describe, test } from 'node:test';
  * The pipeline end to end, over a fixture tree.
  *
  * These run the real loader, the real directive expansion and the real
- * renderer. The fixtures use real paths from `ia.ts` — `setup/macos` is a page
- * the approved IA defines — so the test also proves a file and its entry in the
+ * renderer. The fixtures use real paths from `ia.ts` - `setup/macos` is a page
+ * the approved IA defines - so the test also proves a file and its entry in the
  * structure agree.
  */
 
@@ -75,7 +75,7 @@ describe('guide', () => {
 
   test('resolves a code group nested inside an :::only block', () => {
     // The two directives close with the same `:::`, so the inner one has to be
-    // counted or it closes the outer block at its own fence — which would have
+    // counted or it closes the outer block at its own fence - which would have
     // cut the rest of the partial from every page that includes it.
     const mac = guide(['setup', 'macos'], FIXTURES)!;
     assert.match(mac.html, /<div class="tabs tabs-code"/);

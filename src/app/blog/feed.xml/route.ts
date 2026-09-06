@@ -11,7 +11,7 @@ import { SITE_URL } from '@/lib/site';
  * sanitising the site itself applies, so the feed can never carry markup the
  * pages would have stripped.
  *
- * Drafts are excluded — a feed is the one surface a reader cannot un-see.
+ * Drafts are excluded - a feed is the one surface a reader cannot un-see.
  */
 
 export const dynamic = 'force-static';
@@ -24,7 +24,7 @@ const escape = (s: string) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;');
 
-/** RFC 822, which is what RSS requires — not the ISO date the frontmatter uses. */
+/** RFC 822, which is what RSS requires - not the ISO date the frontmatter uses. */
 const rfc822 = (date: string) => new Date(`${date}T00:00:00Z`).toUTCString();
 
 export function GET() {

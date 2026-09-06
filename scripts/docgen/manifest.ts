@@ -184,12 +184,12 @@ export function plan(
 }
 
 export function describe(p: Plan): string {
-  if (p.reason === 'first-run') return `first run — generating all ${p.dirty.length} types`;
+  if (p.reason === 'first-run') return `first run - generating all ${p.dirty.length} types`;
   if (p.reason === 'generator-changed') {
-    return `generator changed — regenerating all ${p.dirty.length} types`;
+    return `generator changed - regenerating all ${p.dirty.length} types`;
   }
   if (p.reason === 'external-changed') {
-    return `the corpus this resolves against changed — regenerating all ${p.dirty.length} types`;
+    return `the corpus this resolves against changed - regenerating all ${p.dirty.length} types`;
   }
   const direct = p.dirty.length - p.viaInheritance.length;
   const src =

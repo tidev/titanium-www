@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 /**
  * Marks every response from a non-production host as noindex.
  *
- * A header rather than a <meta> tag so it also covers non-HTML responses —
+ * A header rather than a <meta> tag so it also covers non-HTML responses -
  * the sitemap, JSON, and the generated registry files.
  */
 export function proxy(request: NextRequest) {
@@ -20,7 +20,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except build output and the favicon. robots.txt and sitemap.xml
-  // stay in scope deliberately — the header is harmless there, and excluding
+  // stay in scope deliberately - the header is harmless there, and excluding
   // them is one more thing to keep in sync.
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

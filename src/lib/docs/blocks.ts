@@ -28,7 +28,7 @@ import { PLATFORM_IDS, platformLabel, type PlatformId } from './ia.ts';
  *
  * `:::tabs` on its own line is not markdown, so markdown-it emits it as
  * `<p>:::tabs</p>` and it arrives here intact. The cost is that the markers
- * need blank lines around them — without one, markdown-it folds the marker into
+ * need blank lines around them - without one, markdown-it folds the marker into
  * the following paragraph and the block silently renders as text. That failure
  * is caught rather than shipped: `unresolvedMarkers` finds every marker no
  * transform consumed, and `validateGuides` fails the build on it.
@@ -41,7 +41,7 @@ export class BlockError extends Error {}
  *
  * Tabs are CSS-driven (see below), which needs one selector per index rather
  * than a general rule, so the ceiling is real and not advisory. Five platforms
- * plus a spare is more than any group should want — beyond about four the tab
+ * plus a spare is more than any group should want - beyond about four the tab
  * strip wraps and stops reading as a set of alternatives.
  */
 export const MAX_PANELS = 6;
@@ -73,7 +73,7 @@ function parsePlatforms(raw: string, directive: string): PlatformId[] {
 
   for (const id of ids) {
     if (!(PLATFORM_IDS as readonly string[]).includes(id)) {
-      throw new BlockError(`:::${directive} ${id} — not a platform (${PLATFORM_IDS.join(', ')})`);
+      throw new BlockError(`:::${directive} ${id} - not a platform (${PLATFORM_IDS.join(', ')})`);
     }
   }
   return ids as PlatformId[];
@@ -85,7 +85,7 @@ type Panel = { label: string; body: string };
  * Splits a group's inner HTML on its `@tab` markers.
  *
  * Anything before the first marker is content the author put in the group but
- * not in a panel, which is a mistake with no sensible rendering — it would
+ * not in a panel, which is a mistake with no sensible rendering - it would
  * either vanish or appear above the tab strip, and both are worse than saying
  * so.
  */
@@ -125,7 +125,7 @@ function checkPanels(panels: Panel[], kind: string): void {
     // entry pointing at content that is hidden until someone picks that tab.
     if (/<h[1-6][\s>]/.test(panel.body)) {
       throw new BlockError(
-        `:::${kind} panel "${panel.label}" contains a heading — split the group instead`
+        `:::${kind} panel "${panel.label}" contains a heading - split the group instead`
       );
     }
   }
@@ -136,7 +136,7 @@ function checkPanels(panels: Panel[], kind: string): void {
       // with prose in it wants `:::tabs`, which is styled to hold prose.
       if (!/^<pre[\s>]/.test(panel.body) || !panel.body.endsWith('</pre>')) {
         throw new BlockError(
-          `:::code-group panel "${panel.label}" is not a single code block — use :::tabs`
+          `:::code-group panel "${panel.label}" is not a single code block - use :::tabs`
         );
       }
     }
@@ -147,7 +147,7 @@ function renderGroup(kind: 'tabs' | 'code-group', panels: Panel[], index: number
   const name = `tabs-${index}`;
 
   // Each radio sits immediately before its own label so the checked state can
-  // be styled with `input:checked + .tab` — one rule rather than one per index.
+  // be styled with `input:checked + .tab` - one rule rather than one per index.
   // The panels stay outside, where `:has()` reaches them.
   const strip = panels
     .map(
@@ -212,7 +212,7 @@ export function renderBlocks(html: string): string {
 
   out = out.replace(SINCE, (_whole, version: string, body: string) => {
     if (!VERSION.test(version)) {
-      throw new BlockError(`:::since ${version} — not a version number`);
+      throw new BlockError(`:::since ${version} - not a version number`);
     }
     return (
       `<div class="version-notice">` +

@@ -7,7 +7,7 @@ import type { ModuleSource } from '@/lib/registry';
  *
  * The badge said "TiDev" and was read as a statement about the owner. It never
  * was: `tidev` means the module is curated here, with verified releases and a
- * compiled reference, and the giveaway is tidev/ti.worker — a TiDev repository
+ * compiled reference, and the giveaway is tidev/ti.worker - a TiDev repository
  * that nothing on this site documents, so it lists as community. Naming the
  * status rather than the org is what makes the two readable together.
  */
@@ -88,8 +88,8 @@ export function LatestPerPlatform({
             )}
             {date && <span className="text-xs text-text-subtle">{date}</span>}
             {/* Per platform, because it is: ti.map needs SDK 12.7.0 on Android
-                and 10.0.0 on iOS. Shown as the manifest wrote it — some say
-                `10.0.0.GA` — since normalising would be inventing precision. */}
+                and 10.0.0 on iOS. Shown as the manifest wrote it - some say
+                `10.0.0.GA` - since normalising would be inventing precision. */}
             {minsdk && (
               <span
                 title={`Requires Titanium SDK ${minsdk} or newer`}

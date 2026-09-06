@@ -4,7 +4,7 @@ export type NavItem = {
   /**
    * A second link shown beside the first, as `Label / Also`.
    *
-   * For a destination with a machine-readable twin — the blog and its feed —
+   * For a destination with a machine-readable twin - the blog and its feed -
    * where a separate row would imply they are separate places.
    */
   also?: { href: string; label: string };
@@ -12,7 +12,7 @@ export type NavItem = {
 
 /**
  * Main sections. "Docs" is the umbrella over both guides and the API
- * reference — the API is part of the docs, not a sibling of them.
+ * reference - the API is part of the docs, not a sibling of them.
  * Routes are placeholders until M2–M4 build them out.
  */
 export const primaryNav: NavItem[] = [
@@ -23,7 +23,7 @@ export const primaryNav: NavItem[] = [
 ];
 
 /**
- * GitHub points at the org rather than a single repo — the popular repos are
+ * GitHub points at the org rather than a single repo - the popular repos are
  * pinned there, so it is the more useful landing spot.
  */
 export const communityNav: NavItem[] = [
@@ -31,8 +31,11 @@ export const communityNav: NavItem[] = [
   { href: 'https://github.com/tidev/titanium-sdk/discussions', label: 'Discussions' },
   { href: 'https://tidev.slack.com', label: 'Slack' },
   {
-    // Interim target. The eventual home is a site page pulling together the
-    // CLA, code of conduct, and committer path from tidev/organization-docs.
+    // Interim target. Contributing is about the software, so its home is
+    // `/contribute` on this site rather than on tidev.io, settled in TI-68,
+    // see `docs/blog-split.md`. That page still has to be written: it pulls
+    // together the CLA, code of conduct, and committer path from
+    // tidev/organization-docs. Point this at `/contribute` when it exists.
     href: 'https://github.com/tidev/titanium-sdk/blob/main/.github/CONTRIBUTING.md',
     label: 'Contribute',
   },

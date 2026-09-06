@@ -9,7 +9,7 @@ import Link from 'next/link';
 /**
  * Deliberately not the centred logo-tagline-two-buttons stack that React,
  * React Native and Cordova all run. Asymmetric, with real code holding the
- * right side — three rounds of mockups established that the composition is
+ * right side - three rounds of mockups established that the composition is
  * what made those sites interchangeable, far more than the palette was.
  *
  * No images anywhere on this page, which is also why it has no layout shift to
@@ -23,7 +23,7 @@ import Link from 'next/link';
  * The release notes now have pages of their own (TI-72), so this points at the
  * one for this version. It used to match a blog post by looking for the release
  * name inside the post title, which worked but rested on a coincidence of
- * wording — a retitled announcement would have quietly sent the landing page to
+ * wording - a retitled announcement would have quietly sent the landing page to
  * the release list instead.
  *
  * The announcement post is still the better read where one exists, but it is
@@ -72,7 +72,7 @@ const C = ({ children }: { children: React.ReactNode }) => (
 );
 
 /**
- * A window with a button that responds — the smallest thing that is still a
+ * A window with a button that responds - the smallest thing that is still a
  * real app rather than a syntax demo. `Ti.UI.createWindow` returns an Android
  * Activity or a UIWindow, which is the whole point and is worth showing rather
  * than asserting.
@@ -192,7 +192,7 @@ export default function Home() {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {/* The CTA is install rather than a guide because there is no
-                getting-started guide yet — the prose rewrites are TI-32 and
+                getting-started guide yet - the prose rewrites are TI-32 and
                 after. Pointing "Get started" at the API reference would send a
                 newcomer somewhere that answers a different question. */}
             <Link
@@ -238,7 +238,7 @@ export default function Home() {
 
       {/* `border-b` as well as `border-t`: this band is tinted and the section
           after it is not, so without a closing rule the shading just stops.
-          The community band needs none — the footer's own border closes it. */}
+          The community band needs none - the footer's own border closes it. */}
       <section
         aria-labelledby="what"
         className="border-y border-border bg-surface/40 py-14 sm:py-16"
@@ -271,7 +271,7 @@ export default function Home() {
                 Open source, community owned
               </dt>
               <dd className="mt-2 text-sm leading-relaxed text-text-muted">
-                Apache-2.0, governed by TiDev, a non-profit. Fifteen years old and still shipping —
+                Apache-2.0, governed by TiDev, a non-profit. Fifteen years old and still shipping -
                 the SDK is developed in the open by the people who use it.
               </dd>
             </div>
@@ -289,7 +289,7 @@ export default function Home() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-text-muted">
             Alloy is Titanium&rsquo;s MVC framework. Views are XML, styles are a stylesheet, and
-            controllers are plain JavaScript — the same split you would reach for anyway, with data
+            controllers are plain JavaScript - the same split you would reach for anyway, with data
             binding and a build step that compiles it all down to the SDK calls above.
           </p>
           <Link

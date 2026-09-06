@@ -3,8 +3,8 @@ import type { ApiIndex } from '../registry/index.ts';
 /**
  * Navigation shapes derived from `index.json` alone.
  *
- * Nothing here touches the filesystem — it takes the index's `types` array and
- * returns plain data — so the tree can be built in a server component and handed
+ * Nothing here touches the filesystem - it takes the index's `types` array and
+ * returns plain data - so the tree can be built in a server component and handed
  * to a client one without dragging `node:fs` into the browser bundle.
  *
  * Results are memoised against the array identity rather than the version
@@ -46,7 +46,7 @@ export function navTypes(types: readonly IndexType[]): NavType[] {
 export const TOP_LEVEL = '#top-level';
 
 export type NavNode = {
-  /** The dotted prefix this node covers — `Titanium.UI`. Stable id for expansion. */
+  /** The dotted prefix this node covers - `Titanium.UI`. Stable id for expansion. */
   id: string;
   /** The last segment: `UI` for `Titanium.UI`. */
   label: string;
@@ -66,8 +66,8 @@ const names = new WeakMap<object, Set<string>>();
  *
  * 58 of main's 283 names carry no dot. Six of them (`Titanium`, `Global`, `fs`,
  * `util`, `assert`, `buffer`) have types nested under them and become branches
- * on their own; the other 52 — `Point`, `Font`, `ItemTemplate`, the Node shims
- * `os`/`path`/`process` — are leaves with no namespace to sit in. Scattering 52
+ * on their own; the other 52 - `Point`, `Font`, `ItemTemplate`, the Node shims
+ * `os`/`path`/`process` - are leaves with no namespace to sit in. Scattering 52
  * loose entries across the root would bury the six branches that matter, so they
  * collect under one synthetic group instead. The rule is derived from the
  * registry rather than a hand-kept list, so a name that later grows children
@@ -113,7 +113,7 @@ export function buildNavTree(types: readonly NavType[]): NavNode[] {
 
   // `Titanium` is 212 of the 283 types; alphabetical order would file the SDK
   // itself between `buffer` and `util`. The catch-all sorts last for the same
-  // reason — it is where you look once the namespaces have not helped.
+  // reason - it is where you look once the namespaces have not helped.
   branches.sort(byLabel);
   const tree = [
     ...branches.filter((n) => n.id === 'Titanium'),
@@ -128,7 +128,7 @@ export function buildNavTree(types: readonly NavType[]): NavNode[] {
 }
 
 /**
- * The branch ids to expand for a type — its own, plus every namespace above it.
+ * The branch ids to expand for a type - its own, plus every namespace above it.
  *
  * `Titanium.UI.Button` opens `Titanium` and `Titanium.UI`; a name with no dots
  * opens the synthetic group unless it is a root namespace in its own right.
@@ -147,7 +147,7 @@ export function branchIds(name: string, roots: readonly NavNode[]): string[] {
 /**
  * The types that directly extend `name`.
  *
- * The registry records inheritance upwards only — `extends` on the child — so
+ * The registry records inheritance upwards only - `extends` on the child - so
  * the downward edge has to be derived. `index.json` carries `extends` for all
  * 230 types that have one, which makes this a single pass over data the page
  * has already read rather than 283 file opens.
@@ -178,7 +178,7 @@ export type Crumb = {
 /**
  * The namespace path to a type, one crumb per segment.
  *
- * Every prefix in main is also a type — `Titanium.UI` has its own page — but
+ * Every prefix in main is also a type - `Titanium.UI` has its own page - but
  * that is a property of the current registry, not a guarantee, so a prefix with
  * no type of its own comes back unlinked rather than as a dead link.
  */

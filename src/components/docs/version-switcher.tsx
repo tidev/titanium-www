@@ -5,7 +5,7 @@ import type { VersionOption } from '@/lib/docs/versions';
  *
  * ## Links, not a listbox
  *
- * The version is a path segment, so switching is a navigation — which is what
+ * The version is a path segment, so switching is a navigation - which is what
  * makes a pinned version shareable. Every option is therefore a real `<a>` with
  * a real destination, worked out on the server, and the whole control works
  * with scripting off. That matters more here than for the module filters, which
@@ -14,7 +14,7 @@ import type { VersionOption } from '@/lib/docs/versions';
  *
  * `<details>` gives the disclosure behaviour, keyboard support and Escape for
  * free. It does not close on an outside click without JavaScript, which is the
- * one thing lost — and every item in it navigates away, so the menu rarely
+ * one thing lost - and every item in it navigates away, so the menu rarely
  * needs closing any other way.
  *
  * ## Versions that do not have this page
@@ -51,7 +51,7 @@ export function VersionSwitcher({
         </svg>
       </summary>
 
-      {/* Out of flow, so opening it does not push the page down — the switcher
+      {/* Out of flow, so opening it does not push the page down - the switcher
           sits directly above the type's heading. Right-aligned because the
           switcher itself is at the right end of the crumb row, and a
           left-anchored panel opened across the on-this-page rail. */}

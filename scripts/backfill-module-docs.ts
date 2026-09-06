@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
  * Compiles API docs for released module versions.
  *
  * Retention: everything published since 2023, and for a module whose newest
- * release predates that, its latest one — so every module has documentation for
+ * release predates that, its latest one - so every module has documentation for
  * at least one release rather than metadata alone. 31 of 323 versions today.
  *
  * The rest keep metadata and a README, which is honest: the bulk of the corpus
@@ -64,7 +64,7 @@ function selectVersions(): Target[] {
       // asset carries its own and any of them identifies the right commit.
       const tag = meta.tag ?? meta.assets.map((a) => (a as { tag?: string }).tag).find(Boolean);
       if (!tag) {
-        console.log(`  skip ${moduleId}@${v.version} — no tag recorded`);
+        console.log(`  skip ${moduleId}@${v.version} - no tag recorded`);
         continue;
       }
       out.push({ moduleId, repo, version: v.version, tag, reason });

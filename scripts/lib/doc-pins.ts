@@ -21,7 +21,7 @@ export type Pin = {
   repo: string;
   /** Content files, relative to the repo root. */
   files: string[];
-  /** Matches the version substring alone. No `g` — {@link repin} adds it. */
+  /** Matches the version substring alone. No `g` - {@link repin} adds it. */
   pattern: RegExp;
 };
 
@@ -45,7 +45,7 @@ export const TAG = /^v\d+\.\d+\.\d+$/;
  *
  * Returns what it found as well as the new text: a pin that matches nothing has
  * lost track of the content it names, which is a failure rather than a no-op.
- * That is the way this kind of script rots — the doc gets rewritten, the regex
+ * That is the way this kind of script rots - the doc gets rewritten, the regex
  * stops matching, and the check goes on passing while the version freezes.
  */
 export function repin(

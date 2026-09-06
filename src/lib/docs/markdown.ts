@@ -9,7 +9,7 @@ import sanitizeHtml from 'sanitize-html';
  * Renders the markdown that the registry stores in prose fields.
  *
  * Two things make this more than a plain markdown call. The source contains
- * hand-written HTML — `Titanium.UI.View` has a `<table class="doc-table">` — so
+ * hand-written HTML - `Titanium.UI.View` has a `<table class="doc-table">` - so
  * inline HTML is enabled and the result is sanitized. And cross-references were
  * resolved at compile time to `api:` URIs, which are turned into real paths here
  * because only the renderer knows which tree it is rendering into.
@@ -58,7 +58,7 @@ export type RenderOptions = {
    * its references are anchors on the page being rendered and the other half
    * are pages in the SDK tree.
    *
-   * Optional, for prose that has no API references to resolve — a blog post is
+   * Optional, for prose that has no API references to resolve - a blog post is
    * written for people rather than against a type tree. Omitted, an `api:` URI
    * resolves to nothing and the text is left as written.
    */
@@ -69,7 +69,7 @@ export type RenderOptions = {
    * apidoc images sit beside the YAML, so `Titanium/UI/Button.yml` writes
    * `./button_android.png` meaning `Titanium/UI/button_android.png`. A README
    * is the same problem against a different root, and its links need rewriting
-   * as well as its images — they are relative to a repository we do not serve.
+   * as well as its images - they are relative to a repository we do not serve.
    *
    * A root-relative `/x.png` is left alone in both cases: in apidoc it means
    * the site root and is already correct, and no README in the registry uses
@@ -78,7 +78,7 @@ export type RenderOptions = {
   relative?: { images: string; links?: string };
 };
 
-/** Absolute, protocol-relative, or root-relative — nothing to resolve. */
+/** Absolute, protocol-relative, or root-relative - nothing to resolve. */
 const isAbsolute = (ref: string) => /^(?:[a-z][\w+.-]*:)?\/\//i.test(ref) || ref.startsWith('/');
 
 const resolveRelative = (base: string, ref: string) => `${base}/${ref.replace(/^\.\//, '')}`;
@@ -120,7 +120,7 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
         // site does not serve. 46 survive in the registry's prose. Three shapes:
         // the examples of a type, which are on the page now; a plain type
         // reference docgen never converted to an `api:` URI, which the linker
-        // can still resolve; and a guide, which has no address here at all —
+        // can still resolve; and a guide, which has no address here at all -
         // that one loses its link and keeps its text, because "once you have
         // [installed] the module" reads fine without one and a dead `#!`
         // fragment does not.
@@ -163,7 +163,7 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
     },
   });
 
-  // Both run after the allowlist, never before — see highlight.ts. Letting
+  // Both run after the allowlist, never before - see highlight.ts. Letting
   // either write markup the sanitizer then has to permit would extend that
   // permission to whoever wrote the module README this also renders.
   return renderCallouts(highlightCodeBlocks(clean));

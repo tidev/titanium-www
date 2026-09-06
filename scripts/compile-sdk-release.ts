@@ -6,8 +6,8 @@ import { join } from 'node:path';
 /**
  * Compiles one published SDK release into `registry/sdk/<version>/`.
  *
- * The reference defaulted to `main` — the mutable tree compiled from the SDK's
- * development branch — because no release had ever been compiled, and
+ * The reference defaulted to `main` - the mutable tree compiled from the SDK's
+ * development branch - because no release had ever been compiled, and
  * `latestSdkVersion()` falls back to `main` when it finds nothing else. Running
  * this for a release is what makes `/docs/sdk/latest` point at shipped code.
  *
@@ -22,7 +22,7 @@ import { join } from 'node:path';
  * Every GA tag from 13.2.0 to 13.4.1 carries a YAML syntax error in
  * `Geolocation.yml`: a flow sequence continued on the next line at the same
  * indent as its own key, which YAML rejects. The document fails to parse,
- * `Titanium.Geolocation` never compiles, and thirteen references to it dangle —
+ * `Titanium.Geolocation` never compiles, and thirteen references to it dangle -
  * so docgen refuses to publish the tree, which is the right call.
  *
  * Upstream fixed it in `d362f355` on 2026-08-26, the day after 13.4.1 shipped,
@@ -31,7 +31,7 @@ import { join } from 'node:path';
  *
  * The patches below are that upstream commit and nothing else. Each is
  * whitespace, changes no content, and is verified to match before it is applied
- * — a patch that no longer applies is an error rather than a silent no-op, so
+ * - a patch that no longer applies is an error rather than a silent no-op, so
  * this cannot quietly diverge from the tag it claims to compile.
  */
 
@@ -75,7 +75,7 @@ const run = (cmd: string, args: string[], cwd?: string) =>
 
 function compile(version: string): 'compiled' | 'skipped' {
   if (existsSync(join(root, 'registry/sdk', version))) {
-    console.log(`${version}: already compiled, skipped — published versions are frozen`);
+    console.log(`${version}: already compiled, skipped - published versions are frozen`);
     return 'skipped';
   }
 
@@ -137,7 +137,7 @@ function compile(version: string): 'compiled' | 'skipped' {
         process.exit(1);
       }
       writeFileSync(path, before.replace(patch.find, patch.replace));
-      console.log(`  patched ${patch.file} (${patch.upstream}) — ${patch.why}`);
+      console.log(`  patched ${patch.file} (${patch.upstream}) - ${patch.why}`);
     }
 
     run('node', [
@@ -164,9 +164,9 @@ for (const version of versions) {
     if (compile(version) === 'compiled') compiled++;
     else skipped++;
   } catch (err) {
-    // One bad release must not abandon the rest — the summary says which.
+    // One bad release must not abandon the rest - the summary says which.
     const why = (err as Error).message.split('\n')[0];
-    console.error(`\n${version}: FAILED — ${why}\n`);
+    console.error(`\n${version}: FAILED - ${why}\n`);
     failed.push({ version, why });
   }
 }

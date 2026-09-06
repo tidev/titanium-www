@@ -76,7 +76,7 @@ export type InlinedType = {
  *
  * `platforms` is carried because narrowing is per inheriting type: Titanium.UI.View
  * offers `backgroundColor` on all four platforms, but Titanium.UI.iOS.BlurView
- * inherits it as iOS-only. Everything else — prose, type, examples — is read from
+ * inherits it as iOS-only. Everything else - prose, type, examples - is read from
  * the declaring type's file, which is what keeps a base-class edit from rewriting
  * every descendant.
  */
@@ -105,8 +105,8 @@ export type ResolvedType = {
   methods: Member[];
   events: Member[];
   /**
-   * Resolved inherited members, by reference. The list is already correct —
-   * excludes applied down the chain, unreachable platforms dropped — so a
+   * Resolved inherited members, by reference. The list is already correct -
+   * excludes applied down the chain, unreachable platforms dropped - so a
    * consumer never reimplements those rules, it only reads the bodies.
    */
   inherited: Record<'properties' | 'methods' | 'events', InheritedRef[]>;
@@ -147,7 +147,7 @@ function chainOf(name: string, types: Map<string, RawType>): string[] {
 /**
  * Matches the old docgen's getSubtype(), which derived the kind by walking
  * `extends` and fell through to `pseudo` when nothing resolved. That fallback is
- * why the Node namespaces (assert, fs, buffer) land in `pseudo` — they inherit
+ * why the Node namespaces (assert, fs, buffer) land in `pseudo` - they inherit
  * from no Titanium base. A "name has no dots" heuristic gets the same answer for
  * the wrong reason and misclassifies elsewhere.
  *
@@ -177,7 +177,7 @@ const isPlatform = (p: unknown): p is Platform =>
  *
  * `platforms` intersects, `exclude-platforms` subtracts, and saying nothing
  * inherits the base unchanged. Applied to a type against all four platforms,
- * then to each member against its owning type — so an Android-only property
+ * then to each member against its owning type - so an Android-only property
  * inherited by an iOS-only view resolves to nothing and is dropped rather than
  * being advertised as available there.
  */
@@ -232,7 +232,7 @@ function examples(v: unknown): Example[] | undefined {
 /**
  * Builds the `createXxx` factory methods.
  *
- * These are the primary way an app creates anything — `Ti.UI.createWindow()` —
+ * These are the primary way an app creates anything - `Ti.UI.createWindow()` -
  * yet none of them are authored. The old docgen synthesized them onto the parent
  * namespace at compile time, so `<Titanium.UI.createAlertDialog>` appears 40
  * times in prose while being declared nowhere. Omitting them would drop roughly
@@ -386,7 +386,7 @@ export function resolveAll(types: Map<string, RawType>, external?: ExternalCorpu
    * ancestry and applying just the leaf's excludes resurrects it from
    * `Titanium.UI.View`, where it is declared.
    *
-   * Works on the raw documents so it can run before any prose is rewritten —
+   * Works on the raw documents so it can run before any prose is rewritten -
    * the cross-reference resolver needs these names to anchor
    * `<Titanium.UI.Button.backgroundColor>` to the type that inherits it.
    */
@@ -437,7 +437,7 @@ export function resolveAll(types: Map<string, RawType>, external?: ExternalCorpu
 
   // Names a cross-reference can anchor to. <Titanium.UI.Button.backgroundColor>
   // names a member Button inherits rather than declares, so an own-members-only
-  // table would fail to resolve it — while a loose "parent exists, assume the
+  // table would fail to resolve it - while a loose "parent exists, assume the
   // member does too" fallback happily mints an anchor for <Ti.Color>, a typo.
   const members = new Map<string, Set<string>>();
   for (const t of types.values()) {
@@ -666,8 +666,8 @@ export function resolveAll(types: Map<string, RawType>, external?: ExternalCorpu
  *
  * A pseudo-type referenced by exactly one type is an option bag for that type's
  * one method; a reader should not have to click through to learn what three
- * fields it accepts. A pseudo-type referenced by many is a shared value type —
- * Point is referenced by 20 types, Font by 14 — and inlining those would mean 20
+ * fields it accepts. A pseudo-type referenced by many is a shared value type -
+ * Point is referenced by 20 types, Font by 14 - and inlining those would mean 20
  * copies of Point and no canonical page to link to. So fan-out decides.
  */
 function inlinePseudoTypes(resolved: Map<string, ResolvedType>): Set<string> {
@@ -691,7 +691,7 @@ function inlinePseudoTypes(resolved: Map<string, ResolvedType>): Set<string> {
     // Nothing gained by inlining something with no fields of its own.
     if (!pseudo.properties.length) continue;
     // Keep anything another type inherits from, and anything with its own methods
-    // or events — that is an object, not an option bag.
+    // or events - that is an object, not an option bag.
     if (pseudo.methods.length || pseudo.events.length) continue;
     inlined.add(name);
   }

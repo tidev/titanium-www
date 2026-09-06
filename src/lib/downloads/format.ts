@@ -10,7 +10,7 @@ export const OS_LABELS: Record<string, string> = {
 
 /**
  * macOS first: it is the only host that can build for iOS, so it is what most
- * of this audience wants. The registry's own order is not usable — releases
+ * of this audience wants. The registry's own order is not usable - releases
  * list linux/osx/win32 and CI builds list linux/win32/osx, because each comes
  * from a different GitHub API in whatever order it answered.
  */
@@ -29,8 +29,8 @@ const SIZE_UNITS = ['bytes', 'kB', 'MB', 'GB'];
 
 /**
  * SI units, one decimal place. Every SDK zip is between 100 and 200 MB, so
- * three significant figures — what pretty-bytes gives you, and what the old
- * site therefore showed — rounds 109.5 MB to 110 MB and throws away the only
+ * three significant figures - what pretty-bytes gives you, and what the old
+ * site therefore showed - rounds 109.5 MB to 110 MB and throws away the only
  * digit that distinguishes one download from another.
  */
 export function formatSize(bytes: number): string {
@@ -51,7 +51,7 @@ export function formatSize(bytes: number): string {
 
 /**
  * Pinned to UTC. The registry stores instants, and an unpinned formatter would
- * render whatever timezone the build machine happened to be in — which makes
+ * render whatever timezone the build machine happened to be in - which makes
  * the same commit produce different HTML on a developer's laptop and in CI.
  */
 const DATE = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' });

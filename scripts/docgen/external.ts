@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
  * already-compiled index gives those references something to resolve to.
  *
  * The index carries member names rather than only counts precisely so this stays
- * a verification and not a guess — `<Titanium.UI.ANIMATION_CURVE_LINEAR>` is
+ * a verification and not a guess - `<Titanium.UI.ANIMATION_CURVE_LINEAR>` is
  * checked against the SDK's member table the same way an internal reference is
  * checked against the local one, so a typo fails the compile instead of shipping
  * an anchor to a member that does not exist.
@@ -31,7 +31,7 @@ export type ExternalCorpus = {
   /** Type name -> every member name that type's page anchors. */
   members: ReadonlyMap<string, ReadonlySet<string>>;
   /**
-   * Identifies what was consumed — names, not prose. An SDK summary edit must
+   * Identifies what was consumed - names, not prose. An SDK summary edit must
    * not invalidate every module's compiled output; a renamed type must.
    */
   hash: string;

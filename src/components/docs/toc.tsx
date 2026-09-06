@@ -4,12 +4,12 @@ import type { ResolvedMember } from '@/lib/docs/type-view';
  * In-page navigation.
  *
  * Two parts, because two things are worth jumping to and they are not the same
- * size. `links` are the page's own sections — Examples on a type page, Install
- * and Releases on a module's — and always fit one line. `groups` are the long
+ * size. `links` are the page's own sections - Examples on a type page, Install
+ * and Releases on a module's - and always fit one line. `groups` are the long
  * lists: member counts run from 3 at the tenth percentile to 337 on
  * `Titanium.UI`, so one fixed treatment cannot serve both. A group opens with
- * its members listed when there are 20 or fewer — which covers the median type
- * at 16 — and stays a single collapsed row above that, where an open list would
+ * its members listed when there are 20 or fewer - which covers the median type
+ * at 16 - and stays a single collapsed row above that, where an open list would
  * be taller than the viewport and bury the group below it.
  *
  * A group is a member kind on an SDK type page and a whole type on a module

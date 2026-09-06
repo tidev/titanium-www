@@ -12,7 +12,7 @@ import type { Build } from '../registry/index.ts';
  * The SDK half of the public API (TI-64), and the compatibility surface the
  * shipped CLI still reads.
  *
- * `tidev/titanium-cli` hard-codes five URLs on downloads.titaniumsdk.com —
+ * `tidev/titanium-cli` hard-codes five URLs on downloads.titaniumsdk.com -
  * `registry/branches.json`, `registry/<branch>.json`, and `registry/{ga,rc,
  * beta}.json`. Those cannot be redirected to the endpoints below, for two
  * separate reasons: the CLI calls undici's `request` without `maxRedirections`
@@ -43,7 +43,7 @@ export function apiBranchBuilds(branch: string): Build[] | null {
 /**
  * `registry/{ga,rc,beta}.json`: a bare array, newest first.
  *
- * Verified against the live responses rather than assumed — ga.json is 71
+ * Verified against the live responses rather than assumed - ga.json is 71
  * entries of `{name, version, date, url, assets:[{os,size,url}]}`, which is the
  * registry's own `Build` minus nothing. Returned as-is.
  */
@@ -54,7 +54,7 @@ export function legacyChannel(channel: Channel): Build[] {
 /**
  * `registry/branches.json`: a bare `{branch: buildCount}` object.
  *
- * Every key the committed map has, so the shape is unchanged — but the counts
+ * Every key the committed map has, so the shape is unchanged - but the counts
  * are recomputed from the build files rather than served as committed. The
  * committed number is as of the last sweep, and CI artifacts expire 90 days
  * after their run, so the old file offers the CLI twelve branches of which nine
@@ -74,8 +74,8 @@ export function legacyBranches(): Record<string, number> {
  * `registry/<branch>.json`: a bare array of that branch's live builds.
  *
  * An empty array for a branch nothing downloadable remains on, rather than a
- * 404. That is what the old file effectively was — it listed builds whose
- * artifacts had long expired, and the CLI filtered them out on arrival — so
+ * 404. That is what the old file effectively was - it listed builds whose
+ * artifacts had long expired, and the CLI filtered them out on arrival - so
  * answering `[]` is the same result without the dead URLs in between.
  */
 export function legacyBranch(branch: string): Build[] {

@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
  *
  * Generates nothing today: none of the 50 imported posts carry tags, since the
  * old blog had no such field. The route exists so that adding `tags:` to a post
- * is all it takes — rather than a later PR discovering the archive was never
+ * is all it takes - rather than a later PR discovering the archive was never
  * built.
  */
 
@@ -24,7 +24,7 @@ export async function generateMetadata({
 }: PageProps<'/blog/tag/[tag]'>): Promise<Metadata> {
   const { tag } = await params;
   return {
-    title: `${tag} — Titanium SDK blog`,
+    title: `${tag} - Titanium SDK blog`,
     description: `Blog posts tagged ${tag}.`,
     alternates: { canonical: `${SITE_URL}/blog/tag/${tag}` },
   };

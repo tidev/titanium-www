@@ -13,7 +13,7 @@ import type { z } from 'zod';
  * rather than assumed. The archive's own root is `modules/<slot>/<moduleid>/
  * <version>/`, so it unpacks into place from the project root with no `-d` and
  * no moving files afterwards. And `<slot>` is the packager's platform name,
- * which is `iphone` for iOS — in the path inside the zip, in the asset
+ * which is `iphone` for iOS - in the path inside the zip, in the asset
  * filename, and in the `platform` attribute in `tiapp.xml`. `ios` appears in
  * none of the three.
  */

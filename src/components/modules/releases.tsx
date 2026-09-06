@@ -10,8 +10,8 @@ import type { ModuleIndex } from '@/lib/registry';
  * splitting them would list the same download twice.
  *
  * Prereleases are shown rather than filtered out. They are the reason `latest`
- * sometimes names a lower number than the newest row — ti.coremotion's 4.0.1 is
- * a prerelease, so 4.0.0 is still the current iOS build — and hiding them would
+ * sometimes names a lower number than the newest row - ti.coremotion's 4.0.1 is
+ * a prerelease, so 4.0.0 is still the current iOS build - and hiding them would
  * leave that looking like a bug.
  */
 export function Releases({ index, className = '' }: { index: ModuleIndex; className?: string }) {

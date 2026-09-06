@@ -20,7 +20,7 @@ Install it from the Mac App Store, or from
 [Apple's developer downloads](https://developer.apple.com/download/all/) for a
 specific version. It is around 10 GB.
 
-Open it once after installing — it finishes setting itself up on first launch,
+Open it once after installing: it finishes setting itself up on first launch,
 and Titanium cannot use it before that. Then install the command line tools:
 
 ```sh
@@ -36,7 +36,7 @@ sudo xcode-select -s /Applications/Xcode.app
 ### Which version
 
 Titanium SDK 13.4 supports **Xcode 15.0 through 26.x**. A newer one is not
-blocked — Titanium reports it as too new and builds anyway. If a build breaks
+blocked: Titanium reports it as too new and builds anyway. If a build breaks
 in a way that makes no sense, rule that out early.
 
 ### Simulators
@@ -62,7 +62,7 @@ Titanium reads certificates from your keychain and profiles from
 picks them up.
 
 A free Apple ID covers your own device. Distributing to anyone else needs a paid
-Apple Developer account — see [Distributing Apps](/docs/distribute/signing).
+Apple Developer account. See [Distributing Apps](/docs/distribute/signing).
 
 :::include android-sdk
 
@@ -72,7 +72,7 @@ checks.
 ## Set up an Android emulator
 
 Create a virtual device with Android Studio's Device Manager. On Apple silicon,
-choose an `arm64-v8a` system image — an x86 image runs under emulation and is
+choose an `arm64-v8a` system image: an x86 image runs under emulation and is
 unusably slow.
 
 A physical device over USB needs no driver on macOS. Turn on USB debugging in
@@ -84,7 +84,7 @@ Developer options and accept the prompt on the device.
 
 ### Every command exits with "Rebuild failed"
 
-You are on Node 26 with SDK 13.4 or earlier. Switch to Node 24, or to SDK 14 —
+You are on Node 26 with SDK 13.4 or earlier. Switch to Node 24, or to SDK 14 -
 [detail here](#install-node-js).
 
 ### `ti info` reports no iOS certificates

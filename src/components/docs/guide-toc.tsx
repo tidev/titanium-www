@@ -17,7 +17,7 @@ import type { Heading } from '@/lib/docs/headings';
  * and a link at rest should not be dimmer than the body copy it points into.
  */
 export function GuideToc({ headings }: { headings: Heading[] }) {
-  // One heading is not a table of contents — it is a restatement of the title.
+  // One heading is not a table of contents - it is a restatement of the title.
   if (headings.length < 2) return null;
 
   return (

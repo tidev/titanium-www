@@ -41,7 +41,7 @@ export function Install({
       </h2>
 
       <p className="mt-2 text-sm text-text-muted">
-        A module is a zip you unpack in your project. There is no installer command yet — a{' '}
+        A module is a zip you unpack in your project. There is no installer command yet - a{' '}
         <code className="rounded bg-surface px-1 py-0.5 font-mono text-xs">ti module install</code>{' '}
         is planned but <strong className="font-medium">does not exist today</strong>, so the steps
         below are the ones that work.
@@ -95,7 +95,7 @@ export function Install({
           <Snippet>{tiapp}</Snippet>
           <p className="mt-2 text-xs text-text-subtle">
             The <code className="font-mono">platform</code> attribute is the packager&rsquo;s name
-            for the platform, which is <code className="font-mono">iphone</code> for iOS — the same
+            for the platform, which is <code className="font-mono">iphone</code> for iOS - the same
             word the archive uses in its own path.
           </p>
         </li>

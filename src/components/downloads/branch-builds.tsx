@@ -7,7 +7,7 @@ import type { Build } from '@/lib/registry';
  * One branch's CI builds, with the branch rail beside them.
  *
  * Shared by `/downloads/builds` (main) and `/downloads/builds/[branch]`, which
- * are the same page over different data — main is served without a segment so
+ * are the same page over different data - main is served without a segment so
  * the branch nearly everybody wants has one canonical URL.
  */
 

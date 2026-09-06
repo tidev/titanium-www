@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 test('drops a leading title that the excerpt repeats', () => {
-  // Symbol records index the name twice — qualified then bare — so Pagefind's
+  // Symbol records index the name twice - qualified then bare - so Pagefind's
   // excerpt opens by restating the line above it.
   const detail = resultDetail(
     'Titanium.UI.createWindow',

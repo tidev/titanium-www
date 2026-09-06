@@ -9,7 +9,7 @@ import { join } from 'node:path';
  * Records SHA-256 for every module asset the registry points at (TI-65).
  *
  * GitHub only computes a digest for assets uploaded since the feature shipped
- * — the earliest here is 2025-09-10 — and does not backfill, which left 16 of
+ * - the earliest here is 2025-09-10 - and does not backfill, which left 16 of
  * 399 asset rows with anything to verify against. This downloads the rest and
  * hashes them.
  *
@@ -17,14 +17,14 @@ import { join } from 'node:path';
  *
  * 18 filenames occur twice in the release history, from versions that were
  * re-tagged (`v4.4.0-android` and `android-4.4.0`, say). Every one of those
- * pairs differs in content — `ti.nfc-android-4.0.0.zip` is 7808850 bytes under
+ * pairs differs in content - `ti.nfc-android-4.0.0.zip` is 7808850 bytes under
  * one tag and 7846378 under the other. Keying on the filename would hand a
  * client the hash of an archive it is not downloading, which is worse than
  * having no hash at all. The download URL encodes repo, tag and asset, so it
  * is the identity used here.
  *
  * The set comes from the registry's own metadata rather than from the release
- * history, so what gets hashed is exactly what the registry serves — one of
+ * history, so what gets hashed is exactly what the registry serves - one of
  * the two re-tagged archives, never both.
  *
  * ## Why a sidecar rather than metadata.json
@@ -41,7 +41,7 @@ import { join } from 'node:path';
  * A hash computed by downloading from GitHub records what GitHub served on the
  * day it ran. It is not an independent attestation and cannot prove an archive
  * was untampered before that date. Neither can GitHub's own digest, which is
- * whatever was computed at upload — so this does not lower the bar already
+ * whatever was computed at upload - so this does not lower the bar already
  * accepted, and it makes verification possible for the whole archive rather
  * than the recent 4%. Each entry records which it is.
  *

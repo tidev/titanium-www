@@ -2,7 +2,7 @@ import { apiBranchBuilds, apiBranches } from '@/lib/registry-api/sdk';
 import { notFoundJson } from '@/lib/registry-api/not-found';
 import { API_VERSION } from '@/lib/registry-api/v1';
 
-/** One branch's CI builds. Expired ones are never listed — their URLs 404. */
+/** One branch's CI builds. Expired ones are never listed - their URLs 404. */
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;

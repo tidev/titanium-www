@@ -26,7 +26,7 @@ import { useMemo, useState } from 'react';
  * Two kinds of entry sit in one list. A registry module has a page here, with
  * versions and usually a compiled reference; a community module is a GitHub
  * repository carrying the `titanium` topic and nothing more, so its card links
- * out. They are told apart by the stripe, the badge, and the arrow — not by
+ * out. They are told apart by the stripe, the badge, and the arrow - not by
  * being in separate lists, because the question being asked is "is there a
  * module for this", and the answer should not depend on guessing which list to
  * read first.
@@ -43,7 +43,7 @@ const PLATFORMS: { value: PlatformFilter; label: string }[] = [
 /**
  * What this menu selects, which is not quite the module `source` field.
  *
- * It filters on `kind` — whether an entry has a page on this site or is a
+ * It filters on `kind` - whether an entry has a page on this site or is a
  * repository we merely list. `source` is the registry's own field, and it says
  * who stands behind a module: tidev/ti.worker is a TiDev repository that shows
  * as Community here because nothing on this site documents it.
@@ -129,8 +129,8 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
             value={platform}
             onChange={setPlatform}
           />
-          {/* Sort has no self-describing option — "Default" could mean
-              anything on its own — so it keeps a marker, just not a word. */}
+          {/* Sort has no self-describing option - "Default" could mean
+              anything on its own - so it keeps a marker, just not a word. */}
           <Select
             label="Sort"
             icon={<SortIcon />}

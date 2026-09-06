@@ -25,7 +25,7 @@ already checks.
 
 ## Set up an emulator
 
-The emulator needs hardware acceleration — either Windows Hypervisor Platform or
+The emulator needs hardware acceleration: either Windows Hypervisor Platform or
 Intel HAXM. Android Studio's setup wizard enables whichever applies.
 
 If it will not start, enable **Windows Hypervisor Platform** in _Turn Windows
@@ -40,7 +40,7 @@ Developer options and the vendor's USB driver.
 
 ### `ti` is not recognised as a command
 
-Reopen PowerShell — a fresh install does not affect a shell that was already
+Reopen PowerShell. A fresh install does not affect a shell that was already
 running. If it still fails, check that npm's global directory is on your `PATH`:
 
 ```powershell

@@ -5,13 +5,13 @@ import { CopyButton } from './copy-button';
  *
  * The command scrolls inside its own box. `ti sdk install --branch 13_4_X
  * 13.4.1.v20260825113645` is 53 characters, which is wider than a 320px
- * viewport in any monospace face — without this the whole page scrolls
+ * viewport in any monospace face - without this the whole page scrolls
  * sideways because of one build.
  *
  * The height is set rather than derived, because the two boxes it has to sit
  * level with derive theirs from different things: a chip's height comes from
  * its text's line box, this one's from the copy button, and the two landed half
- * a pixel apart — enough to see. `h-8.5` is the chip's natural height, and the
+ * a pixel apart - enough to see. `h-8.5` is the chip's natural height, and the
  * copy button stays 24px so it clears the 24px minimum target size.
  */
 export function InstallCommand({ command, label }: { command: string; label?: string }) {

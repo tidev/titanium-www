@@ -13,7 +13,7 @@ import { join } from 'node:path';
  * resolve.ts and keys are written in a fixed order here.
  *
  * Documents go into the shared content-addressed pool rather than into the
- * version directory — see `src/lib/docs/pool.ts`. Byte-stability is what makes
+ * version directory - see `src/lib/docs/pool.ts`. Byte-stability is what makes
  * that work: an untouched type hashes to the blob twenty releases already
  * share, which is where 103MB of type files becomes 15MB.
  */

@@ -16,8 +16,8 @@ import { describe, test } from 'node:test';
  * The rules that decide where a fifteen-year-old inbound link lands.
  *
  * Every case here is one the real corpus contains, so a change that looks
- * harmless in the abstract — dropping the heading lookup, flattening the two
- * destination trees — fails against the shape of the data rather than against
+ * harmless in the abstract - dropping the heading lookup, flattening the two
+ * destination trees - fails against the shape of the data rather than against
  * a fixture invented to suit the code.
  */
 

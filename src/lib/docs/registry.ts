@@ -17,14 +17,14 @@ import { join } from 'node:path';
  * preview deploys reproducible. Everything here resolves against `registry/`
  * in the repo.
  *
- * A compiled version directory has the same shape wherever it sits — the SDK's
+ * A compiled version directory has the same shape wherever it sits - the SDK's
  * `registry/sdk/<version>/` and a module's `registry/modules/<id>/<version>/`
  * both hold `metadata.json` and a `contents.json` naming what they carry. The
  * readers below take that directory; the SDK wrappers at the bottom and
  * `./modules.ts` are the two things that know where to find one.
  *
  * The documents themselves live in a shared content-addressed pool rather than
- * in the version directory — see `./pool.ts` for why.
+ * in the version directory - see `./pool.ts` for why.
  */
 
 export const REGISTRY = join(process.cwd(), 'registry');
@@ -87,7 +87,7 @@ export type CompiledSource = { repo?: string; ref?: string; commit?: string };
  * Pinned to the commit when one was recorded, so it points at the file as it was
  * compiled rather than at whatever the branch holds now. Falls back to the ref,
  * and returns null when neither is known. Every source repository keeps its
- * apidoc at `apidoc/` — see scripts/docgen/sources.json — so the prefix is
+ * apidoc at `apidoc/` - see scripts/docgen/sources.json - so the prefix is
  * fixed rather than carried per repo.
  */
 export function blobUrl(source: CompiledSource | undefined, sourcePath: string): string | null {
@@ -112,7 +112,7 @@ export function sdkVersions(): string[] {
  * What `/docs/sdk/latest` points at.
  *
  * The newest released version that has been compiled, falling back to `main`
- * when none has yet — which is the case until a release is compiled.
+ * when none has yet - which is the case until a release is compiled.
  */
 export function latestSdkVersion(): string | null {
   const all = sdkVersions();

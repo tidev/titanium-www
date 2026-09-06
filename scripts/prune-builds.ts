@@ -13,7 +13,7 @@ import {
  * URL that 404s. This closes that gap and costs nothing: no API calls, just
  * `expires` compared against now.
  *
- * Safe to run repeatedly — it is a no-op when nothing has expired.
+ * Safe to run repeatedly - it is a no-op when nothing has expired.
  *
  *   node scripts/prune-builds.ts [--check]
  */
@@ -77,7 +77,7 @@ for (const branch of branches) {
     // Without an id the entry cannot be recognised on a later regen, so it
     // would be re-fetched forever. Drop it from the live list either way.
     if (id === null) {
-      console.log(`    no run id in ${b.url} — dropped without a tombstone`);
+      console.log(`    no run id in ${b.url} - dropped without a tombstone`);
       continue;
     }
     if (!known.has(id)) {

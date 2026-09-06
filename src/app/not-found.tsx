@@ -5,7 +5,7 @@ import Link from 'next/link';
  * The 404 (TI-71).
  *
  * Rendered inside the root layout, so it keeps the header, footer, theme and
- * skip link — which the built-in page does not, and which matters here more
+ * skip link - which the built-in page does not, and which matters here more
  * than on most sites: the old documentation's URLs are widely linked and TI-39
  * is still building the redirect map, so this page is a migration surface
  * rather than an edge case.
@@ -13,7 +13,7 @@ import Link from 'next/link';
  * ## What it offers
  *
  * Search first. A wrong URL under `/docs` is usually a half-remembered symbol
- * name, and TI-47 shipped a search that answers exactly that — so the useful
+ * name, and TI-47 shipped a search that answers exactly that - so the useful
  * thing is to say it exists and how to reach it, rather than to apologise.
  *
  * The message itself comes from `NotFoundDetail`, which reads the address that
@@ -26,7 +26,7 @@ import Link from 'next/link';
  */
 
 export const metadata = {
-  title: 'Page not found — Titanium SDK',
+  title: 'Page not found - Titanium SDK',
   // Next injects `noindex` on a 404 response by itself, but the metadata is
   // what a share card and a browser tab show.
   description: 'That address does not exist on this site.',

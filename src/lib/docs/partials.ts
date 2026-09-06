@@ -17,7 +17,7 @@
  * These are the opposite case and must run earlier: a partial contains markdown
  * that has to be parsed as part of the page, so splicing it in after rendering
  * would emit its source as text. That is only safe because partials are files
- * in this repository, never user content — enforced by resolving names against
+ * in this repository, never user content - enforced by resolving names against
  * `content/docs/_partials` and rejecting anything that is not a bare slug, so a
  * page cannot reach out of the directory.
  *
@@ -36,18 +36,18 @@
 
 export class DirectiveError extends Error {}
 
-/** `:::only macos, android` — the platforms a block is scoped to. */
+/** `:::only macos, android` - the platforms a block is scoped to. */
 const ONLY_OPEN = /^:::only[ \t]+([a-z0-9,\s-]+?)[ \t]*$/;
 /**
  * Any other block opener: `:::tabs`, `:::platform ios`, `:::since 12.1.0`.
  *
  * Those are resolved much later, on rendered HTML (`blocks.ts`), so their text
  * passes through here untouched. They still have to be *counted*, because they
- * close with the same `:::` this does — without that, a tab group inside an
+ * close with the same `:::` this does - without that, a tab group inside an
  * `:::only` block would close the `:::only` at its own closing fence.
  */
 const OTHER_OPEN = /^:::[a-z][a-z-]*(?:[ \t]|$)/;
-/** `:::include install-cli` — a bare slug, so no path can escape the directory. */
+/** `:::include install-cli` - a bare slug, so no path can escape the directory. */
 const INCLUDE = /^:::include[ \t]+([a-z0-9-]+)[ \t]*$/;
 const CLOSE = /^:::[ \t]*$/;
 
@@ -57,7 +57,7 @@ export type PartialReader = (name: string) => string | undefined;
 export type ExpandOptions = {
   /**
    * What the including page applies to. An empty or absent list means the page
-   * is platform-agnostic and every `:::only` block is kept — a page that has
+   * is platform-agnostic and every `:::only` block is kept - a page that has
    * not said what it targets should not silently lose content.
    */
   platforms?: readonly string[];
@@ -67,7 +67,7 @@ export type ExpandOptions = {
 /**
  * Resolves `:::only` blocks against the page's platforms.
  *
- * An `:::only` inside another is rejected rather than mis-parsed — the closing
+ * An `:::only` inside another is rejected rather than mis-parsed - the closing
  * fences would be indistinguishable, and content that wants it reads better as
  * two blocks. Other block directives may nest freely: they are counted so the
  * right `:::` closes this one, and are otherwise left for `blocks.ts`.
@@ -86,7 +86,7 @@ function applyOnly(source: string, platforms: readonly string[] | undefined): st
     if (open) {
       if (keep !== undefined) {
         throw new DirectiveError(
-          `nested :::only at line ${i + 1} (opened at line ${openedAt}) — write two blocks instead`
+          `nested :::only at line ${i + 1} (opened at line ${openedAt}) - write two blocks instead`
         );
       }
       const wanted = open[1]

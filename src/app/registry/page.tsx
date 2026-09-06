@@ -11,7 +11,7 @@ import type { Metadata } from 'next';
  */
 
 export const metadata: Metadata = {
-  title: 'Registry API — Titanium SDK',
+  title: 'Registry API - Titanium SDK',
   description:
     'The public JSON API for Titanium modules: every module, its releases, and the archives to download.',
   alternates: { canonical: `${SITE_URL}/registry` },
@@ -29,7 +29,7 @@ const ENDPOINTS: { path: string; title: string; body: React.ReactNode }[] = [
     body: (
       <>
         One file, official and community together, each tagged with a{' '}
-        <code className="font-mono">kind</code>. There are no query parameters — the whole list
+        <code className="font-mono">kind</code>. There are no query parameters - the whole list
         is small enough to fetch and filter locally, which is why it can be cached whole.
       </>
     ),
@@ -47,7 +47,7 @@ const ENDPOINTS: { path: string; title: string; body: React.ReactNode }[] = [
   {
     path: '/registry/v1/releases',
     title: 'SDK releases',
-    body: 'Every published Titanium SDK release — GA, release candidates and betas — with the per-OS archives.',
+    body: 'Every published Titanium SDK release (GA, release candidates and betas) with the per-OS archives.',
   },
   {
     path: '/registry/v1/branches',
@@ -57,7 +57,7 @@ const ENDPOINTS: { path: string; title: string; body: React.ReactNode }[] = [
   {
     path: '/registry/v1/branches/{branch}',
     title: 'CI builds',
-    body: 'One branch\u2019s builds. A build whose artifacts have expired is never listed — its download URL would 404.',
+    body: 'One branch\u2019s builds. A build whose artifacts have expired is never listed - its download URL would 404.',
   },
 ];
 
@@ -76,7 +76,7 @@ export default function RegistryApiPage() {
 
   return (
     // Gutters, the same as the modules and downloads trees get from their own
-    // layouts. This route has no layout of its own — it is one page.
+    // layouts. This route has no layout of its own - it is one page.
     <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Registry API</h1>
@@ -116,7 +116,7 @@ export default function RegistryApiPage() {
         </h2>
         <p className="mt-2 text-text-muted">
           The Titanium CLI reads these, and older copies of it stay in use for years, so they keep
-          answering in their original shape — a bare array, or a bare object for the branch counts.
+          answering in their original shape - a bare array, or a bare object for the branch counts.
           They are served rather than redirected: the CLI does not follow redirects. Prefer the
           versioned endpoints above for anything new.
         </p>
@@ -164,7 +164,7 @@ export default function RegistryApiPage() {
             recorded at upload; the other 363 were computed by downloading the archive, because
             GitHub only began recording digests in September 2025 and does not backfill. Both
             record what GitHub served, not an independent signature, so a checksum detects
-            corruption in transit and any later change to an archive — it does not prove the
+            corruption in transit and any later change to an archive - it does not prove the
             archive was untampered before it was recorded. Still treat a missing checksum as
             &ldquo;cannot verify&rdquo;, never as &ldquo;verified&rdquo;.
           </li>
@@ -184,7 +184,7 @@ export default function RegistryApiPage() {
         <p className="mt-2 text-text-muted">
           The version lives in the path. Fields may be added to{' '}
           <code className="font-mono">v{API_VERSION}</code> responses; nothing will be removed or
-          change meaning. A breaking change gets a new path segment, and this one keeps answering —
+          change meaning. A breaking change gets a new path segment, and this one keeps answering -
           CLI copies stay in the wild for years.
         </p>
         </section>

@@ -8,8 +8,8 @@ import { useEffect } from 'react';
  *
  * ## Why it enhances the DOM instead of rendering buttons
  *
- * Prose arrives as an HTML string — `renderMarkdown` produces it and `Prose`
- * writes it with `dangerouslySetInnerHTML` — so there is no React tree to hang
+ * Prose arrives as an HTML string - `renderMarkdown` produces it and `Prose`
+ * writes it with `dangerouslySetInnerHTML` - so there is no React tree to hang
  * a button off. The alternatives were to emit button markup inside that string,
  * which would ship a dead control to anyone without JavaScript, or to portal
  * into every `<pre>`, which costs a component per block on a page that has

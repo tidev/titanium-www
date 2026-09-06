@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 /**
  * Copy-to-clipboard for one command.
  *
- * The button is the only client component on a releases page — the commands
+ * The button is the only client component on a releases page - the commands
  * themselves are server-rendered text, so a reader without JavaScript can still
  * select and copy them, and the page costs one small component per row rather
  * than a client-rendered list.
@@ -19,7 +19,7 @@ export function CopyButton({
   label?: string;
   /**
    * `terminal` for the always-dark block, where the page's semantic colours are
-   * wrong in light mode — `surface-raised` is white and `text` is near-black.
+   * wrong in light mode - `surface-raised` is white and `text` is near-black.
    */
   tone?: 'default' | 'terminal';
 }) {

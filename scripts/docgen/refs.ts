@@ -53,7 +53,7 @@ export function parseTypeRef(raw: string, known: ReadonlySet<string>): TypeRef {
 
   const generic = GENERIC.exec(name);
   if (generic) {
-    // Split on top-level commas only — Dictionary<Array<String>, Number> nests.
+    // Split on top-level commas only - Dictionary<Array<String>, Number> nests.
     const args: string[] = [];
     let depth = 0;
     let start = 0;
@@ -159,8 +159,8 @@ export type RewriteResult = {
   references: string[];
   /**
    * Refs that leave this corpus. Two kinds, both of them another repo's:
-   * resolved against a corpus the compile was given — a module linking to
-   * `Titanium.UI.View` — and unresolved refs into a namespace it was not, which
+   * resolved against a corpus the compile was given - a module linking to
+   * `Titanium.UI.View` - and unresolved refs into a namespace it was not, which
    * are deferred rather than called broken because nothing here can check them.
    */
   external: string[];
@@ -174,7 +174,7 @@ const EXTERNAL_ROOTS = new Set(['Modules']);
 // `<Titanium.UI.View>`. Also matches HTML tags such as <b>, which is why an
 // unresolvable match is left in place rather than rewritten.
 const ANGLE = /<([A-Za-z_][\w.]*)>/g;
-// `[text](Titanium.UI.View)` — a dotted href with no scheme and no slash is
+// `[text](Titanium.UI.View)` - a dotted href with no scheme and no slash is
 // unambiguously an API reference, never a URL or a relative image path.
 const MD_LINK = /\[([^\]]*)\]\(([A-Za-z_][\w.]*)\)/g;
 
@@ -185,7 +185,7 @@ export function rewriteCrossRefs(markdown: string, r: Resolver): RewriteResult {
 
   /**
    * Whether an unresolved ref is worth reporting. `<b>` and `<Button>` are
-   * markup, and `<YourService.js>` is a filename an author wrapped in brackets —
+   * markup, and `<YourService.js>` is a filename an author wrapped in brackets -
    * none are broken links. Requiring a known root segment separates them from a
    * genuine typo such as `<Ti.Color>`.
    *
@@ -205,7 +205,7 @@ export function rewriteCrossRefs(markdown: string, r: Resolver): RewriteResult {
       return true;
     }
     // Deferral is tested first because the SDK declares `Modules` itself, as a
-    // namespace stub with nothing under it — so its root alone says nothing
+    // namespace stub with nothing under it - so its root alone says nothing
     // about whether the reference could have been checked.
     if (EXTERNAL_ROOTS.has(ref.split('.')[0])) external.add(ref);
     else if (looksLikeApiRef(ref)) broken.add(ref);

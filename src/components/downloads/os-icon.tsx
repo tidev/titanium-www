@@ -2,7 +2,7 @@
  * Platform marks for the download chips.
  *
  * A sprite rather than an icon package or three inline paths. Tux is 5,354
- * characters of path data, and the releases page draws it once per release —
+ * characters of path data, and the releases page draws it once per release -
  * inlining it would put 434KB of duplicated markup in the HTML for one icon.
  * `OsIconDefs` renders each mark once per page and every chip points at it.
  *
@@ -30,7 +30,7 @@ const ICONS: Record<string, { viewBox: string; d: string }> = {
 const symbolId = (os: string) => `os-mark-${os}`;
 
 /**
- * The sprite. Belongs in the downloads layout — once per page, above the chips
+ * The sprite. Belongs in the downloads layout - once per page, above the chips
  * that reference it.
  *
  * `hidden` would take the symbols out of rendering along with the sprite, so it

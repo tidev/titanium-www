@@ -12,7 +12,7 @@ import {
  * Regenerates the SDK release and CI build registry.
  *
  * Vendored from tidev/titanium-builds-regen-action, which downloads-www still
- * uses. Brought in-repo so we own the output layout — the action hardcodes
+ * uses. Brought in-repo so we own the output layout - the action hardcodes
  * `<branch>.expired.json` and reads it back as its own cache, so renaming or
  * moving it was impossible from outside.
  *
@@ -228,7 +228,7 @@ async function getBranchBuilds(
   // pays for the artifact lookup again to learn what we already knew.
   const pruned = new Map(knownPruned);
 
-  // The instability cuts the other way too — a run already returned on an
+  // The instability cuts the other way too - a run already returned on an
   // earlier page can come back on the next one, which would process it twice.
   const seen = new Set<number>();
 
@@ -244,7 +244,7 @@ async function getBranchBuilds(
       seen.add(run.id);
 
       // Already carried forward above, or already known dead. Either way, skip
-      // the artifact lookup — that is the expensive call.
+      // the artifact lookup - that is the expensive call.
       if (knownBuild.has(run.html_url) || knownPruned.has(run.id)) continue;
 
       const { artifacts } = await get<{ artifacts: GhArtifact[] }>(

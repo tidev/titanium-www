@@ -9,7 +9,7 @@ import { notFoundJson } from '@/lib/registry-api/not-found';
  *
  * It also catches the real routes' misses. The module and release endpoints
  * declare `dynamicParams = false`, so an id that was not generated never
- * reaches their handler — Next 404s first, and without this that 404 would be
+ * reaches their handler - Next 404s first, and without this that 404 would be
  * the site's HTML error page landing in a client that asked for JSON.
  */
 

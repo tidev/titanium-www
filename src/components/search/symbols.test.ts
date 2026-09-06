@@ -45,7 +45,7 @@ describe('symbol lookup', () => {
     assert.equal(top('Window').title, 'Titanium.UI.Window');
   });
 
-  test('typos still land — the reason this exists alongside Pagefind', () => {
+  test('typos still land - the reason this exists alongside Pagefind', () => {
     assert.equal(top('creatWindow').title, 'Titanium.UI.createWindow');
     assert.equal(top('creatWindow').rule, 'fuzzy');
     assert.equal(top('addEventLisener').title, 'Titanium.Proxy.addEventListener');

@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 /** The blog index, newest first. Page one; the rest live under /blog/page/N. */
 
 export const metadata: Metadata = {
-  title: 'Blog — Titanium SDK',
+  title: 'Blog - Titanium SDK',
   description: 'Release announcements, guides, and news from the Titanium SDK project.',
   alternates: {
     canonical: `${SITE_URL}/blog`,

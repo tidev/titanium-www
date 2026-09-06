@@ -8,8 +8,8 @@ import { z } from 'zod';
  *
  * Markdown with frontmatter, rendered through the same `renderMarkdown` the
  * docs and module READMEs use. The ticket warned against ending up with two
- * markdown pipelines, and the one already here — markdown-it plus a
- * sanitize-html allowlist — is that pipeline. Adding MDX for the blog alone
+ * markdown pipelines, and the one already here - markdown-it plus a
+ * sanitize-html allowlist - is that pipeline. Adding MDX for the blog alone
  * would have created exactly the split it cautioned about.
  */
 
@@ -27,7 +27,7 @@ export const CATEGORIES = ['Releases', 'Tutorials', 'Community'] as const;
 /**
  * Whether the blog surfaces categories at all.
  *
- * Off while the archive is 48 release announcements and two community posts —
+ * Off while the archive is 48 release announcements and two community posts -
  * a filter that reads "Releases" on nearly every card tells a reader nothing,
  * and a nav with one real option is worse than none. Flip this on once there
  * are categories worth choosing between.
@@ -46,7 +46,7 @@ const FrontmatterSchema = z
     description: z.string().default(''),
     /** `YYYY-MM-DD`. Compared and sorted as a string, so the format is enforced. */
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date must be YYYY-MM-DD'),
-    /** One name or several — multi-author from the start, per TI-53. */
+    /** One name or several - multi-author from the start, per TI-53. */
     author: z.union([z.string(), z.array(z.string()).min(1)]),
     category: z.enum(CATEGORIES),
     tags: z.array(z.string()).default([]),
@@ -60,8 +60,6 @@ const FrontmatterSchema = z
      * fits Bluesky fits X. Written by `scripts/generate-social-posts.ts`.
      */
     social: z.string().max(300).optional(),
-    /** Where this post was published before the migration, if it was. */
-    source: z.url().optional(),
   })
   .strict();
 
@@ -75,7 +73,6 @@ export type Post = {
   tags: string[];
   draft: boolean;
   cover?: string;
-  source?: string;
   /** Pre-filled share text; falls back to the title. */
   social?: string;
   body: string;
@@ -98,7 +95,6 @@ function parse(slug: string, text: string): Post {
     tags: front.tags,
     draft: front.draft,
     ...(front.cover ? { cover: front.cover } : {}),
-    ...(front.source ? { source: front.source } : {}),
     ...(front.social ? { social: front.social } : {}),
     body,
   };
@@ -168,6 +164,6 @@ export const postsOnPage = (page: number): Post[] =>
  *
  * Next resolves a static segment before a dynamic one, so a post called
  * `page.md` would be shadowed by the pagination route and simply never render.
- * Checked rather than hoped for — see the test.
+ * Checked rather than hoped for - see the test.
  */
 export const RESERVED_SLUGS = ['page', 'category', 'tag', 'feed.xml'] as const;

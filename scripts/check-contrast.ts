@@ -4,7 +4,7 @@
  * cannot drift from what is actually deployed.
  *
  * The second pass covers the syntax highlighting palette, which is borrowed
- * rather than authored — see below.
+ * rather than authored - see below.
  *
  *   node scripts/check-contrast.ts
  */
@@ -63,8 +63,8 @@ const PAIRS: [string, string, number][] = [
   ['terminal-text', 'terminal-bg', 4.5],
   ['terminal-window-text', 'terminal-window', 4.5],
   /**
-   * The `$` is `aria-hidden` ornament — it marks the block as a shell and
-   * carries nothing a reader needs — so it is held to the 3:1 non-text
+   * The `$` is `aria-hidden` ornament - it marks the block as a shell and
+   * carries nothing a reader needs - so it is held to the 3:1 non-text
    * threshold (WCAG 1.4.11) rather than the 4.5:1 for text. Deliberately dim:
    * it should sit behind the commands, not compete with them.
    */
@@ -112,7 +112,7 @@ for (const [theme, tokens] of themes) {
  * Shiki's token colours come from GitHub's themes, which were designed against
  * GitHub's own backgrounds. We render them on `--color-surface` instead, so
  * every borrowed colour has to be re-checked against the surface it actually
- * lands on — the pairing GitHub verified is not the pairing we ship.
+ * lands on - the pairing GitHub verified is not the pairing we ship.
  *
  * Colours are collected by highlighting real samples rather than by reading the
  * theme files, so this measures what the corpus actually produces. A theme
@@ -147,7 +147,7 @@ for (const [lang, code] of SAMPLES) {
 
 for (const [theme, tokens] of themes) {
   const surface = tokens.surface;
-  // highlight.ts cannot read globals.css — it runs inside the serverless
+  // highlight.ts cannot read globals.css - it runs inside the serverless
   // function, where the stylesheet is not. So it carries its own copy of the
   // surface, and this is what stops the two drifting apart.
   const declared = CODE_SURFACE[theme as 'light' | 'dark'].toUpperCase();
@@ -159,7 +159,7 @@ for (const [theme, tokens] of themes) {
     );
   }
   const colors = [...shikiColors[theme as 'light' | 'dark']].sort();
-  console.log(`\n${theme} — syntax tokens on surface (${colors.length} distinct)`);
+  console.log(`\n${theme} - syntax tokens on surface (${colors.length} distinct)`);
   let worst = { hex: '', ratio: Infinity };
   for (const hex of colors) {
     const ratio = contrast(hex, surface);

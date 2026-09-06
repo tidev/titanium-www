@@ -12,7 +12,7 @@ import { useEffect } from 'react';
  * ## `retry`, not `reset`
  *
  * Next 16 renamed the prop. Every example in circulation still says `reset`,
- * and the difference is silent — the button simply does nothing. Checked
+ * and the difference is silent - the button simply does nothing. Checked
  * against node_modules/next/dist/docs, not from memory.
  *
  * ## What the reader is told
@@ -42,7 +42,7 @@ export default function Error({
       <p className="font-mono text-4xl text-text-subtle">500</p>
       <h1 className="mt-2 text-3xl font-semibold tracking-tight">Something went wrong</h1>
       <p className="mt-3 text-text-muted">
-        This page failed to render. It is not something you did, and trying again often works — the
+        This page failed to render. It is not something you did, and trying again often works - the
         reference is generated per request, so a transient failure does not repeat.
       </p>
 
@@ -62,7 +62,7 @@ export default function Error({
       {error.digest && (
         <p className="mt-8 text-sm text-text-subtle">
           If you report this, quote{' '}
-          <span className="font-mono text-text-muted">{error.digest}</span> — it identifies this
+          <span className="font-mono text-text-muted">{error.digest}</span> - it identifies this
           failure in the server log.
         </p>
       )}

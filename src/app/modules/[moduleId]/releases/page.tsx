@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!index) return {};
 
   return {
-    title: `${index.moduleId} releases — Titanium modules`,
+    title: `${index.moduleId} releases - Titanium modules`,
     description: `Every published release of the ${index.moduleId} Titanium module.`,
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/releases` },
   };

@@ -10,7 +10,7 @@ import type { MetadataRoute } from 'next';
  * listing a URL we may redirect next week is worse than not listing it. Blog
  * posts have settled URLs, so they are here in full.
  *
- * Drafts are excluded, which is the third of the three places TI-53 requires —
+ * Drafts are excluded, which is the third of the three places TI-53 requires -
  * the index and the feed being the others.
  */
 export default function sitemap(): MetadataRoute.Sitemap {

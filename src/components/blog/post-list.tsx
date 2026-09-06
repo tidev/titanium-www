@@ -60,7 +60,7 @@ export function PostList({ posts }: { posts: Post[] }) {
     // `auto-rows-fr` equalises every row to the tallest card on the page, not
     // just within its own row, so the grid reads as a grid. Cards stretch by
     // default; `items-start` would collapse each to its own content height.
-    // Only from `sm:` up — in a single column there is nothing to line up with,
+    // Only from `sm:` up - in a single column there is nothing to line up with,
     // and padding every short card out to the tallest is just dead space.
     <ul className="mt-8 grid gap-4 sm:auto-rows-fr sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (

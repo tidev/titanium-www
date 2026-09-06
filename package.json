@@ -10,6 +10,7 @@
     "check": "next typegen && tsc --noEmit",
     "check:contrast": "node scripts/check-contrast.ts",
     "check:docs": "node scripts/check-docs.ts",
+    "check:em-dash": "node scripts/check-em-dash.ts",
     "check:offline": "NODE_OPTIONS='--import ./scripts/assert-offline.ts' next build",
     "check:registry": "node scripts/validate-registry.ts",
     "dev": "next dev --port 3002",

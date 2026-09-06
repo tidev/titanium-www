@@ -53,7 +53,7 @@ function readerAcross(id: string, versions: readonly string[]): TypeReader {
  * Only members the newer copy is missing are added, and never merged field by
  * field: two releases describing the same member differently is a docgen
  * question, not something a renderer should silently average. In the current
- * registry this adds exactly two methods — ti.nfc's android 6.0.0 declares
+ * registry this adds exactly two methods - ti.nfc's android 6.0.0 declares
  * `enableReader` and `disableReader`, which its iOS 4.1.1 release predates.
  */
 function mergeTypes(newer: ApiType, older: ApiType): ApiType {
@@ -95,7 +95,7 @@ function ordered(types: ApiType[]): ApiType[] {
 /**
  * Builds the reference for one module across one or more compiled versions.
  *
- * `versions` is what the page decided to show — a single release on a pinned
+ * `versions` is what the page decided to show - a single release on a pinned
  * page, the latest per platform on the module's own page.
  */
 export function buildModuleReference(
@@ -147,8 +147,8 @@ export function buildModuleReference(
  * them; which tree each belongs to is only knowable here, where both are in
  * front of us.
  *
- * A name that is neither — a pseudo-type docgen folded into its referent and
- * emitted no file for — resolves to null, and the caller renders the text
+ * A name that is neither - a pseudo-type docgen folded into its referent and
+ * emitted no file for - resolves to null, and the caller renders the text
  * without a link rather than shipping a 404.
  */
 export function moduleLinker(reference: ModuleReference): ApiLinker {

@@ -7,7 +7,7 @@ import { describe, test } from 'node:test';
  * The block components, driven through the real renderer.
  *
  * Every case starts as markdown rather than as hand-written HTML, because the
- * thing most likely to break these is not the transform — it is markdown-it
+ * thing most likely to break these is not the transform - it is markdown-it
  * deciding to wrap a marker differently from how the regex expects. A test
  * written against the HTML directly would keep passing through exactly that
  * failure.
@@ -50,8 +50,8 @@ describe('tabs', () => {
   });
 
   test('keep every panel in the HTML, not just the selected one', () => {
-    // The panels are hidden by CSS, so a reader with no stylesheet — and any
-    // crawler — still gets the whole page.
+    // The panels are hidden by CSS, so a reader with no stylesheet - and any
+    // crawler - still gets the whole page.
     const html = render(TABS);
     assert.match(text(html), /Install with npm\./);
     assert.match(text(html), /Install with Yarn\./);

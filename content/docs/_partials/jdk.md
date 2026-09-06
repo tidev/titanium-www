@@ -138,8 +138,8 @@ $JAVA_HOME/bin/javac -version
 
 :::
 
-The path differs by distribution — `/usr/lib/jvm/java-21-openjdk-amd64` on
-Debian and Ubuntu, `/usr/lib/jvm/java-21-openjdk` on Fedora — so this reads it
+The path differs by distribution (`/usr/lib/jvm/java-21-openjdk-amd64` on
+Debian and Ubuntu, `/usr/lib/jvm/java-21-openjdk` on Fedora), so this reads it
 off `javac` rather than naming one.
 
 :::

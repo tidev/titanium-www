@@ -5,8 +5,8 @@ import { extname, join, relative, sep } from 'node:path';
 /**
  * Pools the images that apidoc prose references.
  *
- * They sit beside the YAML — `Titanium/UI/Button.yml` refers to
- * `./button_android.png`, meaning `Titanium/UI/button_android.png` — so the
+ * They sit beside the YAML - `Titanium/UI/Button.yml` refers to
+ * `./button_android.png`, meaning `Titanium/UI/button_android.png` - so the
  * path a description writes has to keep resolving. It is recorded as the key of
  * the returned map rather than reproduced as a directory: the file itself goes
  * into the registry's content-addressed pool under its own hash.

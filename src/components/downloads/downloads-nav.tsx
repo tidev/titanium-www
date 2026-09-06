@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
  * The three views of the registry: what to install, what has shipped, what CI
  * built last night.
  *
- * A client component for the same single reason as the API rail — a layout's
+ * A client component for the same single reason as the API rail - a layout's
  * `params` stop at its own segment, so `usePathname()` is the only way to know
  * which tab is current. Every route under it is prerendered, so `aria-current`
  * ships inside the static HTML and hydration has nothing to correct.

@@ -71,7 +71,7 @@ export function moduleIndex(id: string): ModuleIndex | null {
  * The module's README, as committed to its repository.
  *
  * Narrowed here rather than read off the parsed index because `ModuleIndexSchema`
- * does not declare the field — it declares `readme` on a *version* instead, so
+ * does not declare the field - it declares `readme` on a *version* instead, so
  * the one `generate-modules.ts` writes at package level arrives through the
  * schema's catchall as `unknown`. The data is real and every module has one;
  * the contract is what is behind, and widening it is a registry change rather
@@ -86,7 +86,7 @@ export function moduleReadme(id: string): string | undefined {
  * The spellings that should redirect to a canonical id.
  *
  * `aliases` carries the id itself for most modules, so the identity entry is
- * dropped here — a page cannot redirect to itself. What is left is the five
+ * dropped here - a page cannot redirect to itself. What is left is the five
  * repository names that differ from what the module publishes as.
  */
 export function moduleAliases(): { alias: string; moduleId: string }[] {
@@ -152,7 +152,7 @@ export const moduleSource = (id: string, version: string): CompiledSource | unde
  * whatever the site's newest SDK happens to be is the difference between a
  * reference that was verified and one that was assumed.
  *
- * Read loosely on purpose — docgen owns this file and treats a corrupt one as a
+ * Read loosely on purpose - docgen owns this file and treats a corrupt one as a
  * reason to recompile, not as a contract breach.
  */
 export function externalSdkVersion(id: string, version: string): string | null {
@@ -171,7 +171,7 @@ export function externalSdkVersion(id: string, version: string): string | null {
  * `latestPerPlatform` cannot do this itself: it lives in the fs-free half of
  * the library so the browse page's client bundle can import it, and `minsdk` is
  * in the release manifest. One file read per platform per module, at build time
- * only — every caller is prerendered.
+ * only - every caller is prerendered.
  */
 export function latestReleases(index: ModuleIndex): PlatformLatest[] {
   return latestPerPlatform(index).map((entry) => {
@@ -206,7 +206,7 @@ export function moduleSummaries(): ModuleSummary[] {
  * The community index, or nothing if it has not been generated.
  *
  * Absence is not an error: `pnpm registry:community` needs a GitHub token, so a
- * checkout that has never run it still builds — with the curated modules only.
+ * checkout that has never run it still builds - with the curated modules only.
  */
 export function communityListings(): CommunityListing[] {
   const path = join(MODULES_DIR, 'community.json');
@@ -220,7 +220,7 @@ export function communityListings(): CommunityListing[] {
  * The versions whose compiled docs make up `/modules/<id>`.
  *
  * The latest per platform, which is normally one or two release directories.
- * Two modules — ti.coremotion and com.appcelerator.urlSession — have docs only
+ * Two modules - ti.coremotion and com.appcelerator.urlSession - have docs only
  * on a prerelease that `latest` deliberately skips, so nothing released would
  * be shown for them; those fall back to `main`, which every module has, and the
  * page says so rather than rendering an empty reference.

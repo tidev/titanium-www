@@ -3,8 +3,8 @@ import type { ApiType, InheritedRef, Member } from '../registry/index.ts';
 /**
  * Assembles everything a type page needs to render.
  *
- * The registry stores inherited members by reference — `{ name, from, platforms }`
- * — so the body lives on the type that declares it. This resolves those against
+ * The registry stores inherited members by reference - `{ name, from, platforms }`
+ * - so the body lives on the type that declares it. This resolves those against
  * their declaring types, which is the only place that indirection has to be
  * understood.
  *

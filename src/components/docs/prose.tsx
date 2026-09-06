@@ -4,7 +4,7 @@ import { renderMarkdown, type RenderOptions } from '@/lib/docs/markdown';
  * Renders a registry prose field.
  *
  * The HTML is produced and sanitized at build time in renderMarkdown, so this
- * only has to style it. Tables and pre blocks scroll inside themselves — the
+ * only has to style it. Tables and pre blocks scroll inside themselves - the
  * source contains hand-written wide tables, and the page must not scroll
  * sideways on a phone because of one of them.
  */

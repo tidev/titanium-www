@@ -18,7 +18,7 @@ import type { Metadata } from 'next';
  */
 
 export const metadata: Metadata = {
-  title: 'SDK releases — Titanium SDK',
+  title: 'SDK releases - Titanium SDK',
   description:
     'Every Titanium SDK release: GA, release candidates, and betas, with downloads for macOS, Windows, and Linux.',
   alternates: { canonical: `${SITE_URL}/downloads/releases` },
@@ -35,9 +35,9 @@ export default function ReleasesPage() {
     // `has-checked` rather than a sibling selector, so the checkbox can sit
     // where the design wants it instead of having to precede everything it
     // drives. It matches any checked box inside, which is exact while this is
-    // the only one on the page — a second would need the selector narrowed to
+    // the only one on the page - a second would need the selector narrowed to
     // it by id. A plain checkbox and not a client component: the rows are
-    // server rendered, and this way they stay reachable with JavaScript off —
+    // server rendered, and this way they stay reachable with JavaScript off -
     // on a page whose whole purpose is handing out files, that matters more
     // than the markup being pretty.
     <div className="max-w-4xl py-8 [&_[data-prerelease]]:hidden has-checked:[&_[data-prerelease]]:block">
@@ -65,7 +65,7 @@ export default function ReleasesPage() {
         builds={all}
         latest={latest}
         // GA rows only. A release candidate carries the same `version` as the
-        // GA that follows it — 13.0.0.RC and 13.0.0.GA are both `13.0.0` — so
+        // GA that follows it - 13.0.0.RC and 13.0.0.GA are both `13.0.0` - so
         // matching on version alone pointed twelve prerelease rows at notes
         // describing the release they preceded.
         notesHref={(build) =>

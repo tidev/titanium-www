@@ -11,8 +11,8 @@
  * information architecture (approved)". It replaces the section list this file
  * carried for TI-31, which was derived from the legacy corpus.
  *
- * That derivation was the mistake. The old site is three silos — Titanium SDK,
- * Alloy, Editor/IDE — each with its own getting-started path and its own FAQ,
+ * That derivation was the mistake. The old site is three silos - Titanium SDK,
+ * Alloy, Editor/IDE - each with its own getting-started path and its own FAQ,
  * and a structure inferred from it inherits the silos. The approved tree starts
  * from what a reader does instead: arrive, get a machine working, build
  * something, ship it. Pages earn a place in it or are dropped.
@@ -20,7 +20,7 @@
  * ## The rules it encodes
  *
  * Sections are named for activities, not products. Alloy is the single
- * exception — choosing it is a real decision a project makes rather than a
+ * exception - choosing it is a real decision a project makes rather than a
  * stage it passes through.
  *
  * Using and writing are different sections. `build/modules` is how to consume
@@ -29,7 +29,7 @@
  * reader extending the platform, not the one learning to lay out a view.
  *
  * There is no catch-all. No "how-to", no "guides", no "advanced". Every page
- * sits under a capability, so nothing has an obvious place to be dumped — which
+ * sits under a capability, so nothing has an obvious place to be dumped - which
  * is precisely how the legacy `Titanium_SDK_How-tos` tree grew to 38 pages.
  */
 
@@ -62,7 +62,7 @@ export type DocSection = {
   /**
    * Legacy path prefixes that redirect into this section, longest-prefix-first.
    *
-   * These do **not** shape the structure — that is the whole point of the
+   * These do **not** shape the structure - that is the whole point of the
    * redesign. They exist so TI-39 can send an indexed legacy URL somewhere
    * truthful instead of a 404. A legacy tree with no successor matches nothing
    * here and lands on the docs index, which is the honest answer.
@@ -114,7 +114,7 @@ export const VERSION_SEGMENT = /^v\d+$/;
  * Raised from two once `build` earned a third level: `ui` and `data` are large
  * enough to group, and flattening them would put a dozen sibling pages under
  * `build` with no ordering signal. Nothing else uses it, and the ceiling is
- * enforced rather than advisory — depth creep is what produced
+ * enforced rather than advisory - depth creep is what produced
  * `/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Platform_SDKs/`.
  */
 export const MAX_DEPTH = 3;
@@ -209,8 +209,8 @@ export const SECTIONS: DocSection[] = [
         slug: 'modules',
         title: 'Using modules',
         // npm packages live here too. Consuming a native module and consuming
-        // an npm package are the same task to the reader — find it, add it,
-        // require it — and splitting them across sections would have put half
+        // an npm package are the same task to the reader - find it, add it,
+        // require it - and splitting them across sections would have put half
         // the answer under a section about authoring. Writing either one is
         // under Extending Titanium.
         blurb: 'Native modules and npm packages: finding, adding, and requiring them.',
@@ -252,7 +252,7 @@ export const SECTIONS: DocSection[] = [
       },
       // Apple's own name for it is "App Store", but that name only disambiguates
       // in context, and these titles also appear in search results, breadcrumbs
-      // and tabs. Its sibling carries its vendor — "Google Play" — so naming
+      // and tabs. Its sibling carries its vendor - "Google Play" - so naming
       // Apple here makes the pair symmetric rather than one store and one
       // generic category.
       { slug: 'ios', title: 'Apple App Store', platforms: ['ios'] },
@@ -308,7 +308,7 @@ export const SECTIONS: DocSection[] = [
 /**
  * Legacy container pages that were navigation and nothing else.
  *
- * Each was a shell listing its children — the wiki's substitute for a landing
+ * Each was a shell listing its children - the wiki's substitute for a landing
  * page. The `/docs` index replaces them, so they resolve there rather than
  * being given a page that would have nothing on it.
  *
@@ -409,7 +409,7 @@ const STOPWORDS = new Set(['and', 'or', 'the', 'a', 'an', 'for', 'with', 'to', '
  * put in its title because the wiki had no hierarchy to say it instead.
  *
  * Conservative on purpose. `Titanium_and_Angular` must not become `and-angular`,
- * so a prefix is only dropped when what remains still reads as a name — hence
+ * so a prefix is only dropped when what remains still reads as a name - hence
  * the stopword guard, and hence `titanium-sdk-` rather than a bare `titanium-`.
  */
 export function trimRedundantPrefix(slug: string, section: string): string {

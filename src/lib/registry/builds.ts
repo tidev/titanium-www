@@ -7,12 +7,12 @@ import { z } from 'zod';
  * tidev/titanium-builds-regen-action. Kept compatible on purpose: that data is
  * live today and this schema has to validate all 91 existing files.
  *
- * Schemas are permissive by default — `.loose()` lets the generator add fields
+ * Schemas are permissive by default - `.loose()` lets the generator add fields
  * without breaking every consumer, and free-form strings are used where the
  * upstream values are messier than they look.
  */
 
-/** ISO-8601. Not `z.iso.datetime()` — upstream has mixed precision and offsets. */
+/** ISO-8601. Not `z.iso.datetime()` - upstream has mixed precision and offsets. */
 const IsoDate = z.string().min(1);
 
 /**
@@ -28,7 +28,7 @@ export const AssetSchema = z
   .loose();
 
 /**
- * One build. Covers both GA/RC/Beta releases and CI branch builds — they differ
+ * One build. Covers both GA/RC/Beta releases and CI branch builds - they differ
  * only in whether `expires` is present and where `url` points.
  *
  * `name` is the full build id (`13.4.0.GA`, `13.4.0.v20260728065841`);
@@ -45,7 +45,7 @@ export const BuildSchema = z
      * writes `null` when a run reports no artifact expiry.
      *
      * CI assets are nightly.link proxies to GitHub Actions artifacts, which die
-     * after 90 days. Anything past this is a dead link — see TI-40.
+     * after 90 days. Anything past this is a dead link - see TI-40.
      */
     expires: IsoDate.nullish(),
     /** Release tag page, or the Actions run for a CI build. */
@@ -60,7 +60,7 @@ export const BuildListSchema = z.array(BuildSchema);
 export const BranchesSchema = z.record(z.string(), z.number().int().nonnegative());
 
 /**
- * `builds/pruned/<branch>.pruned.json` is **not** build data — it is a
+ * `builds/pruned/<branch>.pruned.json` is **not** build data - it is a
  * negative-result cache.
  *
  * It records workflow runs whose artifacts no longer exist, so a regen skips
