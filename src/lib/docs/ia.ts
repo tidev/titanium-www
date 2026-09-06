@@ -55,21 +55,42 @@ export type DocSection = {
   slug: string;
   title: string;
   /**
-   * The sidebar label for the section's own page at `/docs/<slug>`, when it has
-   * one written.
+   * The section's own page at `/docs/<slug>`, when one is written.
    *
    * A section heading is a category and never a link, so a section that does
    * have a page of its own needs somewhere to put it: this names the row, which
-   * the nav renders indented alongside the section's pages. Absent means the
-   * section has no page of its own and `/docs/<slug>` falls back to the
-   * generated index of its children.
+   * the nav draws alongside the section's pages. Absent means the section has
+   * no page of its own and `/docs/<slug>` falls back to the generated index of
+   * its children.
    *
-   * It exists because the label and the heading differ. The heading says
-   * "Getting Started" and the page is "Environment Setup", so neither
-   * `section.title` nor the page's own frontmatter can supply it: the nav is
-   * built from this file rather than from disk, on purpose.
+   * `title` exists separately because the label and the heading differ. The
+   * heading says "Getting Started" and the page is "Environment Setup", so
+   * neither `section.title` nor the page's own frontmatter can supply it: the
+   * nav is built from this file rather than from disk, on purpose.
+   *
+   * ## `covers` is a grouping, not a path
+   *
+   * The pages it names are drawn nested under this row rather than beside it,
+   * and they keep their `/docs/<section>/<page>` URLs. That is the one place
+   * this file describes something the URLs do not: `/docs/setup/linux` and
+   * `/docs/setup/ide-integration` are siblings by path, and the sidebar draws
+   * the first under Environment Setup and the second beside it.
+   *
+   * It is a grouping because that is what it is editorially. Environment Setup
+   * is the page that says "follow the page for your operating system", so the
+   * three it sends you to belong under it; IDE Integration is a separate thing
+   * you do next. Nesting the URLs to match would have meant `/docs/start/setup/
+   * macos`, and the shorter URL was worth more than the symmetry. Decided with
+   * Chris on 2026-09-06.
+   *
+   * Breadcrumbs follow the same grouping, so the two never disagree about what
+   * a covered page sits under.
    */
-  indexTitle?: string;
+  index?: {
+    title: string;
+    /** Slugs from `pages`, drawn under this row. The rest stay beside it. */
+    covers?: readonly string[];
+  };
   /** One line, shown on the docs landing page. */
   blurb: string;
   /** Diátaxis-ish, and the reason the section exists rather than a label. */
@@ -139,12 +160,12 @@ export const SECTIONS: DocSection[] = [
   {
     slug: 'setup',
     title: 'Getting Started',
-    indexTitle: 'Environment Setup',
+    index: { title: 'Environment Setup', covers: ['linux', 'macos', 'windows'] },
     blurb: 'Get a machine ready to build, on your operating system.',
     kind: 'tutorial',
     pages: [
       // These three carry a shorter title here than the page itself does. A
-      // sidebar row is read directly under "Environment Setup", where "Linux
+      // sidebar row is read nested under "Environment Setup", where "Linux
       // Setup" would repeat it; a tab, a search result and a bookmark carry no
       // such context, so the page is "Linux Setup". `title` in frontmatter wins
       // wherever the page speaks for itself, and this one labels the tree.

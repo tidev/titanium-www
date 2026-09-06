@@ -97,13 +97,21 @@ function crumbsFor(segments: string[]): Crumb[] {
   // A section with a page of its own does not own its path: that page does, and
   // it is a sibling of the section's other pages rather than their parent. So
   // the category is a plain label and its page becomes a crumb in its own
-  // right. Without `indexTitle` the path is the generated index of the
-  // section's children, which is a real destination and stays a link.
+  // right. Without `index` the path is the generated index of the section's
+  // children, which is a real destination and stays a link.
+  const index = found.section.index;
   crumbs.push(
-    found.section.indexTitle
+    index
       ? { label: found.section.title }
       : { label: found.section.title, href: `/docs/${found.section.slug}` }
   );
+
+  // A page the section's own page introduces sits under it in the sidebar, so
+  // it sits under it here. Those two describing the same page differently is
+  // the whole reason `covers` is written down rather than inferred.
+  if (index?.covers?.includes(segments[1] ?? '')) {
+    crumbs.push({ label: index.title, href: `/docs/${found.section.slug}` });
+  }
   // A third-level page sits under a parent that is itself a page.
   if (segments.length === 3) {
     const parent = found.section.pages.find((p) => p.slug === segments[1]);
@@ -112,7 +120,7 @@ function crumbsFor(segments: string[]): Crumb[] {
     }
   }
   if (found.page) crumbs.push({ label: found.page.title });
-  else if (found.section.indexTitle) crumbs.push({ label: found.section.indexTitle });
+  else if (index) crumbs.push({ label: index.title });
   return crumbs;
 }
 

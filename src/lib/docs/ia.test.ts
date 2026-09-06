@@ -116,6 +116,34 @@ describe('platform names', () => {
   });
 });
 
+describe('section index pages', () => {
+  test('every covered slug is a page of its own section', () => {
+    // A typo here does not drop the page, it silently moves it: the slug fails
+    // to match, so the page falls through to the un-covered list and draws
+    // beside Environment Setup instead of under it. Nothing else would catch
+    // that, because both lists render.
+    for (const section of SECTIONS) {
+      const slugs = new Set(section.pages.map((p) => p.slug));
+      for (const slug of section.index?.covers ?? []) {
+        assert.ok(
+          slugs.has(slug),
+          `${section.slug} covers "${slug}", which is not one of its pages`
+        );
+      }
+    }
+  });
+
+  test('a section that covers pages has a page of its own to cover them with', () => {
+    // `covers` without `title` cannot happen through the type, but a section
+    // whose index page is unwritten would nest rows under a dead row.
+    for (const section of SECTIONS) {
+      if (section.index?.covers?.length) {
+        assert.ok(section.index.title, `${section.slug} covers pages but has no index title`);
+      }
+    }
+  });
+});
+
 describe('Getting Started', () => {
   test('lists the operating systems alphabetically', () => {
     // They are peers. Any other order reads as a recommendation, and the one

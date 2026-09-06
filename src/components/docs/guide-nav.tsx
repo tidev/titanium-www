@@ -87,7 +87,7 @@ function Row({
  * destination, so it cannot be clickable on the strength of a file happening to
  * exist at its path - which is how "Environment Setup" came to behave unlike
  * every other section. A section with a page of its own lists it as a child
- * instead, through `indexTitle`.
+ * instead, through `section.index`.
  *
  * It gets its own weight for the reason the three link states have theirs: the
  * unwritten state is `text-subtle`, and a category borrowing it would make a
@@ -106,20 +106,42 @@ export function GuideNav({ current, written }: GuideNavProps) {
       <nav aria-label="Documentation">
         {SECTIONS.map((section) => {
           const base = `/docs/${section.slug}`;
+          const covered = new Set(section.index?.covers ?? []);
+          const uncovered = section.pages.filter((page) => !covered.has(page.slug));
           return (
             <div key={section.slug} className="mb-5">
               <SectionHeading title={section.title} />
               <ul className="mt-0.5 ml-1.5 border-l border-border pl-2">
-                {!!section.indexTitle && (
-                  <Row
-                    href={base}
-                    title={section.indexTitle}
-                    active={current === base}
-                    written={written.has(base)}
-                    depth={0}
-                  />
+                {!!section.index && (
+                  <>
+                    <Row
+                      href={base}
+                      title={section.index.title}
+                      active={current === base}
+                      written={written.has(base)}
+                      depth={0}
+                    />
+                    {/* The pages that row introduces, drawn under it. They are
+                        its siblings by URL and its children editorially; see
+                        `covers` in `ia.ts`. */}
+                    {section.pages
+                      .filter((page) => covered.has(page.slug))
+                      .map((page: DocPage) => {
+                        const path = `${base}/${page.slug}`;
+                        return (
+                          <Row
+                            key={page.slug}
+                            href={path}
+                            title={page.title}
+                            active={current === path}
+                            written={written.has(path)}
+                            depth={1}
+                          />
+                        );
+                      })}
+                  </>
                 )}
-                {section.pages.map((page: DocPage) => {
+                {uncovered.map((page: DocPage) => {
                   const path = `${base}/${page.slug}`;
                   return (
                     <li key={page.slug}>
