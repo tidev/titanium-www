@@ -126,24 +126,31 @@ export const SECTIONS: DocSection[] = [
     blurb: 'Get a machine ready to build, on your operating system.',
     kind: 'tutorial',
     pages: [
+      // These three carry a shorter title here than the page itself does. A
+      // sidebar row is read under the section heading that already says
+      // "Environment Setup", where "Linux Setup" would repeat it; a tab, a
+      // search result and a bookmark carry no such context, so the page is
+      // "Linux Setup". `title` in frontmatter wins wherever the page speaks for
+      // itself, and this one labels the tree.
+      //
       // The three operating systems are peers and are listed alphabetically.
       // Putting macOS first would read as an endorsement of it: the only thing
       // a Mac is actually required for is building iOS, which each page says.
       {
         slug: 'linux',
-        title: 'Linux Setup',
+        title: 'Linux',
         blurb: 'Titanium CLI and SDK, and the Android SDK.',
         platforms: ['linux', 'android'],
       },
       {
         slug: 'macos',
-        title: 'macOS Setup',
+        title: 'macOS',
         blurb: 'Titanium CLI and SDK, Xcode, the Android SDK, and signing identities.',
         platforms: ['macos', 'ios', 'android'],
       },
       {
         slug: 'windows',
-        title: 'Windows Setup',
+        title: 'Windows',
         blurb: 'Titanium CLI and SDK, and the Android SDK.',
         platforms: ['windows', 'android'],
       },
