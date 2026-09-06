@@ -1,10 +1,10 @@
-## Check the toolchain
+## Verify Titanium is Ready
 
 ```sh
 ti info
 ```
 
-`ti info` lists everything it found, then the problems it hit. A working setup
+`ti info` lists everything it detected and any issues it found. A working setup
 reports none.
 
 Warnings are common and usually harmless — a component newer than the SDK

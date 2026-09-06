@@ -2,6 +2,10 @@
 
 Titanium requires **Node.js 22.19.0 or 24.x**.
 
+> [!IMPORTANT]
+> **Node 26 is only compatible with Titanium SDK 14 or newer.** Node 24
+> works with every SDK.
+
 :::only macos
 
 :::tabs
@@ -102,24 +106,3 @@ Download the `.msi` from [nodejs.org](https://nodejs.org/dist/latest-v24.x/).
 ```sh
 node -v
 ```
-
-> [!IMPORTANT]
-> **Node 26 is only compatible with Titanium SDK 14 or newer.** Node 24
-> works with every SDK.
-
-:::only macos
-
-On SDK 13.4 and earlier, Node 26 breaks every CLI command. Those releases reach
-a physical iPhone through `node-ios-device`, which ships prebuilt binaries for
-Node 18 through 24. There is none for Node 26, so npm compiles from source and
-the compile fails:
-
-```
-Error: Rebuild failed:
-node-pre-gyp ERR! install response status 404 Not Found on
-https://github.com/tidev/node-ios-device/releases/download/v1.13.0/node_ios_device-v1.13.0-node-v147-darwin-arm64.tar.gz
-```
-
-Switch to Node 24, or to SDK 14, which drops the dependency.
-
-:::

@@ -27,7 +27,11 @@ global directory is owned by root.
 ti -v
 ```
 
-The command is also available as `titanium`.
+The command is also available as `titanium`:
+
+```sh
+titanium -v
+```
 
 ## Install the Titanium SDK
 
