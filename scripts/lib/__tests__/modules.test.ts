@@ -237,12 +237,15 @@ describe('isLegacyManifestPath', () => {
     assert.equal(isLegacyManifestPath('android/manifest'), false);
   });
 
-  test('every path manifestPaths offers is classifiable', () => {
+  test('every path manifestPaths offers is one this knows a rule for', () => {
     // The reporting in generate-modules.ts asks this of whichever path a read
-    // landed on, so a third spelling added above without a rule here would be
-    // silently counted as current.
+    // landed on, and the answer is a bare boolean, so a third spelling added to
+    // manifestPaths without a rule here would be counted as current rather than
+    // rejected. Enumerating the paths it may be asked about is what catches
+    // that; asserting the return type cannot, since it is always a boolean.
+    const known = new Set(['ios/manifest', 'android/manifest', LEGACY_IOS_MANIFEST]);
     for (const path of [...manifestPaths('ios'), ...manifestPaths('android')]) {
-      assert.equal(typeof isLegacyManifestPath(path), 'boolean', path);
+      assert.ok(known.has(path), `${path} has no rule in isLegacyManifestPath`);
     }
     assert.equal(manifestPaths('ios').filter(isLegacyManifestPath).length, 1);
   });

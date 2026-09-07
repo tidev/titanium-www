@@ -30,8 +30,8 @@ import { MODULES_DIR, moduleDir, moduleVersionDir } from './lib/registry-paths.t
  * Three things about this history make it awkward, and all three are why the
  * layout looks the way it does:
  *
- *   - Tags are not a key. 18 spellings are in use, four of them in ti.map
- *     alone (`3_2_3_GA`, `iOS-2.3.2`, `android-4.4.0`, `v7.3.1-ios`). Nothing
+ *   - Tags are not a key. 17 spellings are in use, seven of them in ti.map
+ *     alone (`3_2_3_GA`, `iOS-2.3.2`, `android-4.4.0`, `v7.3.1-ios`, ...). Nothing
  *     here reads one; the version comes from the asset filename, which has been
  *     stable for eleven years, and the tag is carried as an opaque reference.
  *
@@ -199,10 +199,22 @@ const manifests = new Map<string, FoundManifest | null>();
  * How many iOS manifests each repo still serves from `iphone/manifest`.
  *
  * Counted rather than reported per tag: the old spelling is expected at an old
- * tag and 250 of them have it, so a note apiece would be noise. What is worth
- * knowing is the shape of a repo, which is the ratio (TI-24).
+ * tag and 36 of the 218 iOS reads have it, so a note apiece would be noise.
+ * What is worth knowing is the shape of a repo, which is the ratio (TI-24).
  */
 const legacyIos = new Map<string, { legacy: number; total: number }>();
+
+/**
+ * Which path the default branch's iOS manifest came from, per repo.
+ *
+ * Kept apart from the ratio above because it answers a different question. The
+ * ratio mixes immutable tags with the one mutable ref, so a repo at 100% is not
+ * evidence it never moved: `writeMain` bails before reading the branch at all
+ * when docgen has not compiled `main` yet, which would leave a migrated repo
+ * counting tags only and reading as 100% legacy. Whether the *next* release
+ * carries the old path is a fact about this ref and nothing else (TI-24).
+ */
+const mainIosPath = new Map<string, string>();
 
 async function manifestAt(
   repo: string,
@@ -368,8 +380,8 @@ async function buildVersions(m: Collected): Promise<ModuleVersion[]> {
 
     // A fourth cross-check, and the only one between two manifests rather than
     // between a manifest and its artifact: both platforms of one version are
-    // meant to carry the same guid, and three modules have shipped versions
-    // where they did not (TI-24).
+    // meant to carry the same guid, and four modules have shipped versions
+    // where they did not, 24 of them in total (TI-24).
     const guids = guidMismatch(built);
     if (guids) {
       notes.push(`${m.moduleId}@${version}: platforms disagree on guid: ${guids.join(', ')}`);
@@ -454,7 +466,9 @@ async function writeMain(m: Collected, defaultBranch: string): Promise<boolean> 
   const built: ModuleManifest[] = [];
   for (const platform of PLATFORMS) {
     const found = await manifestAt(m.repo, defaultBranch, platform);
-    if (found) built.push(toModuleManifest(found.fields, platform, MUTABLE));
+    if (!found) continue;
+    if (platform === 'ios') mainIosPath.set(m.repo, found.path);
+    built.push(toModuleManifest(found.fields, platform, MUTABLE));
   }
   if (!built.length) {
     failures.push(`${m.repo} ${defaultBranch}: no manifest for either platform`);
@@ -608,16 +622,20 @@ if (pruned.length) console.log(`${pruned.length} pruned: ${pruned.join(', ')}`);
 /**
  * Which repos still answer for iOS at `iphone/manifest`.
  *
- * Every repo has some, because the rename happened partway through and old tags
- * do not move. A repo at 100% is the one to look at: it never made the move,
- * and its next release will carry the old path too (TI-24).
+ * The count on its own never reaches zero, because the rename happened partway
+ * through and old tags do not move. The marker is the actionable half, and it
+ * is read off the default branch rather than off the ratio: that is the ref a
+ * migration actually changes, and the only one whose path decides what the next
+ * release carries (TI-24). A repo whose branch was never sampled - docgen has
+ * not compiled its `main` yet - gets no marker rather than a guessed one.
  */
 const legacy = [...legacyIos.entries()].filter(([, s]) => s.legacy > 0);
 if (legacy.length) {
   console.log(`\niOS manifests read from the legacy iphone/ path:`);
   for (const [repo, { legacy: n, total }] of legacy.sort((a, b) => b[1].legacy - a[1].legacy)) {
-    const all = n === total ? '  <- never moved to ios/manifest' : '';
-    console.log(`  ${repo}: ${n} of ${total}${all}`);
+    const path = mainIosPath.get(repo);
+    const still = path !== undefined && isLegacyManifestPath(path);
+    console.log(`  ${repo}: ${n} of ${total}${still ? '  <- default branch is still on it' : ''}`);
   }
 }
 

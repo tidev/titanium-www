@@ -29,10 +29,18 @@ None of this happens at build time. The site build is offline by design.
 
 ## The headline
 
-**Nothing here blocks the registry.** All 16 repos publish GitHub releases, all
-399 assets across those 400 releases parse, and every repo has a licence file
-and a reachable manifest for each platform it ships. The registry is viable
-today and was already being built from this data before the audit.
+**Nothing here blocks the registry.** All 16 repos publish GitHub releases,
+every one of the 399 assets the generator parses is named the way the parser
+expects, and every repo has a licence file and a reachable manifest for each
+platform it ships. The registry is viable today and was already being built from
+this data before the audit.
+
+Two denominators appear below and they are not the same number, so both are
+stated once here rather than left to be inferred. There are **400 releases**,
+399 published and one draft, carrying **400 assets** between them. The generator
+skips drafts, so the assets it parses are the **399** on published releases; the
+400th is the draft's. Release-level counts, including the "One zip" column,
+are out of all 400.
 
 What the audit found is drift, and one real defect:
 
@@ -40,9 +48,9 @@ What the audit found is drift, and one real defect:
   pre-rename `iphone/manifest` path. That is not cosmetic. It is why
   [TI-66](https://linear.app/titanium-sdk/issue/TI-66)'s licence sweep missed
   the file, which still declares `Appcelerator Commercial License` while the
-  repo's own `LICENSE` is Apache 2.0 and all 26 other manifests now say
-  `Apache-2.0`. A stale path hid a wrong licence for the length of a
-  remediation.
+  repo's own `LICENSE` is Apache 2.0. It is the only manifest of the 27 that
+  says anything else: 25 now say `Apache-2.0` and `ti.applesignin`'s says `MIT`.
+  A stale path hid a wrong licence for the length of a remediation.
 - `ti.identity` declares two different guids for one module, one per platform,
   and has done since 1.0.0. Three other modules had the same split and were
   reconciled; this one was not.
@@ -73,8 +81,9 @@ What the audit found is drift, and one real defect:
 | `ti.playservices`                | `ti.playservices`                |       16 |   16/16 | 2025-09-10   |             3 |
 | `ti.webdialog`                   | `titanium-web-dialog`            |       18 |   18/18 | 2025-11-06   |             7 |
 
-"One zip" is releases carrying exactly one `.zip`. The three exceptions are
-harmless and are recorded so nobody re-investigates them:
+"One zip" is releases carrying exactly one `.zip`, counted across all 400
+releases including the draft. The three exceptions are harmless and are recorded
+so nobody re-investigates them:
 
 - `ti.map` `3_2_3_GA` and `titanium-apple-sign-in` `v3.1.0` have no assets at
   all. The generator skips them with a note.
@@ -82,11 +91,14 @@ harmless and are recorded so nobody re-investigates them:
   zip, an iphone zip and a universal `-titanium-` package. `beats()` in
   `scripts/generate-modules.ts` already prefers the platform-specific asset over
   the universal one, so this resolves correctly.
-- One further release, `ti.geofence` `ios-2.0.2`, is a draft and is skipped.
+- One further release, `ti.geofence` `ios-2.0.2`, is a draft and is skipped. It
+  does carry one zip, so it is inside the 397 above but outside the 399 assets
+  the generator parses.
 
-**Asset naming is the one thing that has never drifted.** All 399 assets match
-`<moduleid>-<platform>-<x.y.z>.zip`. In eleven years and 400 releases the
-convention has not moved once, which is why the extractor keys on the filename
+**Asset naming is the one thing that has never drifted.** All 400 assets match
+`<moduleid>-<platform>-<x.y.z>.zip`, the 399 parsed and the draft's alike. In
+eleven years and 400 releases the convention has not moved once, which is why
+the extractor keys on the filename
 and never on the tag. The platform slot is always `android`, `iphone` or
 `titanium`; `ios` has never appeared in a filename. 24 assets across
 `ti.geofence`, `appcelerator.https` and `appcelerator.encrypteddatabase` use
@@ -258,9 +270,11 @@ spellings cost nothing to leave. This applies to the next tag and no others.
 TI-24 offered these as alternatives. They are not.
 
 **The extractor keeps both paths, permanently.** `manifestPaths('ios')` returns
-`['ios/manifest', 'iphone/manifest']` and will continue to. 36 of the iOS
+`['ios/manifest', 'iphone/manifest']` and will continue to. 36 of the 218 iOS
 manifests a full registry build reads still resolve through the fallback, across
-five repos, and every one is at an immutable tag. Removing the fallback would
+five repos. 35 of the 36 are at immutable tags; the 36th is
+`appcelerator.https`'s default branch, which is exactly the read TI-80 moves,
+and after it lands 35 immutable reads still need the fallback. Removing it would
 not raise an error, which is the dangerous part: those reads would return null
 and the registry would rebuild with the iOS platform quietly absent from those
 versions. This is now asserted by a test rather than left to a comment, so a
@@ -276,19 +290,22 @@ this audit.
 
 To make the move verifiable rather than a matter of belief,
 `scripts/generate-modules.ts` now reports which repos read through the fallback
-and marks a repo that has never moved:
+and marks the ones whose default branch is still on it:
 
 ```
 iOS manifests read from the legacy iphone/ path:
-  tidev/appcelerator.https: 16 of 16  <- never moved to ios/manifest
+  tidev/appcelerator.https: 16 of 16  <- default branch is still on it
   tidev/ti.geofence: 9 of 13
   tidev/appcelerator.encrypteddatabase: 8 of 18
   tidev/ti.coremotion: 2 of 9
   tidev/ti.facebook: 1 of 46
 ```
 
-The other four counts will never reach zero, because old tags do not move. Only
-the "never moved" marker should disappear, and only for this one repo.
+The five counts will never reach zero, because old tags do not move. The marker
+is the half that should, and only for this one repo. It is read off the default
+branch rather than off a repo sitting at 100%, because the ratio mixes tags with
+the one mutable ref and a repo whose branch was never sampled would read as
+100% legacy without ever having been on the old path at its head.
 
 ### Axway-era metadata: no blanket rewrite, three targeted corrections
 
@@ -338,9 +355,13 @@ front of it:
   what a manifest said but not where it was read from, so "which repos are still
   on `iphone/`" was a question only GitHub could answer.
 - `scripts/lib/modules.ts` gained `guidMismatch`, and `generate-modules.ts`
-  reports it for every version and for each default branch. It is the fourth
-  manifest cross-check and the only one between two manifests rather than
-  between a manifest and its artifact.
+  reports it for every version, and for each default branch that gets read at
+  all. It is the fourth manifest cross-check and the only one between two
+  manifests rather than between a manifest and its artifact. The default-branch
+  half rides along with `writeMain`, which only runs where docgen has already
+  compiled a `main`, so a module added before its first docs compile is checked
+  on its released versions and not yet on its branch. That is true of none of
+  the 16 today.
 
 Both are reported, never corrected, for the same reason the existing three are:
 the manifest is evidence about the release, and where it disagrees with the

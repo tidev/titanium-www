@@ -10,7 +10,7 @@ import type { ModuleManifest, Platform } from '../../src/lib/registry/index.ts';
  * should need the network to test.
  *
  * Tags are deliberately absent. They are opaque references and nothing here
- * reads one: 18 spellings are in use across the 16 repos, four of them in
+ * reads one: 17 spellings are in use across the 16 repos, seven of them in
  * ti.map alone, and every attempt to derive meaning from one is a bug waiting
  * for the next release manager's habits.
  */
@@ -162,13 +162,14 @@ export const LEGACY_IOS_MANIFEST = 'iphone/manifest';
  * both are still reachable at their own tags, so which one exists is a property
  * of the release, not of the module.
  *
- * Both spellings are permanent (TI-24). 36 of the iOS manifests a full run
- * reads still resolve through the fallback, spread across 5 of the 16 repos,
- * and every one of them is at a tag that cannot be rewritten. Dropping
- * `iphone/manifest` would not tidy anything up: those reads would return null,
- * and the registry would rebuild with the iOS platform quietly missing from
- * those versions rather than fail. The fallback is load-bearing, not
- * transitional.
+ * Both spellings are permanent (TI-24). 36 of the 218 iOS manifests a full run
+ * reads still resolve through the fallback, spread across 5 of the 16 repos.
+ * 35 of those 36 are at tags, which cannot be rewritten; the 36th is
+ * `appcelerator.https`'s default branch, the one read TI-80 will move.
+ * Dropping `iphone/manifest` would not tidy anything up: those reads would
+ * return null, and the registry would rebuild with the iOS platform quietly
+ * missing from those versions rather than fail. The fallback is load-bearing,
+ * not transitional.
  */
 export const manifestPaths = (platform: Platform): string[] =>
   platform === 'android' ? ['android/manifest'] : ['ios/manifest', LEGACY_IOS_MANIFEST];
@@ -188,8 +189,9 @@ export const isLegacyManifestPath = (path: string): boolean => path === LEGACY_I
  *
  * A guid identifies the module, not the build, so the two platforms of one
  * release are meant to share one. Eleven years of separate per-platform release
- * histories put three modules out of step at some point and left `ti.identity`
- * that way (TI-24): its android and iOS manifests have never matched. Reported
+ * histories put four modules out of step across 24 released versions, and left
+ * `ti.identity` that way (TI-24): the other three agree on their default
+ * branches today, while its android and iOS manifests never have. Reported
  * rather than corrected, like every other manifest cross-check here, because
  * the manifest is evidence about the release and the shipped artifact is what a
  * developer installs.
