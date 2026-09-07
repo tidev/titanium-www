@@ -121,6 +121,17 @@ export type Guide = {
   draft: boolean;
   html: string;
   toc: Heading[];
+  /**
+   * The page's markdown with `:::include` and `:::only` already resolved, and
+   * frontmatter removed. What `html` was rendered from.
+   *
+   * Carried so the machine-readable output (TI-57) can serve markdown that is
+   * the same page, rather than HTML turned back into markdown by a converter
+   * that would have to guess. Kept as the expanded form because that is the
+   * page a reader gets: an unexpanded `:::include install-cli` would hand a
+   * model a marker instead of the install steps.
+   */
+  markdown: string;
   /** Repo-relative source, for the edit link. */
   sourcePath: string;
 };
@@ -201,6 +212,7 @@ function parse(root: string, segments: string[], file: string, text: string): Gu
     draft: front.draft,
     html,
     toc,
+    markdown: expanded.trim(),
     sourcePath: file.slice(process.cwd().length + 1),
   };
 }
