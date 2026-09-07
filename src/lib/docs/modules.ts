@@ -212,7 +212,7 @@ export function moduleSummaries(): ModuleSummary[] {
  * does not have to be re-applied after one. See `docs/module-curation.md`.
  *
  * Two granularities. A repo entry vouches for one module; an owner entry
- * vouches for everything that author publishes, which is how 49 of the 112
+ * vouches for everything that author publishes, which is how 48 of the 106
  * listings are covered by two lines.
  */
 function vouchedFor(): { repos: Set<string>; owners: Set<string> } {

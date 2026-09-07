@@ -158,6 +158,14 @@ export const CommunityModuleSchema = z.strictObject({
   description: z.string().optional(),
   platforms: z.array(PlatformSchema).min(1),
   stars: z.number().int().nonnegative(),
+  /**
+   * Always false, and kept anyway.
+   *
+   * The generator drops archived repos before they reach this file (TI-23), so
+   * nothing here can carry `true`. It stays because the registry API serves
+   * this shape and promises not to remove a field, and because it is still the
+   * honest answer to "is this repository archived" rather than a placeholder.
+   */
   archived: z.boolean(),
   pushedAt: z.string(),
 });
@@ -193,7 +201,7 @@ export const VerifiedListSchema = z.object({
    * GitHub usernames whose modules are all vouched for.
    *
    * Vouching per author rather than per repo, for the authors who publish a
-   * dozen modules to the same standard: hansemannn alone is 41 of the 112
+   * dozen modules to the same standard: hansemannn alone is 40 of the 106
    * listings, and enumerating those by hand would be a list that goes stale
    * every time he publishes.
    *

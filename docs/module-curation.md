@@ -80,8 +80,8 @@ take. It is applied at read time, so withdrawing it is one deletion and takes
 effect on the next build. And a single module that should not carry it goes in
 `blocked.json`, which wins.
 
-Vouched for today: **hansemannn** (41 listings) and **m1ga** (8), which is 49
-of the 112.
+Vouched for today: **hansemannn** (40 listings) and **m1ga** (8), which is 48
+of the 106.
 
 ## What earns a block
 
@@ -106,7 +106,7 @@ without anyone doing anything.
 Remove it from `verified.json` and it falls back to Unverified with its listing
 intact. Blocking is a stronger statement and is not the tool for staleness.
 
-**49 of the 112 are verified**, by two usernames in `owners`. The other 63 are
+**48 of the 106 are verified**, by two usernames in `owners`. The other 58 are
 Unverified: nobody has looked at them, one at a time, and the badge says so.
 
 ## Who decides
@@ -127,8 +127,7 @@ owner the ability to make this repository fetch and run docgen against their
 code on dispatch. Verification is a statement about a module; that would have
 made it a grant of execution. The two lists stay separate.
 
-**Dropping the modules that fail the bar.** Of the 112 scraped today, 6 are
-archived and the median has 6 stars; most have no releases and no packaged
-asset. Applying the bar as a filter would have emptied the list and lost
+**Dropping the modules that fail the bar.** Of the 112 the search returned,
+the median has 6 stars and most have no releases and no packaged asset. Applying the bar as a filter would have emptied the list and lost
 modules.titaniumsdk.com most of what it lists. Badging them honestly keeps the
 search useful and tells the truth about what a listing is.
