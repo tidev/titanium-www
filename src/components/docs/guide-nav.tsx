@@ -1,5 +1,5 @@
 import { ApiTree, Chevron } from './api-tree';
-import { ScrollToCurrent } from './scroll-to-current';
+import { RailScroll } from './rail-scroll';
 import { ROOT_TITLE, SECTIONS, type DocPage } from '@/lib/docs/ia';
 import type { NavType } from '@/lib/docs/tree';
 import Link from 'next/link';
@@ -46,8 +46,8 @@ export type GuideNavProps = {
    * row stays a single link and this stays undefined.
    *
    * `active` is the type on screen, or empty on the index. The route that
-   * renders this knows it from its own params, which is why nothing here needs
-   * `usePathname()` and why guide pages ship no JavaScript for their sidebar.
+   * renders this knows it from its own params, so the tree itself renders on
+   * the server and nothing here needs `usePathname()`.
    */
   apiTree?: { types: NavType[]; base: string; active: string; count: number };
 };
@@ -145,21 +145,22 @@ function ApiSubtree({ tree }: { tree: NonNullable<GuideNavProps['apiTree']> }) {
       <div className="api-nav ml-3 hidden text-sm peer-checked:block lg:block">
         <ApiTree types={tree.types} base={tree.base} active={tree.active} />
       </div>
-      {/* The rail scrolls, and the expanded branch is usually below its fold.
-          The <aside> is what carries `overflow-y-auto`, not the <nav>. */}
-      <ScrollToCurrent within="#guide-rail" />
     </>
   );
 }
 
 export function GuideNav({ current, written, apiTree }: GuideNavProps) {
   return (
-    // The id is `ScrollToCurrent`'s handle on the scrolling box. Only the API
-    // tree is long enough to need it, so nothing reads it on a guide page.
+    // The id is `RailScroll`'s handle on the box that actually scrolls: the
+    // <aside> carries `overflow-y-auto`, not the <nav> inside it.
     <aside
       id="guide-rail"
       className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto"
     >
+      {/* Remembers where the rail was left. Rendered for every docs page, not
+          just the ones carrying the tree: a guides rail long enough to scroll
+          resets on navigation just as visibly. */}
+      <RailScroll selector="#guide-rail" storageKey="docs:rail" />
       <nav aria-label="Documentation">
         {/* `/docs` is a page like any other and the only one no section holds,
             so without this row the tree cannot reach it. Unindented and with no

@@ -1,9 +1,9 @@
 'use client';
 
 import { ApiTree, Chevron } from './api-tree';
+import { RailScroll } from './rail-scroll';
 import type { NavType } from '@/lib/docs/tree';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 
 /**
  * The API reference sidebar for a pinned version: every type, by namespace.
@@ -40,22 +40,12 @@ export function ApiNav({
     ? decodeURIComponent(pathname.slice(base.length + 1))
     : '';
 
-  // The rail holds 284 rows and starts at the top, so the branch that was
-  // expanded for you is often below the fold. Enhancement only - the rail is
-  // correct without it, just scrolled to the wrong place. Measured against the
-  // rail's own box rather than scrollIntoView(), which would drag the document
-  // along with it.
-  const rail = useRef<HTMLElement>(null);
-  useEffect(() => {
-    const box = rail.current;
-    const current = box?.querySelector('[aria-current="page"]');
-    if (!box || !current) return;
-    const offset = current.getBoundingClientRect().top - box.getBoundingClientRect().top;
-    box.scrollTop += offset - box.clientHeight / 2;
-  }, []);
-
   return (
     <>
+      {/* Centres the current type on a first visit and holds the position
+          afterwards. Was an effect here; it is shared with the guides rail now,
+          which has the same problem for the same reason. */}
+      <RailScroll selector="#api-rail" storageKey="docs:api-rail" />
       {/*
         A checkbox drives the phone disclosure so the tree is in the document
         once. The obvious markup - a <details> for phones and an <aside> for
@@ -79,7 +69,7 @@ export function ApiNav({
         {/* Sticks below the 4rem site header and scrolls on its own, so a long
             branch never drags the page with it. */}
         <nav
-          ref={rail}
+          id="api-rail"
           aria-label="API reference"
           // `api-nav` is the hook for the chevron rule in globals.css; see there.
           className="api-nav max-h-[70dvh] overflow-y-auto pb-6 text-sm lg:sticky lg:top-16 lg:max-h-[calc(100dvh-4rem)] lg:py-10 lg:pr-3"
