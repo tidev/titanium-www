@@ -28,6 +28,7 @@ import {
   type DocSection,
 } from '@/lib/docs/ia';
 import { lastUpdated } from '@/lib/docs/last-updated';
+import { NOINDEX } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -138,11 +139,36 @@ export async function generateMetadata({
     // is nothing to consolidate to and the page goes `noindex, follow`
     // instead. See `archivedSeo`.
     alternates: { canonical: `${SITE_URL}${seo.canonical}` },
-    ...(seo.index ? {} : { robots: { index: false, follow: true } }),
-    // A draft renders so it can be reviewed at its URL, but it is not finished
-    // prose and should not be what a search brings someone to.
-    ...(page?.draft ? { robots: { index: false, follow: false } } : {}),
+    // A page's own verdict wins over the archive's. A draft, or a defined path
+    // with nothing written under it, should stay out of the index whichever
+    // major it sits in; only where the page itself has no objection does the
+    // archived-orphan rule decide.
+    ...(robotsFor(rest, contentRoot(major)) ?? (seo.index ? {} : { robots: NOINDEX })),
   };
+}
+
+/**
+ * When a `/docs` path should be kept out of search, and why (TI-48).
+ *
+ * Two cases, and they want different verdicts. A draft renders so it can be
+ * reviewed at its URL, but it is not finished prose and should not be what a
+ * search brings someone to; it is `follow: false` as well, because a draft is
+ * usually written against pages that do not exist yet.
+ *
+ * A defined path with no file and nothing below it is the other. It renders
+ * "this page has not been written yet" above links to what is written, so it is
+ * `noindex` and followed: thin enough that indexing it would teach a search
+ * engine the site answers a question it does not, and the links off it are
+ * real. `indexableGuidePaths` applies the same rule to the sitemap.
+ */
+function robotsFor(segments: string[], root?: string): { robots: Metadata['robots'] } | undefined {
+  const page = guide(segments, root);
+  if (page) return page.draft ? { robots: { index: false, follow: false } } : undefined;
+  if (!segments.length) return undefined;
+
+  const found = findPage(segments);
+  const children = found && (found.page ? found.page.pages : found.section.pages);
+  return children?.length ? undefined : { robots: NOINDEX };
 }
 
 /** GitHub's edit view for the file behind a page. */

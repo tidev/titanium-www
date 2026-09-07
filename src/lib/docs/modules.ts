@@ -69,6 +69,25 @@ export function moduleIndex(id: string): ModuleIndex | null {
 }
 
 /**
+ * What a module's own authors say it does, punctuated as a sentence (TI-48).
+ *
+ * Every module page opens its search description with this, and each view then
+ * adds what that view actually holds. The alternative was four sentences per
+ * module written by us, which would say the same thing about ti.nfc and
+ * ti.playservices and rank as well as that deserves.
+ *
+ * The registry copies `description` straight off the repository, where trailing
+ * punctuation is a coin flip: eleven of the sixteen have none. A description is
+ * optional in the schema, so a module without one gets no lead sentence rather
+ * than an invented one.
+ */
+export function moduleBlurb(index: ModuleIndex): string | undefined {
+  const text = index.description?.trim();
+  if (!text) return undefined;
+  return /[.!?]$/.test(text) ? text : `${text}.`;
+}
+
+/**
  * The module's README, as committed to its repository.
  *
  * Narrowed here rather than read off the parsed index because `ModuleIndexSchema`

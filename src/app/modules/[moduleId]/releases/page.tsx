@@ -1,6 +1,6 @@
 import { Releases } from '@/components/modules/releases';
 import { ModuleLayout } from '@/components/modules/shell';
-import { moduleIds, moduleIndex } from '@/lib/docs/modules';
+import { moduleBlurb, moduleIds, moduleIndex } from '@/lib/docs/modules';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -20,9 +20,21 @@ export async function generateMetadata({
   const index = moduleIndex(moduleId);
   if (!index) return {};
 
+  // Newest first, per the registry schema.
+  const newest = index.versions[0]?.version;
+  const oldest = index.versions[index.versions.length - 1]?.version;
+  const count = index.versions.length;
+
   return {
     title: `${index.moduleId} releases - Titanium modules`,
-    description: `Every published release of the ${index.moduleId} Titanium module.`,
+    description: [
+      moduleBlurb(index),
+      count > 1
+        ? `All ${count} published releases, ${oldest} to ${newest}, with the archives to download.`
+        : `Its ${count === 1 ? `one published release, ${newest},` : 'published releases,'} with the archives to download.`,
+    ]
+      .filter((part) => !!part)
+      .join(' '),
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/releases` },
   };
 }

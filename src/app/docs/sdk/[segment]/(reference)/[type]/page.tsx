@@ -1,7 +1,8 @@
 import { TypeReference } from '@/components/docs/type-reference';
 import { resolveVersion, sdkType } from '@/lib/docs/registry';
 import { buildTypeView } from '@/lib/docs/type-view';
-import { canonicalPath } from '@/lib/docs/versions';
+import { canonicalPath, isIndexedVersion } from '@/lib/docs/versions';
+import { NOINDEX } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -68,6 +69,10 @@ export async function generateMetadata({
     // For the latest release this points at the unversioned page: the two are
     // the same content and only one of them should compete in search.
     alternates: { canonical: `${SITE_URL}${canonicalPath(resolved, view.type.name)}` },
+    // Past the cutoff a version is served but not offered: 284 types across
+    // twenty releases is 5,680 near-identical pages, and the older ones are
+    // reached from a link somebody kept rather than from a search.
+    ...(isIndexedVersion(resolved) ? {} : { robots: NOINDEX }),
   };
 }
 

@@ -1,6 +1,7 @@
 import { BlockError, renderBlocks, unresolvedMarkers } from './blocks.ts';
 import { withHeadingAnchors, type Heading } from './headings.ts';
 import {
+  allPaths,
   findPage,
   isValidSlug,
   MAX_DEPTH,
@@ -297,6 +298,36 @@ export function writtenPaths(root = CONTENT): Set<string> {
     if (page && !page.draft) out.add(page.path);
   }
   return out;
+}
+
+/**
+ * Every `/docs` page worth putting in front of a search engine (TI-48).
+ *
+ * Three kinds of address answer under `/docs`, and only two of them are pages.
+ * A path with a file is a written guide. A path with no file but with children
+ * below it renders the index of those children, which is a real destination and
+ * how a reader gets into a section. A path with neither renders "this page has
+ * not been written yet", and no version of that is worth a search result: it is
+ * thin by construction, and listing it teaches a search engine that the site
+ * answers a question it does not.
+ *
+ * Drafts are absent, because `writtenPaths` already drops them. That is the
+ * third of the three places TI-53 requires, the index and the feed being the
+ * others, and it is why this is built from that set rather than from disk.
+ *
+ * `/docs` itself is always here: it lists the six sections whether or not
+ * anyone has written an introduction above them.
+ */
+export function indexableGuidePaths(root = CONTENT): string[] {
+  const written = writtenPaths(root);
+  return allPaths().filter((path) => {
+    if (written.has(path)) return true;
+    const segments = path.split('/').slice(2);
+    if (!segments.length) return true;
+    const found = findPage(segments);
+    const children = found && (found.page ? found.page.pages : found.section.pages);
+    return !!children?.length;
+  });
 }
 
 export type Problem = { where: string; message: string };

@@ -4,7 +4,19 @@ import { communityListings, moduleSummaries } from '@/lib/docs/modules';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { latestRelease } from '@/lib/downloads/registry';
 import { communityNav } from '@/lib/nav';
+import { SITE_URL } from '@/lib/site';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+/**
+ * The title and description are the root layout's, which are written for this
+ * page in the first place. Only the canonical is new: without one, the home
+ * page is the single address on the site that does not name itself, and it is
+ * the one most likely to be linked with a tracking parameter stuck on the end.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: `${SITE_URL}/` },
+};
 
 /**
  * Deliberately not the centred logo-tagline-two-buttons stack that React,
