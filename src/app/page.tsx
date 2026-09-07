@@ -54,7 +54,13 @@ function Chrome({ name, children }: { name: string; children: React.ReactNode })
         <span className="size-2 rounded-full bg-border-strong" />
         <span className="font-mono text-xs text-text-subtle">{name}</span>
       </div>
-      <pre className="overflow-x-auto p-4 font-mono text-sm leading-relaxed">
+      {/* Focusable because it scrolls: without a tab stop there is no keyboard
+          route to the end of a line wider than the box (WCAG 2.1.1). Same
+          reasoning as `Terminal` and as the prose blocks in markdown.ts. */}
+      <pre
+        tabIndex={0}
+        className="overflow-x-auto p-4 font-mono text-sm leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      >
         <code>{children}</code>
       </pre>
     </div>

@@ -55,7 +55,15 @@ export function ApiNav({
         The cost is that assistive tech announces a checkbox rather than a
         disclosure. It works with scripting off, which the alternatives do not.
       */}
-      <input id="api-nav-toggle" type="checkbox" className="peer sr-only" />
+      {/* `lg:hidden` on the input as well as the label (TI-49). `sr-only` keeps
+          a control in the tab order and in the accessibility tree, so above
+          `lg` - where the label that names it is display:none and the tree is
+          open regardless - this was a 1x1 unnamed checkbox that a keyboard
+          stopped on and a screen reader announced with no name at all. Hiding
+          it costs nothing: no rule below `lg` is affected, and `peer-checked`
+          still matches, because a sibling selector does not care about
+          display. */}
+      <input id="api-nav-toggle" type="checkbox" className="peer sr-only lg:hidden" />
       <label
         htmlFor="api-nav-toggle"
         className="mt-6 flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium peer-checked:[&_svg]:rotate-90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus lg:hidden"

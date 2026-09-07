@@ -35,11 +35,16 @@ export function BranchBuilds({
       <p className="rounded-lg border border-warning/40 bg-surface px-4 py-3 text-sm text-text-muted">
         CI builds are not releases. They are unsigned, untested beyond CI, and should never ship in
         production. If one misbehaves,{' '}
+        {/* Underlined at rest, not only on hover: this one sits mid-sentence in
+            a paragraph of `text-text-muted`, and `--link` against that is under
+            3:1 in the light theme, so colour alone does not mark it as a link
+            (WCAG 1.4.1). The nav and list links elsewhere are not inside a text
+            block and are not affected. */}
         <a
           href="https://github.com/tidev/titanium-sdk/issues/new/choose"
           target="_blank"
           rel="noreferrer"
-          className="text-link hover:underline"
+          className="text-link underline underline-offset-2"
         >
           open an issue
         </a>

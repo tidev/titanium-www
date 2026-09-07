@@ -100,12 +100,24 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
     ...SANITIZE,
     transformTags: {
       img: (tagName, attribs) => {
+        /**
+         * Every image ends up with an `alt`, even if it is empty (TI-49).
+         *
+         * The markdown images all carry one; the twenty-odd written as raw HTML
+         * in the apidoc YAML do not, and an `<img>` with no alt is announced by
+         * its filename - `7618194ed3a17536.png` - which is worse than silence.
+         * The empty string marks those decorative, which is the honest reading:
+         * each one sits under prose that already describes it. Writing real alt
+         * text for them is a content task, not one the renderer can do.
+         */
+        const alt = attribs.alt ?? '';
         const src = attribs.src ?? '';
-        if (!relative || !src || isAbsolute(src)) return { tagName, attribs };
+        if (!relative || !src || isAbsolute(src)) return { tagName, attribs: { ...attribs, alt } };
         return {
           tagName,
           attribs: {
             ...attribs,
+            alt,
             // Through the asset manifest: the same image is shared by every
             // compiled version rather than copied into each one.
             src: assetUrl(resolveRelative(relative.images, src)),
@@ -163,10 +175,27 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
     },
   });
 
-  // Both run after the allowlist, never before - see highlight.ts. Letting
-  // either write markup the sanitizer then has to permit would extend that
+  // All three run after the allowlist, never before - see highlight.ts. Letting
+  // any of them write markup the sanitizer then has to permit would extend that
   // permission to whoever wrote the module README this also renders.
-  return renderCallouts(highlightCodeBlocks(clean));
+  return focusableCodeBlocks(renderCallouts(highlightCodeBlocks(clean)));
+}
+
+/**
+ * Gives every code block a tab stop (TI-49).
+ *
+ * `.prose-docs pre` scrolls sideways so that one wide sample cannot scroll the
+ * page at 320px. That trade only works for a reader with a pointer: a scrolling
+ * box nothing can focus has no keyboard route to the end of a long line, which
+ * is WCAG 2.1.1. `Terminal` reached the same conclusion for the same reason and
+ * marks its rows `tabIndex={0}`; this is that, for the blocks that come out of
+ * markdown and so cannot carry a prop.
+ *
+ * Runs last, after highlighting, so a block Shiki coloured and one it declined
+ * to are treated alike - the second kind still scrolls.
+ */
+function focusableCodeBlocks(html: string): string {
+  return html.replace(/<pre(?=[\s>])/g, '<pre tabindex="0"');
 }
 
 /** Single-paragraph render for summaries, which should not become block elements. */

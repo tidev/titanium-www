@@ -144,3 +144,33 @@ describe('renderMarkdown, third-party README', () => {
     assert.doesNotMatch(html, /script|alert/);
   });
 });
+
+/**
+ * The accessibility guarantees the renderer makes about its own output (TI-49).
+ *
+ * Both exist because this HTML comes from fifteen years of hand-written source
+ * that cannot be asked to carry them, so the renderer supplies them instead.
+ */
+describe('renderMarkdown, accessibility', () => {
+  test('gives an image with no alt an empty one rather than none', () => {
+    // Otherwise a screen reader falls back to announcing the filename.
+    assert.match(renderMarkdown('<img src="/docs/img/7618194.png">', { link }), /alt=""/);
+  });
+
+  test('keeps the alt the source did write', () => {
+    const html = renderMarkdown('![A modal window](/docs/img/window-modal.png)', { link });
+    assert.match(html, /alt="A modal window"/);
+    assert.doesNotMatch(html, /alt=""/);
+  });
+
+  test('makes every code block focusable, highlighted or not', () => {
+    // A block scrolls sideways rather than widening the page, so a keyboard
+    // needs a way to reach the end of a long line.
+    assert.match(
+      renderMarkdown('```js\nvar win = Ti.UI.createWindow();\n```', { link }),
+      /<pre tabindex="0"[^>]*class="[^"]*shiki/
+    );
+    // No language, so Shiki declines to colour it - it still scrolls.
+    assert.match(renderMarkdown('```\nError: Rebuild failed\n```', { link }), /<pre tabindex="0"/);
+  });
+});

@@ -58,7 +58,20 @@ export function MemberSection({
   const Heading = level === 2 ? 'h2' : 'h3';
 
   return (
-    <section aria-labelledby={id} className={level === 2 ? 'mt-12' : 'mt-8'}>
+    /**
+     * Only the page's own sections are landmarks (TI-49).
+     *
+     * `aria-labelledby` on a `<section>` promotes it to a `region`, and a
+     * module page renders every type at once - so eight types with properties
+     * produced eight regions all called "Properties", which is what a screen
+     * reader's landmark list then offers as a way to navigate. Nested groups
+     * keep their heading, which is what carries the outline, and give up the
+     * landmark; at level 2 the names are the page's own and stay unique.
+     */
+    <section
+      aria-labelledby={level === 2 ? id : undefined}
+      className={level === 2 ? 'mt-12' : 'mt-8'}
+    >
       <Heading
         id={id}
         className={`scroll-mt-24 font-semibold tracking-tight ${
@@ -116,8 +129,14 @@ function Member({
           </a>
         </Heading>
 
+        {/* A signature is one unbroken token as far as the browser is
+            concerned, and the longest -
+            `Promise<Titanium.Android.RequestPermissionAccessResult>` - measures
+            429px, which scrolled the whole page at 320px. Same fix and same
+            reasoning as the `.prose-docs` link and inline-code rules: break
+            inside the word only because the word is wider than the screen. */}
         {member.type && (
-          <span className="font-mono text-sm text-text-muted">
+          <span className="min-w-0 font-mono text-sm break-all text-text-muted">
             <TypeRefText refs={member.type} link={link} />
           </span>
         )}
@@ -212,7 +231,8 @@ function Member({
       {!!member.returns?.length && (
         <div className="mt-3 text-sm">
           <span className="text-text-subtle">Returns </span>
-          <span className="font-mono">
+          {/* Breaks for the same reason as the member's own type above it. */}
+          <span className="font-mono break-all">
             <TypeRefText refs={member.returns[0].type} link={link} />
           </span>
           <Prose markdown={member.returns[0].summary} link={link} className="mt-1" />
@@ -271,7 +291,21 @@ type Row = NonNullable<ResolvedMember['parameters']>[number];
 /** The one genuinely tabular thing on the page, so it scrolls rather than the page. */
 function Parameters({ rows, link, caption }: { rows: Row[]; link: ApiLinker; caption: string }) {
   return (
-    <div className="mt-3 overflow-x-auto">
+    /* Focusable because it scrolls: the box takes the sideways scroll so the
+       table cannot widen the page at 320px, and a scrolling box nothing can
+       focus has no keyboard route to its right-hand columns (WCAG 2.1.1).
+
+       `group` rather than `region`, which was the first attempt: `region` is a
+       landmark, and a type page renders one of these per method, so sixty
+       members produced sixty landmarks all called "Parameters" in the very list
+       a screen reader offers for skipping around. `group` takes the same name
+       without joining that list. */
+    <div
+      role="group"
+      aria-label={caption}
+      tabIndex={0}
+      className="mt-3 overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+    >
       <table className="w-full min-w-md border-collapse text-left text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
