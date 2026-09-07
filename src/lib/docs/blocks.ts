@@ -71,6 +71,24 @@ const LEFTOVER = /<p>(:::[^<]*|@tab[^<]*|@card[\s\S]{0,300}?)<\/p>/g;
 
 const VERSION = /^\d+(?:\.\d+){0,3}(?:\.[A-Za-z]+\d*)?$/;
 
+/**
+ * `:::missing <w>:<h>` - a screenshot that has not been taken yet.
+ *
+ * The ratio is captured loosely and checked below, so a typo names itself
+ * instead of surviving as a visible `:::` marker.
+ */
+const MISSING = /<p>:::missing[ \t]+([^<>]{1,12}?)[ \t]*<\/p>([\s\S]*?)<p>:::<\/p>/g;
+const RATIO = /^(\d{1,2}):(\d{1,2})$/;
+
+/**
+ * The tallest a placeholder may draw, in rem.
+ *
+ * A phone screenshot is 9:16, and at prose width that is about 85rem of empty
+ * box. The width is capped from this and the ratio rather than the height being
+ * clamped, because `aspect-ratio` only holds while one axis is free.
+ */
+const MISSING_MAX_HEIGHT = 26;
+
 /** "iOS", "iOS or Android", "iOS, Android or Windows". */
 function listWords(items: string[]): string {
   if (items.length < 2) return items[0] ?? '';
@@ -255,6 +273,39 @@ function renderCards(cards: Card[]): string {
 }
 
 /**
+ * A box the shape of the picture that belongs there, crossed through.
+ *
+ * Screenshots of somebody else's UI date faster than anything else on a page,
+ * and TI-78 tracks the ones this rewrite still owes. Leaving a gap in the prose
+ * loses the fact that a picture is wanted at all; leaving a stale 2013 one is
+ * worse. This says what the image should show, in the space it will occupy, so
+ * the page reads as finished apart from the art and the reviewer can tell what
+ * to shoot.
+ *
+ * The X is an SVG rather than two CSS gradients because `to top right` only
+ * runs corner to corner on a square, and none of these are square.
+ * `non-scaling-stroke` keeps the hairline a hairline once the viewBox is
+ * stretched by `preserveAspectRatio="none"`.
+ */
+function renderMissing(w: number, h: number, body: string): string {
+  const cap = (MISSING_MAX_HEIGHT * w) / h;
+  const line = (x1: number, y1: number, x2: number, y2: number) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" vector-effect="non-scaling-stroke"/>`;
+  return (
+    `<figure class="missing" style="aspect-ratio:${w}/${h};max-width:min(100%,${cap.toFixed(2)}rem)">` +
+    `<svg class="missing-x" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">` +
+    line(0, 0, 100, 100) +
+    line(100, 0, 0, 100) +
+    `</svg>` +
+    `<figcaption class="missing-note">` +
+    `<span class="missing-label">Missing screenshot</span>` +
+    body +
+    `</figcaption>` +
+    `</figure>`
+  );
+}
+
+/**
  * Rewrites every block marker into markup.
  *
  * Groups first: their panels may contain anything except another block, so
@@ -303,6 +354,25 @@ export function renderBlocks(html: string): string {
       );
     }
   );
+
+  out = out.replace(MISSING, (_whole, raw: string, body: string) => {
+    const ratio = RATIO.exec(raw);
+    if (!ratio) {
+      throw new BlockError(
+        `:::missing ${raw} - the shape must be written as width:height, like 9:16`
+      );
+    }
+    const w = Number(ratio[1]);
+    const h = Number(ratio[2]);
+    if (!w || !h) {
+      throw new BlockError(`:::missing ${raw} - neither side may be zero`);
+    }
+    // A placeholder with nothing in it is a hole with a border round it.
+    if (!body.replace(/<[^>]+>/g, '').trim()) {
+      throw new BlockError(`:::missing ${raw} - say what the screenshot should show`);
+    }
+    return renderMissing(w, h, body);
+  });
 
   out = out.replace(SINCE, (_whole, version: string, body: string) => {
     if (!VERSION.test(version)) {

@@ -227,6 +227,87 @@ describe('version notices', () => {
   });
 });
 
+describe('missing screenshots', () => {
+  const MISSING = `
+:::missing 9:16
+
+The two-tab template on an Android emulator.
+
+:::
+`;
+
+  test('draws a box the shape of the picture', () => {
+    const html = render(MISSING);
+    assert.match(html, /<figure class="missing"/);
+    assert.match(html, /aspect-ratio:9\/16/);
+  });
+
+  test('caps the width from the ratio, so a tall shot is not a storey high', () => {
+    // 26rem of height at 9:16 is 14.63rem of width. A 16:9 at the same height
+    // is wider than the prose, which is what `min(100%, ...)` is for.
+    assert.match(render(MISSING), /max-width:min\(100%,14\.63rem\)/);
+    assert.match(render(MISSING.replace('9:16', '16:9')), /max-width:min\(100%,46\.22rem\)/);
+  });
+
+  test('crosses the box corner to corner', () => {
+    const html = render(MISSING);
+    // Stretched by preserveAspectRatio, so the stroke has to opt out of scaling
+    // or the hairline turns into a wedge on anything that is not square.
+    assert.match(html, /preserveAspectRatio="none"/);
+    assert.equal((html.match(/vector-effect="non-scaling-stroke"/g) ?? []).length, 2);
+    assert.match(html, /x1="0" y1="0" x2="100" y2="100"/);
+    assert.match(html, /x1="100" y1="0" x2="0" y2="100"/);
+  });
+
+  test('says it is missing, and what it should show', () => {
+    const html = render(MISSING);
+    assert.match(text(html), /Missing screenshot/);
+    assert.match(text(html), /two-tab template on an Android emulator/);
+  });
+
+  test('the X is hidden from a screen reader, the description is not', () => {
+    const html = render(MISSING);
+    assert.match(html, /<svg class="missing-x"[^>]*aria-hidden="true"/);
+    assert.match(html, /<figcaption class="missing-note">/);
+  });
+
+  test('leaves no marker behind', () => {
+    assert.equal(unresolvedMarkers(render(MISSING)).length, 0);
+  });
+});
+
+describe('a missing screenshot refuses', () => {
+  const bad = (markdown: string) => assert.throws(() => render(markdown), BlockError);
+
+  test('a shape that is not width:height', () => {
+    bad(`
+:::missing wide
+
+A screenshot.
+
+:::
+`);
+  });
+
+  test('a side of zero, which has no shape at all', () => {
+    bad(`
+:::missing 0:16
+
+A screenshot.
+
+:::
+`);
+  });
+
+  test('no description, which is a hole with a border round it', () => {
+    bad(`
+:::missing 9:16
+
+:::
+`);
+  });
+});
+
 describe('card grids', () => {
   const CARDS = `
 :::cards

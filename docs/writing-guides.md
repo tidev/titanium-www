@@ -132,7 +132,7 @@ wrong thing, or is an example app that belongs in a repository.
 
 ## Components
 
-Seven of them. Each solves one problem; reach for the plainest one that fits, and
+Eight of them. Each solves one problem; reach for the plainest one that fits, and
 if none fits, write a paragraph.
 
 Every marker needs **a blank line above and below it**. Without one, markdown
@@ -281,6 +281,31 @@ inside the link.
 
 Images belong in `public/docs/guides/` and are referenced from the site root,
 as above. `public/docs/img/` is the registry's and is gitignored.
+
+### Missing screenshots
+
+A picture the page wants and nobody has taken yet. It draws a box the shape of
+the image, crossed through, saying what belongs there.
+
+```md
+:::missing 9:16
+
+The two-tab template running on an Android emulator, with the second tab open.
+
+:::
+```
+
+The argument is the shape as `width:height` - `9:16` for a phone, `16:9` for a
+window, `4:3` for a dialog. The width is capped from it so a tall screenshot
+does not leave a storey of empty box in the middle of the page.
+
+Write the body as an instruction to whoever takes the shot: what is on screen,
+on which platform, and what to look for. It is also what a reader gets in place
+of the picture, so it should be worth reading on its own.
+
+Use one rather than leaving a gap. A gap loses the fact that a picture was
+wanted; a stale screenshot is worse than either. Outstanding ones are tracked in
+TI-78.
 
 ### Platform-scoped source
 

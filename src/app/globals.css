@@ -774,6 +774,57 @@ body {
 
      `auto-fit` rather than a fixed column count, so two cards fill the width
      and six wrap without the block needing to know how many it has. */
+  /* A screenshot that has not been taken yet: a box the shape of the picture,
+     crossed through, saying what belongs there. See `:::missing` in blocks.ts.
+
+     The width is capped inline from the ratio, because `aspect-ratio` holds the
+     shape only while one axis is free - clamping the height instead would just
+     stretch the box. */
+  .prose-docs .missing {
+    position: relative;
+    margin-block: 1.25em;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .prose-docs .missing-x {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    stroke: var(--color-border-strong);
+    stroke-width: 1;
+  }
+
+  /* Above the X, and opaque enough to read against it. */
+  .prose-docs .missing-note {
+    position: relative;
+    margin: 0;
+    max-width: 24rem;
+    background-color: var(--color-bg);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    font-size: 0.875em;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .prose-docs .missing-label {
+    display: block;
+    font-weight: 600;
+    color: var(--color-text-subtle);
+  }
+
+  .prose-docs .missing-note > :first-child {
+    margin-top: 0.25em;
+  }
+
+  .prose-docs .missing-note > :last-child {
+    margin-bottom: 0;
+  }
+
   .prose-docs .cards {
     margin-block: 1.25em;
     display: grid;
