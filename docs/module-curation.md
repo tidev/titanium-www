@@ -35,8 +35,10 @@ was: the repos the regen workflow may fetch and run docgen against. It is a
 security boundary before it is a curation list, which is why nothing here
 widens it.
 
-`registry/modules/verified.json` is the vouching list. An entry records who
-vouched and when, because a verification nobody signed cannot be revisited.
+`registry/modules/verified.json` is the vouching list, at two granularities. A
+`modules` entry vouches for one repository; an `owners` entry vouches for
+everything an author publishes. Either records who vouched and when, because a
+verification nobody signed cannot be revisited.
 
 `registry/modules/blocked.json` is the exclusion list. An entry records why,
 for the same reason. Forks and archived repositories do **not** belong here:
@@ -64,6 +66,22 @@ All four, checked by a person against the repository:
 A module can be excellent and fail this. Failing it means Unverified, not
 blocked.
 
+### Vouching for an author
+
+An `owners` entry says the four above hold for everything that author
+publishes, including what they publish next. Use it for someone with a track
+record and a consistent standard, where listing their modules one at a time
+would be a list that goes stale every release.
+
+It is a weaker claim than a per-repo entry, and deliberately so: it is a bet on
+the author rather than a review of each module. Two things make that safe to
+take. It is applied at read time, so withdrawing it is one deletion and takes
+effect on the next build. And a single module that should not carry it goes in
+`blocked.json`, which wins.
+
+Vouched for today: **hansemannn** (41 listings) and **m1ga** (8), which is 49
+of the 112.
+
 ## What earns a block
 
 Not "it is bad". Blocking is for listings that mislead:
@@ -87,9 +105,8 @@ without anyone doing anything.
 Remove it from `verified.json` and it falls back to Unverified with its listing
 intact. Blocking is a stronger statement and is not the tool for staleness.
 
-**Nothing is verified today.** `verified.json` ships empty, so every community
-listing badges Unverified. Populating it is a review per module and has not
-been done.
+**49 of the 112 are verified**, by two `owners` entries. The other 63 are
+Unverified: nobody has looked at them, one at a time, and the badge says so.
 
 ## Who decides
 

@@ -189,6 +189,34 @@ const RepoSlug = z.string().regex(/^[\w.-]+\/[\w.-]+$/, 'expected an owner/name 
 
 export const VerifiedListSchema = z.object({
   $comment: z.string(),
+  /**
+   * Authors whose modules are all vouched for.
+   *
+   * Vouching per author rather than per repo, for the authors who publish a
+   * dozen modules to the same standard: hansemannn alone is 41 of the 112
+   * listings, and enumerating those by hand would be a list that goes stale
+   * every time he publishes.
+   *
+   * Applied at read time, so a module that appears in tomorrow's scrape is
+   * verified the moment it is listed. That is the difference between this and
+   * expanding the authors into `modules` entries during generation, which would
+   * snapshot the answer and leave anything newer unverified until someone
+   * noticed.
+   *
+   * It is a bet on the author rather than the module, which is a weaker claim
+   * than a per-repo entry. Withdrawing it is one deletion, and a single module
+   * that should not carry it goes in `blocked.json`.
+   */
+  owners: z
+    .array(
+      z.object({
+        owner: z.string().min(1),
+        by: z.string().min(1),
+        at: z.string().min(1),
+        note: z.string().optional(),
+      })
+    )
+    .default([]),
   modules: z.array(
     z.object({
       repo: RepoSlug,

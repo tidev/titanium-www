@@ -204,19 +204,26 @@ export function moduleSummaries(): ModuleSummary[] {
 }
 
 /**
- * Repos TiDev has vouched for, lowercased for slug comparison (TI-23).
+ * What TiDev has vouched for, lowercased for comparison (TI-23).
  *
  * Hand-maintained, and deliberately not folded into `community.json`. That file
  * holds what GitHub said and is rewritten daily; this holds a judgement. Keeping
  * them apart means a regen cannot overwrite a verification, and a verification
  * does not have to be re-applied after one. See `docs/module-curation.md`.
+ *
+ * Two granularities. A repo entry vouches for one module; an owner entry
+ * vouches for everything that author publishes, which is how 49 of the 112
+ * listings are covered by two lines.
  */
-function verifiedRepos(): Set<string> {
+function vouchedFor(): { repos: Set<string>; owners: Set<string> } {
   const path = join(MODULES_DIR, 'verified.json');
-  if (!existsSync(path)) return new Set();
+  if (!existsSync(path)) return { repos: new Set(), owners: new Set() };
 
   const parsed = VerifiedListSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
-  return new Set(parsed.modules.map((m) => m.repo.toLowerCase()));
+  return {
+    repos: new Set(parsed.modules.map((m) => m.repo.toLowerCase())),
+    owners: new Set(parsed.owners.map((o) => o.owner.toLowerCase())),
+  };
 }
 
 /**
@@ -235,13 +242,17 @@ export function communityListings(): CommunityListing[] {
   if (!existsSync(path)) return [];
 
   const parsed = CommunityIndexSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
-  const verified = verifiedRepos();
+  const vouched = vouchedFor();
 
-  return parsed.modules.map((m) => ({
-    kind: 'community' as const,
-    source: verified.has(m.id.toLowerCase()) ? ('community' as const) : ('unverified' as const),
-    ...m,
-  }));
+  return parsed.modules.map((m) => {
+    const verified =
+      vouched.owners.has(m.owner.toLowerCase()) || vouched.repos.has(m.id.toLowerCase());
+    return {
+      kind: 'community' as const,
+      source: verified ? ('community' as const) : ('unverified' as const),
+      ...m,
+    };
+  });
 }
 
 /**
