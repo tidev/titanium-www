@@ -50,6 +50,28 @@ describe('breadcrumbList', () => {
     );
   });
 
+  test('leaves out a category label rather than emitting an item-less step', () => {
+    // "Getting Started" is the section's title rendered as plain text, because
+    // the section's own page is the crumb below it. `item` is required on every
+    // position but the last, and one missing invalidates the whole list, so the
+    // label is not offered at all. The addresses that remain are the real ones.
+    const data = breadcrumbList([
+      { label: 'Docs', href: '/docs' },
+      { label: 'Getting Started' },
+      { label: 'Environment Setup', href: '/docs/setup' },
+      { label: 'macOS' },
+    ]) as { itemListElement: { position: number; name: string; item?: string }[] };
+
+    assert.deepEqual(
+      data.itemListElement.map((item) => [item.position, item.name, item.item]),
+      [
+        [1, 'Docs', 'https://titaniumsdk.com/docs'],
+        [2, 'Environment Setup', 'https://titaniumsdk.com/docs/setup'],
+        [3, 'macOS', undefined],
+      ]
+    );
+  });
+
   test('drops an empty href rather than pointing at the site root', () => {
     // The SDK reference builds crumb hrefs as `name && ...`, which is '' for a
     // namespace with no page of its own.

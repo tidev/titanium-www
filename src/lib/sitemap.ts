@@ -1,4 +1,4 @@
-import { activeCategories, pageCount, publishedPosts } from './blog/posts.ts';
+import { activeCategories, allTags, pageCount, publishedPosts } from './blog/posts.ts';
 import { guide, indexableGuidePaths } from './docs/guides.ts';
 import { lastUpdated } from './docs/last-updated.ts';
 import { latestPerPlatform } from './docs/module-summary.ts';
@@ -147,8 +147,15 @@ function modules(): MetadataRoute.Sitemap {
 
       // The newest release across platforms. A module's platforms are years
       // apart routinely, and the page changes when the later of them ships.
+      //
+      // `publishedAt` is optional in the registry schema, and `sort` puts
+      // `undefined` last whatever the comparator says, so the dates are
+      // filtered before they are compared: otherwise one platform missing a
+      // date would drop `lastModified` from all four of this module's entries,
+      // including the platform that has one.
       const published = latestPerPlatform(index)
         .map((entry) => entry.publishedAt)
+        .filter((at) => !!at)
         .sort();
       const modified = published[published.length - 1];
 
@@ -208,6 +215,16 @@ function blog(): MetadataRoute.Sitemap {
       url: `${SITE_URL}/blog/category/${category.toLowerCase()}`,
       changeFrequency: 'weekly' as const,
       priority: 0.4,
+    })),
+    // Empty today: no imported post carries a tag, because the old blog had no
+    // such field. Listed anyway, because a tag archive is prerendered, linked
+    // from every post that carries the tag, and canonical to itself - the same
+    // three things that put the categories above here. Leaving it to be noticed
+    // later is how a section goes unlisted for a year.
+    ...allTags().map(({ tag }) => ({
+      url: `${SITE_URL}/blog/tag/${tag}`,
+      changeFrequency: 'weekly' as const,
+      priority: 0.3,
     })),
     ...posts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,

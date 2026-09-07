@@ -1,6 +1,7 @@
 import { Releases } from '@/components/modules/releases';
 import { ModuleLayout } from '@/components/modules/shell';
 import { moduleBlurb, moduleIds, moduleIndex } from '@/lib/docs/modules';
+import { compareVersions } from '@/lib/docs/registry';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -20,10 +21,16 @@ export async function generateMetadata({
   const index = moduleIndex(moduleId);
   if (!index) return {};
 
-  // Newest first, per the registry schema.
-  const newest = index.versions[0]?.version;
-  const oldest = index.versions[index.versions.length - 1]?.version;
-  const count = index.versions.length;
+  // Sorted by version rather than read off the ends of `index.versions`, which
+  // is newest first by publish *date*. The two orders disagree for five of the
+  // sixteen modules, because a module's platforms ship independently: ti.map's
+  // most recent release is android 5.7.0 while its highest version is iOS
+  // 7.3.1, so the ends of that array describe a range that excludes releases
+  // the page itself lists.
+  const byVersion = index.versions.map((entry) => entry.version).toSorted(compareVersions);
+  const newest = byVersion[0];
+  const oldest = byVersion[byVersion.length - 1];
+  const count = byVersion.length;
 
   return {
     title: `${index.moduleId} releases - Titanium modules`,

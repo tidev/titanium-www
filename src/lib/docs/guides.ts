@@ -311,9 +311,12 @@ export function writtenPaths(root = CONTENT): Set<string> {
  * thin by construction, and listing it teaches a search engine that the site
  * answers a question it does not.
  *
- * Drafts are absent, because `writtenPaths` already drops them. That is the
- * third of the three places TI-53 requires, the index and the feed being the
- * others, and it is why this is built from that set rather than from disk.
+ * Drafts are absent, which is the third of the three places TI-53 requires, the
+ * index and the feed being the others. `writtenPaths` dropping them is not on
+ * its own enough: a draft that sits at a path with children below it would fall
+ * through to the children rule and be listed, while the page itself is served
+ * `noindex, nofollow`. So a file that exists is asked about directly, and only
+ * a path with no file at all reaches the children rule.
  *
  * `/docs` itself is always here: it lists the six sections whether or not
  * anyone has written an introduction above them.
@@ -324,6 +327,15 @@ export function indexableGuidePaths(root = CONTENT): string[] {
     if (written.has(path)) return true;
     const segments = path.split('/').slice(2);
     if (!segments.length) return true;
+
+    // Absent from `written` and yet a file: a draft, or a page that does not
+    // parse - which `validateGuides` fails the build over. Neither is offered.
+    try {
+      if (guide(segments, root)) return false;
+    } catch {
+      return false;
+    }
+
     const found = findPage(segments);
     const children = found && (found.page ? found.page.pages : found.section.pages);
     return !!children?.length;

@@ -69,13 +69,24 @@ type Step = { label: string; href?: string };
  * Built from the array the list renders, the two cannot disagree.
  *
  * The final crumb is the current page and carries no `href`, which is what the
- * schema expects of a last item, so nothing here special-cases it.
+ * schema expects of a last item.
+ *
+ * Any *other* crumb without one is a category label rather than a page: a
+ * section whose own index page is a crumb in its own right renders its title as
+ * plain text, so "Docs / Getting Started / Environment Setup / macOS" is four
+ * visible steps and three addresses. `item` is required on every position but
+ * the last, and a list with one missing is thrown out whole rather than in
+ * part, so the labels are dropped here instead of being given a URL that
+ * already belongs to the crumb below them. What is left is still read off the
+ * rendered array, so it cannot name a step the page does not show.
  */
 export function breadcrumbList(crumbs: readonly Step[]): object {
+  const steps = crumbs.filter((crumb, i) => !!crumb.href || i === crumbs.length - 1);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: crumbs.map((crumb, i) => ({
+    itemListElement: steps.map((crumb, i) => ({
       '@type': 'ListItem',
       position: i + 1,
       name: crumb.label,
