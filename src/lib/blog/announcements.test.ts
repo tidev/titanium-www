@@ -23,6 +23,14 @@ describe('announcedVersion', () => {
     assert.equal(announcedVersion('release-sdk-11'), null);
   });
 
+  test('a slug naming an Object property resolves to nothing', () => {
+    // The irregular table is looked up on a Map. Held here because an object
+    // literal would answer these with a function and return it as the version.
+    for (const slug of ['constructor', 'toString', '__proto__', 'valueOf']) {
+      assert.equal(announcedVersion(slug), null, `${slug} resolved to something`);
+    }
+  });
+
   test('other software is not read as an SDK release', () => {
     assert.equal(announcedVersion('cli-7-0-0-ga'), null);
     assert.equal(announcedVersion('cli-8-0-0'), null);

@@ -39,9 +39,15 @@ import { allPosts, type Post } from './posts.ts';
  *
  * `release-sdk-11` is deliberately absent. It announced 11.0.0.RC, not the GA.
  */
-const IRREGULAR: Record<string, string> = {
-  'sdk-11-ga': '11.0.0',
-};
+/*
+ * A Map rather than an object literal, so a lookup cannot reach the prototype:
+ * a plain object would have answered `constructor` and `toString` with a
+ * function, and `announcedVersion` would have returned it despite promising a
+ * string. Nothing reaches it with such a slug today - a slug comes from a
+ * committed filename by way of `postBySlug` - but the signature should hold on
+ * its own rather than on that.
+ */
+const IRREGULAR = new Map<string, string>([['sdk-11-ga', '11.0.0']]);
 
 /**
  * The GA release a post announces, or null for a post announcing none.
@@ -52,7 +58,7 @@ const IRREGULAR: Record<string, string> = {
  * SDK 7.0.0 whose note this site does not have.
  */
 export function announcedVersion(slug: string): string | null {
-  const irregular = IRREGULAR[slug];
+  const irregular = IRREGULAR.get(slug);
   if (irregular) return irregular;
   const m = /^sdk-(\d+)-(\d+)-(\d+)-ga$/.exec(slug);
   return m ? `${m[1]}.${m[2]}.${m[3]}` : null;
