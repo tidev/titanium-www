@@ -21,7 +21,9 @@ import { describe, test } from 'node:test';
 
 describe('flattenBlocks', () => {
   test('turns a tab group into labelled prose', () => {
-    const out = flattenBlocks(':::tabs\n\n@tab macOS\n\nbrew install\n\n@tab Windows\n\nchoco\n\n:::');
+    const out = flattenBlocks(
+      ':::tabs\n\n@tab macOS\n\nbrew install\n\n@tab Windows\n\nchoco\n\n:::'
+    );
     assert.match(out, /\*\*macOS\*\*/);
     assert.match(out, /\*\*Windows\*\*/);
     assert.doesNotMatch(out, /:::/);
@@ -179,6 +181,49 @@ describe('llmsTxt', () => {
   test('validates clean against the real tree', () => {
     assert.deepEqual(validateLlmsIndex(), []);
   });
+
+  test('lists the documentation home, which belongs to no section', () => {
+    // It is the entry point of the tree and is reached by neither section loop,
+    // so it went missing from the index and from llms-full.txt.
+    const paths = llmsGroups().flatMap((group) => group.entries.map((entry) => entry.path));
+    assert.ok(paths.includes('/docs'), 'the documentation home is not indexed');
+  });
+});
+
+describe('markdownFor path handling', () => {
+  // These segments reach `join(CONTENT, ...segments)`, which resolves `..`. Left
+  // unchecked they escaped the content root and read arbitrary markdown from the
+  // repository, dying in the frontmatter parser as a 500 rather than a 404, and
+  // would have served any file that happened to satisfy the schema.
+  const escapes = [
+    '/docs/../../AGENTS',
+    '/docs/../../README',
+    '/docs/../blog/sdk-11-ga',
+    '/docs/../../package',
+    '/docs/setup/../../../AGENTS',
+  ];
+
+  for (const path of escapes) {
+    test(`refuses to escape the content root: ${path}`, () => {
+      assert.equal(markdownFor(path), undefined);
+    });
+  }
+
+  test('refuses a partial, which is a fragment rather than a page', () => {
+    assert.equal(markdownFor('/docs/_partials/install-cli'), undefined);
+  });
+
+  test('never throws for an arbitrary path', () => {
+    // The route turns `undefined` into a 404. A throw would be a public 500.
+    for (const path of [...escapes, '/docs/_partials/jdk', '/docs/.', '/docs/..']) {
+      assert.doesNotThrow(() => markdownFor(path), path);
+    }
+  });
+
+  test('still serves the pages it is meant to', () => {
+    assert.ok(markdownFor('/docs'));
+    assert.ok(markdownFor('/docs/setup/macos'));
+  });
 });
 
 describe('llmsFullTxt', () => {
@@ -200,7 +245,10 @@ describe('llmsFullTxt', () => {
   test('truncates at the cap and says what it dropped', () => {
     const { text, omitted } = llmsFullTxt(20_000);
     assert.ok(omitted.length > 0, 'nothing was dropped at a 20KB cap');
-    assert.ok(Buffer.byteLength(text, 'utf8') < 40_000);
+    // The cap the header states, not a loose multiple of it. The footer listing
+    // the omissions is part of the file, and appending it unbudgeted put a
+    // 20,000 byte cap at 21,045 bytes.
+    assert.ok(Buffer.byteLength(text, 'utf8') <= 20_000, 'the file overran its own cap');
     assert.match(text, /## Omitted for size/);
     // Dropped is not lost: each one is still addressable on its own.
     for (const path of omitted) assert.ok(text.includes(`${path}.md`), path);

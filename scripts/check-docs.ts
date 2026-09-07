@@ -1,7 +1,12 @@
 import { validatePosts } from '../src/lib/blog/links.ts';
 import { archivedMajors, contentRoot, validateDocVersions } from '../src/lib/docs/doc-versions.ts';
 import { validateGuides } from '../src/lib/docs/guides.ts';
-import { LLMS_FULL_CAP_BYTES, llmsFullTxt, llmsTxt, validateLlmsIndex } from '../src/lib/docs/llms.ts';
+import {
+  LLMS_FULL_CAP_BYTES,
+  llmsFullTxt,
+  llmsTxt,
+  validateLlmsIndex,
+} from '../src/lib/docs/llms.ts';
 
 /**
  * Fails the build on anything wrong with guide content (TI-32, TI-59), with the

@@ -157,9 +157,7 @@ function registryApiHeaders() {
  * destination is a path the docs route does not define, and that route sets
  * `dynamicParams = false`, so it 404s.
  */
-const hideInternalReadme = [
-  { source: '/docs/README.md', destination: '/docs/_internal-readme' },
-];
+const hideInternalReadme = [{ source: '/docs/README.md', destination: '/docs/_internal-readme' }];
 
 /**
  * `<path>.md` beside `<path>`, for the machine-readable corpus (TI-57).

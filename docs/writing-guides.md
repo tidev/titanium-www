@@ -484,6 +484,15 @@ before deciding whether to fetch your page.
 `pnpm check:docs` prints both corpus sizes and fails on an index entry that
 resolves to nothing.
 
+**These addresses 404 in `next dev`.** The corpus is published on
+`titaniumsdk.com` only, and the check is on the `Host` header, so `localhost`
+is refused along with the preview domain. That is deliberate, and it is not a
+broken page. To read your own markdown locally, ask for it as the live host:
+
+```sh
+curl -H 'Host: titaniumsdk.com' http://localhost:3002/docs/setup/macos.md
+```
+
 ## Before you open a pull request
 
 ```sh

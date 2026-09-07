@@ -630,6 +630,21 @@ export function llmsGroups(): LlmsGroup[] {
   const describe = (segments: string[], fallback?: string): string | undefined =>
     guide(segments)?.description || fallback;
 
+  // The documentation home, which belongs to no section and so is reached by
+  // neither loop below. It is a written page and the entry point of the tree,
+  // and leaving it out made both artifacts contradict themselves: this file
+  // claims an entry exists precisely when a page does, and `llms-full.txt`
+  // claims to carry every written guide page.
+  if (written.has('/docs')) {
+    groups.push({
+      heading: 'Documentation',
+      guides: true,
+      entries: [
+        { title: guide([])?.title ?? 'Titanium documentation', path: '/docs', blurb: describe([]) },
+      ],
+    });
+  }
+
   for (const section of SECTIONS) {
     const entries: LlmsEntry[] = [];
     const sectionPath = `/docs/${section.slug}`;
@@ -770,46 +785,60 @@ export function llmsFullTxt(cap = LLMS_FULL_CAP_BYTES): LlmsFull {
     '',
   ].join('\n');
 
+  const groups = llmsGroups();
+
+  // Only the guide tree. The reference and module groups in the index point
+  // into trees this file does not carry.
+  const guideEntries = groups.filter((group) => group.guides).flatMap((group) => group.entries);
+
+  const footer = (paths: string[]): string =>
+    [
+      '',
+      '---',
+      '',
+      `## Omitted for size (${paths.length})`,
+      '',
+      `These pages were dropped at the ${cap.toLocaleString('en-US')} byte cap. Each is served on its own:`,
+      '',
+      ...paths.map((path) => `- ${mdUrl(path)}`),
+      '',
+    ].join('\n');
+
+  /**
+   * The footer is part of the file, so it is paid for before the pages are.
+   *
+   * Appending it afterwards overran the cap the header states, and overran it
+   * by the most exactly when the cap was binding hardest: a 20,000 byte cap
+   * produced 21,045 bytes. Reserved at its worst case, every page dropped,
+   * which is a couple of KB against a megabyte and is an amount the subset
+   * actually omitted can never exceed.
+   *
+   * The header itself is the floor. A cap too small to hold it and the footer
+   * yields just those two, because a file with no header states nothing about
+   * what it is or what it left out.
+   */
+  const budget = cap - sizeOf(footer(guideEntries.map((entry) => entry.path)));
+
   const chunks: string[] = [header];
   const omitted: string[] = [];
   let size = sizeOf(header);
 
-  for (const group of llmsGroups()) {
-    // Only the guide tree. The reference and module groups in the index point
-    // into trees this file does not carry.
-    if (!group.guides) continue;
-
-    for (const entry of group.entries) {
-      const page = guideMarkdown(entry.path.split('/').slice(2));
-      if (!page) continue;
-      const chunk = `\n---\n\n${page}`;
-      // Once one page has been dropped, every later page is dropped too. Filling
-      // the remaining space with whichever short page happened to fit next would
-      // make the contents depend on page length rather than on site order.
-      if (omitted.length || size + sizeOf(chunk) > cap) {
-        omitted.push(entry.path);
-        continue;
-      }
-      chunks.push(chunk);
-      size += sizeOf(chunk);
+  for (const entry of guideEntries) {
+    const page = guideMarkdown(entry.path.split('/').slice(2));
+    if (!page) continue;
+    const chunk = `\n---\n\n${page}`;
+    // Once one page has been dropped, every later page is dropped too. Filling
+    // the remaining space with whichever short page happened to fit next would
+    // make the contents depend on page length rather than on site order.
+    if (omitted.length || size + sizeOf(chunk) > budget) {
+      omitted.push(entry.path);
+      continue;
     }
+    chunks.push(chunk);
+    size += sizeOf(chunk);
   }
 
-  if (omitted.length) {
-    chunks.push(
-      [
-        '',
-        '---',
-        '',
-        `## Omitted for size (${omitted.length})`,
-        '',
-        `These pages were dropped at the ${cap.toLocaleString('en-US')} byte cap. Each is served on its own:`,
-        '',
-        ...omitted.map((path) => `- ${mdUrl(path)}`),
-        '',
-      ].join('\n')
-    );
-  }
+  if (omitted.length) chunks.push(footer(omitted));
 
   return { text: chunks.join(''), omitted };
 }

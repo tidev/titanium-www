@@ -145,8 +145,34 @@ const readerFor =
     return existsSync(file) ? readFileSync(file, 'utf8') : undefined;
   };
 
+/**
+ * Whether a segment can name a page under the content root.
+ *
+ * `sourceFor` joins segments onto that root and `join` resolves `..`, so an
+ * unchecked segment walks straight out of the tree: `/docs/..%2F..%2FAGENTS.md`
+ * reached the repository root, and `/docs/_partials/jdk.md` reached a fragment.
+ * Both then died in `parse` as a 500 rather than a 404, and either would have
+ * been served verbatim had the file happened to satisfy the frontmatter schema.
+ *
+ * Nothing checked before because nothing had to: the HTML route sets
+ * `dynamicParams = false`, so only paths the IA defines ever reached here. The
+ * markdown twins (TI-57) take their segments from the URL, so the guard belongs
+ * at the join rather than at either caller.
+ *
+ * Leading `_` and `.` are excluded for the reason `contentFiles` skips them:
+ * partials and dotfiles are fragments, not pages. That also catches `.` and
+ * `..` themselves.
+ */
+const namesAPage = (segment: string): boolean =>
+  segment.length > 0 &&
+  !segment.startsWith('_') &&
+  !segment.startsWith('.') &&
+  !/[/\\]/.test(segment);
+
 /** Where a set of segments would be read from, index form first. */
 function sourceFor(root: string, segments: string[]): string | undefined {
+  if (!segments.every(namesAPage)) return undefined;
+
   const base = join(root, ...segments);
   const candidates = segments.length
     ? [`${base}.md`, join(base, 'index.md')]

@@ -55,7 +55,18 @@ export async function GET(request: Request, ctx: RouteContext<'/md/[...path]'>) 
   if (!requested.endsWith('.md')) return notFound();
 
   const { path } = await ctx.params;
-  const body = markdownFor(`/${path.join('/')}`);
+
+  // A page that does not parse is a 404 here rather than a 500. `check-docs`
+  // fails the build on one, so this cannot fire for a committed guide; what it
+  // covers is an arbitrary path arriving from the URL and landing on something
+  // that is not a page. `writtenPaths` swallows the same throw for the same
+  // reason.
+  let body: string | undefined;
+  try {
+    body = markdownFor(`/${path.join('/')}`);
+  } catch {
+    return notFound();
+  }
   if (!body) return notFound();
 
   return new Response(body, {
