@@ -1,7 +1,9 @@
 import { Share } from '@/components/blog/share';
 import { Prose } from '@/components/docs/prose';
+import { announcedVersion } from '@/lib/blog/announcements';
 import { allPosts, postBySlug } from '@/lib/blog/posts';
 import { formatDate } from '@/lib/docs/format';
+import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -46,6 +48,13 @@ export default async function BlogPost({ params }: PageProps<'/blog/[slug]'>) {
   const post = postBySlug(slug);
   if (!post) notFound();
 
+  // A release announcement says what shipped; the note is the record of what
+  // changed in it (TI-72). Where both exist they link across, so neither has to
+  // grow into the other. 31 of the 50 posts get this; the rest are prerelease
+  // announcements, CLI and Alloy releases, and community posts.
+  const announced = announcedVersion(post.slug);
+  const notes = announced && hasReleaseNote(announced) ? announced : null;
+
   return (
     // `mx-auto` centres the column inside the layout's 7xl gutters; without it
     // a 3xl article hugs the left edge on a wide screen.
@@ -74,6 +83,14 @@ export default async function BlogPost({ params }: PageProps<'/blog/[slug]'>) {
         {post.draft && (
           <p className="mt-4 rounded-lg border border-warning px-4 py-3 text-sm text-text-muted">
             This is a draft. It is not listed on the blog, in the feed, or in the sitemap.
+          </p>
+        )}
+
+        {notes && (
+          <p className="mt-4 text-sm">
+            <a href={`/docs/sdk/${notes}/release-notes`} className="text-link hover:underline">
+              Release notes for {notes}
+            </a>
           </p>
         )}
       </header>
