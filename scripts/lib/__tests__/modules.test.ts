@@ -1,5 +1,9 @@
+import type { ModuleManifest } from '../../../src/lib/registry/index.ts';
 import {
   AssetNameError,
+  guidMismatch,
+  isLegacyManifestPath,
+  LEGACY_IOS_MANIFEST,
   manifestPaths,
   parseAsset,
   parseManifest,
@@ -209,5 +213,79 @@ describe('manifestPaths', () => {
   test('iOS moved from iphone/ to ios/, and old tags keep the old one', () => {
     assert.deepEqual(manifestPaths('ios'), ['ios/manifest', 'iphone/manifest']);
     assert.deepEqual(manifestPaths('android'), ['android/manifest']);
+  });
+
+  test('the new spelling is tried first, so a repo carrying both resolves to ios/', () => {
+    // Nothing in the corpus has both today, but a repo mid-move would, and the
+    // one it is moving to is the one that describes the release.
+    assert.equal(manifestPaths('ios')[0], 'ios/manifest');
+  });
+
+  test('the legacy path is permanent, not a migration step (TI-24)', () => {
+    // 36 iOS manifests across 5 repos still resolve through the fallback, all
+    // of them at tags nobody is going to rewrite. Dropping it would not error,
+    // it would quietly rebuild those versions with no iOS manifest at all,
+    // which is why this is asserted rather than left to a comment.
+    assert.ok(manifestPaths('ios').includes(LEGACY_IOS_MANIFEST));
+  });
+});
+
+describe('isLegacyManifestPath', () => {
+  test('names the pre-rename spelling and nothing else', () => {
+    assert.equal(isLegacyManifestPath('iphone/manifest'), true);
+    assert.equal(isLegacyManifestPath('ios/manifest'), false);
+    assert.equal(isLegacyManifestPath('android/manifest'), false);
+  });
+
+  test('every path manifestPaths offers is classifiable', () => {
+    // The reporting in generate-modules.ts asks this of whichever path a read
+    // landed on, so a third spelling added above without a rule here would be
+    // silently counted as current.
+    for (const path of [...manifestPaths('ios'), ...manifestPaths('android')]) {
+      assert.equal(typeof isLegacyManifestPath(path), 'boolean', path);
+    }
+    assert.equal(manifestPaths('ios').filter(isLegacyManifestPath).length, 1);
+  });
+});
+
+describe('guidMismatch', () => {
+  const at = (platform: 'android' | 'ios', guid?: string): ModuleManifest => ({
+    platform,
+    version: '1.0.0',
+    ...(guid ? { guid } : {}),
+  });
+
+  test('says nothing when the platforms agree', () => {
+    assert.equal(guidMismatch([at('android', 'a'), at('ios', 'a')]), null);
+  });
+
+  test('reports the distinct guids when they do not', () => {
+    // ti.identity has shipped this way since 1.0.0 and still does on master:
+    // one moduleid, two guids, one per platform.
+    assert.deepEqual(
+      guidMismatch([
+        at('android', 'c3d987a8-8bd4-42cd-a3e4-2a75952d1ea0'),
+        at('ios', 'ae6ffc93-6e6e-4251-8373-b0cb263a1662'),
+      ]),
+      ['ae6ffc93-6e6e-4251-8373-b0cb263a1662', 'c3d987a8-8bd4-42cd-a3e4-2a75952d1ea0']
+    );
+  });
+
+  test('a single-platform version has nothing to disagree with', () => {
+    assert.equal(guidMismatch([at('ios', 'a')]), null);
+    assert.equal(guidMismatch([]), null);
+  });
+
+  test('a missing guid is not a disagreement', () => {
+    // Old manifests predate the field. One platform declaring one and the other
+    // staying silent says nothing about whether they match.
+    assert.equal(guidMismatch([at('android'), at('ios', 'a')]), null);
+    assert.equal(guidMismatch([at('android'), at('ios')]), null);
+  });
+
+  test('the order manifests arrive in does not change the report', () => {
+    const forwards = guidMismatch([at('android', 'b'), at('ios', 'a')]);
+    const backwards = guidMismatch([at('ios', 'a'), at('android', 'b')]);
+    assert.deepEqual(forwards, backwards);
   });
 });

@@ -11,6 +11,8 @@ import { checksums } from './lib/checksums.ts';
 import { file, get, paginate, rcompare } from './lib/github.ts';
 import {
   AssetNameError,
+  guidMismatch,
+  isLegacyManifestPath,
   manifestPaths,
   parseAsset,
   parseManifest,
@@ -187,28 +189,48 @@ async function collect(repo: string): Promise<Collected> {
 
 // -------------------------------------------------------------- manifests
 
+/** A manifest and the path it was actually found at, which is not fixed. */
+type FoundManifest = { fields: Record<string, string>; path: string };
+
 /** Tags are immutable, so a manifest read once is good for the whole run. */
-const manifests = new Map<string, Record<string, string> | null>();
+const manifests = new Map<string, FoundManifest | null>();
+
+/**
+ * How many iOS manifests each repo still serves from `iphone/manifest`.
+ *
+ * Counted rather than reported per tag: the old spelling is expected at an old
+ * tag and 250 of them have it, so a note apiece would be noise. What is worth
+ * knowing is the shape of a repo, which is the ratio (TI-24).
+ */
+const legacyIos = new Map<string, { legacy: number; total: number }>();
 
 async function manifestAt(
   repo: string,
   ref: string,
   platform: Platform
-): Promise<Record<string, string> | null> {
+): Promise<FoundManifest | null> {
   const key = `${repo}@${ref}#${platform}`;
   const cached = manifests.get(key);
   if (cached !== undefined) return cached;
 
-  let fields: Record<string, string> | null = null;
+  let found: FoundManifest | null = null;
   for (const path of manifestPaths(platform)) {
     const text = await file(repo, path, ref);
     if (text !== null) {
-      fields = parseManifest(text);
+      found = { fields: parseManifest(text), path };
       break;
     }
   }
-  manifests.set(key, fields);
-  return fields;
+
+  if (platform === 'ios' && found) {
+    const seen = legacyIos.get(repo) ?? { legacy: 0, total: 0 };
+    seen.total++;
+    if (isLegacyManifestPath(found.path)) seen.legacy++;
+    legacyIos.set(repo, seen);
+  }
+
+  manifests.set(key, found);
+  return found;
 }
 
 /**
@@ -248,11 +270,12 @@ async function candidatesFor(m: Collected): Promise<Candidate[]> {
 // ------------------------------------------------------------------ build
 
 async function manifestFor(m: Collected, c: Candidate): Promise<ModuleManifest | null> {
-  const fields = await manifestAt(m.repo, c.release.tag_name, c.platform);
-  if (!fields) {
+  const found = await manifestAt(m.repo, c.release.tag_name, c.platform);
+  if (!found) {
     notes.push(`${m.repo} ${c.release.tag_name}: no ${c.platform} manifest at this tag`);
     return null;
   }
+  const { fields } = found;
 
   // Three cross-checks, all reported rather than corrected: the manifest is
   // evidence about the release, and where it disagrees with the artifact that
@@ -343,6 +366,15 @@ async function buildVersions(m: Collected): Promise<ModuleVersion[]> {
       if (manifest) built.push(manifest);
     }
 
+    // A fourth cross-check, and the only one between two manifests rather than
+    // between a manifest and its artifact: both platforms of one version are
+    // meant to carry the same guid, and three modules have shipped versions
+    // where they did not (TI-24).
+    const guids = guidMismatch(built);
+    if (guids) {
+      notes.push(`${m.moduleId}@${version}: platforms disagree on guid: ${guids.join(', ')}`);
+    }
+
     // One tag only when both platforms came from the same release. When they
     // did not, every asset carries its own and inventing a winner would be a
     // lie about where half the files came from.
@@ -421,12 +453,21 @@ async function writeMain(m: Collected, defaultBranch: string): Promise<boolean> 
 
   const built: ModuleManifest[] = [];
   for (const platform of PLATFORMS) {
-    const fields = await manifestAt(m.repo, defaultBranch, platform);
-    if (fields) built.push(toModuleManifest(fields, platform, MUTABLE));
+    const found = await manifestAt(m.repo, defaultBranch, platform);
+    if (found) built.push(toModuleManifest(found.fields, platform, MUTABLE));
   }
   if (!built.length) {
     failures.push(`${m.repo} ${defaultBranch}: no manifest for either platform`);
     return false;
+  }
+
+  // The same cross-check the released versions get. This is the one that says
+  // whether a module is still shipping two guids, rather than whether it once
+  // did: a version directory is history, `main` is what the next release
+  // inherits (TI-24).
+  const guids = guidMismatch(built);
+  if (guids) {
+    notes.push(`${m.repo} ${defaultBranch}: platforms disagree on guid: ${guids.join(', ')}`);
   }
 
   return writeVersion(dir, {
@@ -563,6 +604,22 @@ console.log(`\n${releases} releases, ${assets} assets parsed, 0 failed`);
 console.log(`${versionCount} versions, ${bothPlatforms} shipping both platforms`);
 console.log(`${written} file(s) written under ${MODULES_DIR}`);
 if (pruned.length) console.log(`${pruned.length} pruned: ${pruned.join(', ')}`);
+
+/**
+ * Which repos still answer for iOS at `iphone/manifest`.
+ *
+ * Every repo has some, because the rename happened partway through and old tags
+ * do not move. A repo at 100% is the one to look at: it never made the move,
+ * and its next release will carry the old path too (TI-24).
+ */
+const legacy = [...legacyIos.entries()].filter(([, s]) => s.legacy > 0);
+if (legacy.length) {
+  console.log(`\niOS manifests read from the legacy iphone/ path:`);
+  for (const [repo, { legacy: n, total }] of legacy.sort((a, b) => b[1].legacy - a[1].legacy)) {
+    const all = n === total ? '  <- never moved to ios/manifest' : '';
+    console.log(`  ${repo}: ${n} of ${total}${all}`);
+  }
+}
 
 if (notes.length) {
   console.log(`\n${notes.length} thing(s) worth knowing:`);
