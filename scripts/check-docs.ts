@@ -1,7 +1,9 @@
+import { validatePosts } from '../src/lib/blog/links.ts';
 import { validateGuides } from '../src/lib/docs/guides.ts';
 
 /**
- * Fails the build on anything wrong with guide content (TI-32).
+ * Fails the build on anything wrong with guide content (TI-32) or with the
+ * links in a blog post (TI-67).
  *
  *   node scripts/check-docs.ts
  *
@@ -15,21 +17,25 @@ import { validateGuides } from '../src/lib/docs/guides.ts';
  *   - an internal link to a `/docs` path the structure does not define
  *   - a structural mistake in `ia.ts` itself: a bad slug, too much depth, or a
  *     page claiming a reserved segment
+ *   - a link in `content/blog` to a path this site does not serve, or one
+ *     written as `https://titaniumsdk.com/…` rather than as a path
  *
- * The link check is the reason this is a script and not a lint rule: it needs
- * the rendered HTML, which needs the whole pipeline, which needs the IA. A
+ * The link checks are the reason this is a script and not a lint rule: they
+ * need the rendered HTML, which needs the whole pipeline, which needs the IA. A
  * broken link between two guides is otherwise invisible until someone clicks
- * it, and the legacy corpus has 21 pages whose links died exactly that way.
+ * it, and the legacy corpus has 21 pages whose links died exactly that way. The
+ * blog arrived in the same condition and worse: 44 of its 164 internal links
+ * pointed into a documentation wiki this site does not serve.
  */
 
-const problems = validateGuides();
+const problems = [...validateGuides(), ...validatePosts()];
 
 if (!problems.length) {
-  console.log('Guide content is valid.');
+  console.log('Guide and blog content is valid.');
   process.exit(0);
 }
 
-console.error(`${problems.length} problem(s) in guide content:\n`);
+console.error(`${problems.length} problem(s) in content:\n`);
 for (const { where, message } of problems) {
   console.error(`  ${where}\n    ${message}`);
 }

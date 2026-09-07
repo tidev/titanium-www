@@ -18,10 +18,10 @@ social: |-
 
 ![Titanium SDK 13.0.0.RC](/blog/titanium-general.png)
 
-✅ **Update**: The stable version of Titanium 13.0.0 has been released - make sure to check it out [here](/posts/2025/sdk_13_0_0_ga.md).
+✅ **Update**: The stable version of Titanium 13.0.0 has been released - make sure to check it out [here](/blog/sdk-13-0-0-ga).
 
 Titanium SDK 13.0.0 is a major release of the SDK, providing full support for iOS 26 and Xcode 26. It is also compatible with the latest Android 16 KB page size requirement by Google and all included first party Android modules support 16kb page size too. Many community modules like the Firebase modules are also already updated.
-If you need help with other modules make sure to join our [Slack group](https://slack.tidev.io/) and ask for support.
+If you need help with other modules make sure to join our [Slack group](https://tidev.slack.com) and ask for support.
 
 Here are some highlights:
 
@@ -37,7 +37,7 @@ Last but not least: We have been able to clock in many additional hours over the
 
 P.S.: We are the first cross platform framework to fully support all these new iOS 26 features - spread it to the world and code strong :slightly_smiling_face: :titanium:
 
-To view the full list of changes, see the release notes: [Titanium SDK 13.0.0.RC Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.0.0.RC_Release_Note.html).
+To view the full list of changes, see the release notes: [Titanium SDK 13.0.0.RC Release Note](/docs/sdk/13.0.0/release-notes).
 
 ## Install
 
@@ -53,4 +53,4 @@ If you run into any issues that seem related to the update, please report them o
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

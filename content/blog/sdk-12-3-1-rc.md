@@ -20,9 +20,9 @@ social: |-
 
 The next version of the Titanium SDK is now is available: <b>12.3.1.RC</b>. Titanium SDK 12.3.1 is a patch release of the SDK fixing existing bugs from previous releases.
 
-We also also added support and documentation for the new Apple privacy manifest files that are required starting May 1 2024. You can read more about it in [Adhere to the iOS 17+ Privacy Requirements](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_How-tos/Adhere_to_the_iOS17_Privacy_Requirements.html)
+We also also added support and documentation for the new Apple privacy manifest files that are required starting May 1 2024. You can read more about it in [Adhere to the iOS 17+ Privacy Requirements](/docs/build)
 
-For a more detailed overview, known issues and closed issues, see the release notes: [Titanium SDK 12.3.1.RC Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.1.RC_Release_Note.html).
+For a more detailed overview, known issues and closed issues, see the release notes: [Titanium SDK 12.3.1.RC Release Note](/docs/sdk/12.3.1/release-notes).
 
 ## Install
 
@@ -38,4 +38,4 @@ If you run into any issues that seem related to the update, please report them o
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

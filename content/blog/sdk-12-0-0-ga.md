@@ -19,7 +19,7 @@ The stable version (GA) of the Titanium SDK<b>12.0.0</b> is now available. Titan
 
 iOS adds support for the `Dynamic Island` API and adds a new error page layout. Andorid targetSDK is now 33 and you can use `Material3` themes like `Theme.Titanium.Material3.DayNight`.
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.0.0.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.0.0.GA_Release_Note.html).
+For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.0.0.GA Release Note](/docs/sdk/12.0.0/release-notes).
 
 ## Install
 
@@ -39,4 +39,4 @@ As always, please test it on your apps and give feedback. If you run into any is
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

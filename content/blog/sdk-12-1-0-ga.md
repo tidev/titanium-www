@@ -23,7 +23,7 @@ addressing high-priority issues from previous releases. Highlights of this relea
 - Improved macOS support
 - More parity APIs between iOS and Android
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.1.0.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.1.0.GA_Release_Note.html).
+For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.1.0.GA Release Note](/docs/sdk/12.1.0/release-notes).
 
 ## Install
 
@@ -45,4 +45,4 @@ If you run into any issues that seem related to the update, please report them o
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

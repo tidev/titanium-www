@@ -17,7 +17,7 @@ social: |-
 
 This version fixes several bugs across iOS and Android, improving the performance and developer experience across the platform.
 
-For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.0.1.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.0.1.GA_Release_Note.html).
+For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.0.1.GA Release Note](/docs/sdk/13.0.1/release-notes).
 
 ## Install
 
