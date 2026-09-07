@@ -15,15 +15,37 @@ without a browser, it will probably run here.
 
 ## Native modules
 
-The [modules directory](/modules) lists what TiDev maintains, with the id to
-install. Installing one is two steps: fetch it, then declare it.
+The [modules directory](/modules) lists what TiDev maintains. Installing one is
+three steps: unpack it, declare it, require it.
 
-```sh
-ti module install ti.map
+> [!NOTE]
+> There is no install command yet. `ti module` has one subcommand, `list`, so
+> unpacking is done by hand. `ti module install` and `ti module search` are
+> planned; until they ship, this is the path.
+
+Download the release archive for the module and unzip it into a `modules`
+directory beside `tiapp.xml`. The archive already carries the right shape, so
+unzipping it in place gives you:
+
+```
+modules/
+  android/ti.map/5.7.0/
+  iphone/ti.map/7.3.1/
 ```
 
-That unpacks it into the project's `modules/` directory. Then declare it in
-`tiapp.xml`, per platform:
+That is `modules/<platform>/<id>/<version>/`, and the platform directory is
+`android`, `iphone` or `commonjs` - `iphone` covers iPad and macOS too.
+
+Check the CLI can see it:
+
+```sh
+ti module list
+```
+
+It reports three scopes - project, configured paths, and global - so the output
+also tells you which copy a build will pick up.
+
+Then declare it in `tiapp.xml`, per platform:
 
 ```xml
 <modules>
@@ -42,7 +64,7 @@ Then require it by id:
 const Map = require('ti.map');
 ```
 
-Pin a version when you care which one you get:
+Pin a version when more than one is unpacked and you care which one you get:
 
 ```xml
 <module platform="android" version="5.7.0">ti.map</module>
@@ -64,9 +86,11 @@ different builds from the same commit.
 like any other source. Some teams keep them out of version control and install
 in CI instead; either works, as long as the whole team does the same thing.
 
-A module installed globally with `ti module install -g` is available to every
-project on that machine and to nobody else's, which makes builds
-machine-dependent. Prefer the project-local install.
+Unpacking into the global directory instead makes the module available to every
+project on that machine and to nobody else's, which makes a build depend on the
+machine it runs on. Prefer the project-local copy. On macOS the global one is
+`~/Library/Application Support/Titanium/modules`, and `ti module list` prints
+the full path of everything it finds.
 
 ## npm packages
 
