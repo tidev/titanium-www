@@ -35,18 +35,25 @@ export function NotFoundDetail() {
   const pathname = usePathname();
   const parts = pathname.split('/').filter(Boolean);
 
-  // /docs/sdk/<version>/<type>
+  // `/docs/sdk/<version>/<type>` pinned, or `/docs/sdk/<type>` at the latest
+  // release. One segment is ambiguous by shape alone, so it is read the way the
+  // route reads it: version-shaped means a version, anything else is a type.
+  // Getting it wrong here only mislabels a sentence on a page that is already a
+  // 404, which is why this is a regex and not a registry lookup.
   if (parts[0] === 'docs' && parts[1] === 'sdk' && parts.length >= 3) {
-    const version = parts[2];
-    const type = parts.length > 3 ? decodeURIComponent(parts.slice(3).join('/')) : '';
+    const pinned = /^\d+\.\d+\.\d+$/.test(parts[2]!) || parts[2] === 'main';
+    const version = pinned ? parts[2] : '';
+    const rest = pinned ? parts.slice(3) : parts.slice(2);
+    const type = rest.length ? decodeURIComponent(rest.join('/')) : '';
     return (
       <>
         <p className="mt-3 text-text-muted">
           {type ? (
             <>
               <span className="font-mono text-text">{type}</span> is not part of the{' '}
-              <span className="font-mono text-text">{version}</span> reference. It may have been
-              added in a later release, removed in an earlier one, or simply be misspelt.
+              {version ? <span className="font-mono text-text">{version}</span> : 'current'}{' '}
+              reference. It may have been added in a later release, removed in an earlier one, or
+              simply be misspelt.
             </>
           ) : (
             <>

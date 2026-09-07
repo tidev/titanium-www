@@ -1,4 +1,7 @@
+import { ApiTree, Chevron } from './api-tree';
+import { ScrollToCurrent } from './scroll-to-current';
 import { ROOT_TITLE, SECTIONS, type DocPage } from '@/lib/docs/ia';
+import type { NavType } from '@/lib/docs/tree';
 import Link from 'next/link';
 
 /**
@@ -10,9 +13,11 @@ import Link from 'next/link';
  * every time a page landed, and a reader would have no way to tell "not written"
  * from "does not exist". Unwritten pages are visibly dimmed and not links.
  *
- * Sibling of `ApiNav`, which does the same job for `/docs/sdk` - that one is a
- * disclosure tree over 45,610 types, this one is a fixed list of about forty
- * pages, so they share an idea and no code.
+ * Sibling of `ApiNav`, which does the same job for a pinned `/docs/sdk/<version>`.
+ * That one is a disclosure tree over 284 types and this is a fixed list of about
+ * forty pages, so they shared an idea and no code - until TI-79, which hangs the
+ * same tree under the "Titanium API" row when the reader is inside the API.
+ * `ApiTree` is the shared half; the rails around it stay separate.
  *
  * ## Four states, four strengths
  *
@@ -33,6 +38,18 @@ export type GuideNavProps = {
   current: string;
   /** Paths that have content. Everything else renders as pending. */
   written: ReadonlySet<string>;
+  /**
+   * The API namespace tree, drawn under the section link whose href is `base`.
+   *
+   * Present only under `/docs/sdk`. TI-28 measured the tree at 78 KiB of markup
+   * per page, which has no business on a setup page, so everywhere else that
+   * row stays a single link and this stays undefined.
+   *
+   * `active` is the type on screen, or empty on the index. The route that
+   * renders this knows it from its own params, which is why nothing here needs
+   * `usePathname()` and why guide pages ship no JavaScript for their sidebar.
+   */
+  apiTree?: { types: NavType[]; base: string; active: string; count: number };
 };
 
 function Row({
@@ -100,9 +117,49 @@ function SectionHeading({ title }: { title: string }) {
   );
 }
 
-export function GuideNav({ current, written }: GuideNavProps) {
+/**
+ * The API tree, nested under its row, behind a disclosure on a phone.
+ *
+ * The guides rail has no disclosure of its own - below `lg` it simply stacks
+ * above the article - so 284 extra rows would bury the page. A checkbox is what
+ * `ApiNav` uses for the same problem and for the same reason: the tree stays in
+ * the document once, and it works with scripting off. The id differs from that
+ * one because both are global and only one of them may own `#api-nav-toggle`.
+ *
+ * `api-nav` is a behaviour hook rather than an identity: it is what the chevron
+ * rule in `globals.css` selects on, so the branches turn here too. No CSS
+ * changed for this.
+ */
+function ApiSubtree({ tree }: { tree: NonNullable<GuideNavProps['apiTree']> }) {
   return (
-    <aside className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
+    <>
+      <input id="guide-api-toggle" type="checkbox" className="peer sr-only" />
+      <label
+        htmlFor="guide-api-toggle"
+        className="ml-3 flex cursor-pointer items-center gap-1.5 py-1 text-sm text-text-muted peer-checked:[&_svg]:rotate-90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus lg:hidden"
+      >
+        <Chevron className="transition-transform" />
+        Browse types
+        <span className="ml-auto font-mono text-xs text-text-subtle">{tree.count}</span>
+      </label>
+      <div className="api-nav ml-3 hidden text-sm peer-checked:block lg:block">
+        <ApiTree types={tree.types} base={tree.base} active={tree.active} />
+      </div>
+      {/* The rail scrolls, and the expanded branch is usually below its fold.
+          The <aside> is what carries `overflow-y-auto`, not the <nav>. */}
+      <ScrollToCurrent within="#guide-rail" />
+    </>
+  );
+}
+
+export function GuideNav({ current, written, apiTree }: GuideNavProps) {
+  return (
+    // The id is `ScrollToCurrent`'s handle on the scrolling box. Only the API
+    // tree is long enough to need it, so nothing reads it on a guide page.
+    <aside
+      id="guide-rail"
+      className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto"
+    >
       <nav aria-label="Documentation">
         {/* `/docs` is a page like any other and the only one no section holds,
             so without this row the tree cannot reach it. Unindented and with no
@@ -157,16 +214,25 @@ export function GuideNav({ current, written }: GuideNavProps) {
                 {/* Somewhere else on the site that belongs in this section.
                     Always a link: `written` tracks pages this route renders,
                     and these are not among them. */}
-                {section.links?.map((link) => (
-                  <Row
-                    key={link.href}
-                    href={link.href}
-                    title={link.title}
-                    active={false}
-                    written
-                    depth={0}
-                  />
-                ))}
+                {section.links?.map((link) => {
+                  const tree = apiTree?.base === link.href ? apiTree : undefined;
+                  return (
+                    <li key={link.href}>
+                      <ul>
+                        <Row
+                          href={link.href}
+                          title={link.title}
+                          // Current on the index itself. A type page below it is
+                          // marked inside the tree, on its own row.
+                          active={!!tree && tree.active === ''}
+                          written
+                          depth={0}
+                        />
+                      </ul>
+                      {!!tree && <ApiSubtree tree={tree} />}
+                    </li>
+                  );
+                })}
                 {uncovered.map((page: DocPage) => {
                   const path = `${base}/${page.slug}`;
                   return (

@@ -33,7 +33,7 @@ export const metadata = {
 };
 
 const PLACES = [
-  { href: '/docs/sdk/latest', label: 'API reference', hint: 'Every SDK type, method and event' },
+  { href: '/docs/sdk', label: 'API reference', hint: 'Every SDK type, method and event' },
   { href: '/modules', label: 'Modules', hint: 'Official and community native modules' },
   { href: '/downloads', label: 'Downloads', hint: 'Releases and CI builds' },
   { href: '/blog', label: 'Blog', hint: 'Release notes and announcements' },

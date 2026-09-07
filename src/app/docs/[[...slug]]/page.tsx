@@ -25,7 +25,7 @@ import { notFound } from 'next/navigation';
  * this one, which is what keeps the API reference where it is.
  *
  * Prerendered: the whole tree is about forty pages read from local markdown,
- * against 45,610 API type pages that are rendered on demand. There is no reason
+ * against 5,680 API type pages that are rendered on demand. There is no reason
  * for a guide to pay a cold render.
  *
  * ## A defined path with no content is not a 404
@@ -215,7 +215,7 @@ function Pending({ section, page }: { section: DocSection; page?: DocPage }) {
           {section.title}
         </Link>
         , which is being written as part of the documentation rewrite. The{' '}
-        <Link href="/docs/sdk/latest" className="text-link hover:underline">
+        <Link href="/docs/sdk" className="text-link hover:underline">
           API reference
         </Link>{' '}
         is complete and searchable in the meantime.

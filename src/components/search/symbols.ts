@@ -63,13 +63,16 @@ export function buildSymbolTable(payload: SymbolPayload): Entry[] {
   };
 
   for (const [type, members] of payload.t) {
-    push(type, `/docs/sdk/${payload.sdk}/${type}`, 'api');
+    // Unversioned: the index only ever covers the latest release, and that is
+    // the canonical address for it since TI-79. `payload.sdk` still records
+    // which release the index was built from.
+    push(type, `/docs/sdk/${type}`, 'api');
     for (const raw of members) {
       // `name>anchor` where the anchor was disambiguated; see the generator.
       const cut = raw.indexOf('>');
       const name = cut === -1 ? raw : raw.slice(0, cut);
       const anchor = cut === -1 ? raw : raw.slice(cut + 1);
-      push(`${type}.${name}`, `/docs/sdk/${payload.sdk}/${type}#${anchor}`, 'api');
+      push(`${type}.${name}`, `/docs/sdk/${type}#${anchor}`, 'api');
     }
   }
   for (const [id, types] of payload.m) {

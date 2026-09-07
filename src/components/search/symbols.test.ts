@@ -21,22 +21,22 @@ describe('symbol lookup', () => {
     const hit = top('Titanium.UI.Window');
     assert.equal(hit.title, 'Titanium.UI.Window');
     assert.equal(hit.rule, 'exact');
-    assert.equal(hit.url, '/docs/sdk/13.4.1/Titanium.UI.Window');
+    assert.equal(hit.url, '/docs/sdk/Titanium.UI.Window');
   });
 
   test('a bare member name resolves to the symbol, which is what Pagefind cannot do', () => {
     const hit = top('addEventListener');
     assert.equal(hit.title, 'Titanium.Proxy.addEventListener');
     assert.equal(hit.rule, 'segment');
-    assert.equal(hit.url, '/docs/sdk/13.4.1/Titanium.Proxy#addEventListener');
+    assert.equal(hit.url, '/docs/sdk/Titanium.Proxy#addEventListener');
   });
 
   test('a disambiguated member keeps the anchor the page renders', () => {
     const hits = lookupSymbols(table, 'open', 5);
     const urls = hits.filter((h) => h.title === 'Titanium.UI.Window.open').map((h) => h.url);
-    assert.ok(urls.includes('/docs/sdk/13.4.1/Titanium.UI.Window#open'));
+    assert.ok(urls.includes('/docs/sdk/Titanium.UI.Window#open'));
     assert.ok(
-      urls.includes('/docs/sdk/13.4.1/Titanium.UI.Window#open-event'),
+      urls.includes('/docs/sdk/Titanium.UI.Window#open-event'),
       'the event anchor should survive the payload'
     );
   });

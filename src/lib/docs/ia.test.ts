@@ -11,6 +11,7 @@ import {
   trimRedundantPrefix,
   VERSION_SEGMENT,
 } from './ia.ts';
+import { MAIN, sdkIndex, sdkVersions } from './registry.ts';
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
@@ -112,6 +113,37 @@ describe('platform names', () => {
           assert.notEqual(platformLabel(id), id, `${id} has no display name`);
         }
       }
+    }
+  });
+});
+
+describe('the /docs/sdk segment', () => {
+  test('no compiled type name can be read as a version', () => {
+    // `/docs/sdk/<segment>` is a version index or a type page, and the route
+    // tells them apart by asking the registry whether the segment resolves to a
+    // compiled version. A type actually named `13.4.1`, `main` or `latest`
+    // would be shadowed by that check and simply stop existing.
+    //
+    // True today across all 20 versions, and nothing upstream enforces it:
+    // docgen emits whatever names the apidoc YAML carries. Pinned here so a
+    // regen cannot introduce the collision quietly.
+    const reserved = /^\d+\.\d+\.\d+$/;
+    for (const version of sdkVersions()) {
+      for (const { name } of sdkIndex(version)?.types ?? []) {
+        assert.ok(
+          !reserved.test(name) && name !== MAIN && name !== 'latest',
+          `${version} has a type named "${name}", which a URL cannot tell from a version`
+        );
+      }
+    }
+  });
+
+  test('release-notes is not a type name either', () => {
+    // A static segment beside `[type]`, so a type of that name would be
+    // unreachable at a pinned version.
+    for (const version of sdkVersions()) {
+      const names = new Set((sdkIndex(version)?.types ?? []).map((t) => t.name));
+      assert.ok(!names.has('release-notes'), `${version} has a type named "release-notes"`);
     }
   });
 });

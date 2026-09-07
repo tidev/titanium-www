@@ -7,89 +7,48 @@ import { OnThisPage, SectionJump, jumpLinks, type TocGroup } from '@/components/
 import { OlderVersionNotice, VersionSwitcher } from '@/components/docs/version-switcher';
 import { formatSince } from '@/lib/docs/format';
 import { anchorAllocator, pathLinker } from '@/lib/docs/links';
-import { sdkIndex, sdkType, resolveVersion, sourceUrl, MAIN } from '@/lib/docs/registry';
+import { sdkIndex, sdkType, sourceUrl, MAIN } from '@/lib/docs/registry';
 import { crumbsFor, subtypesOf } from '@/lib/docs/tree';
 import { buildTypeView } from '@/lib/docs/type-view';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
-import { SITE_URL } from '@/lib/site';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 /**
- * One page per compiled type.
+ * One compiled type, rendered for whichever URL is asking (TI-79).
  *
- * Everything is read from `registry/` on disk - no network at build time or at
- * request time, which is what keeps rebuilds fast and preview deploys
- * reproducible.
+ * Two routes reach this. `/docs/sdk/13.4.1/Titanium.UI.Button` pins a version
+ * and browses the API on its own; `/docs/sdk/Titanium.UI.Button` is the same
+ * type at the latest version, inside the documentation. They differ in their
+ * shell and in one prop.
  *
- * ## Rendered on first request, not at build time
+ * ## Why `linkBase` and `imageRoot` are separate
  *
- * TI-25 prerendered these and said to record the numbers before reaching for
- * runtime rendering. Here they are. One SDK version is 190MB of HTML and RSC
- * payload across 284 pages; twenty versions are 3.8GB. Vercel caps a
- * deployment's static files at 100MB, so even a single version overshoots by
- * 90MB - this was never a question of how many releases to keep.
- *
- * Page weight is not the cause and trimming it is not the fix: brotli takes the
- * largest page from 1053KB to 71KB, because what makes the file big is 152
- * distinct class strings repeated 4,116 times. Nothing is served more slowly
- * for this change. What moves is when the file is written.
- *
- * `generateStaticParams` returns nothing, so a page is rendered the first time
- * someone asks for it and then cached indefinitely - `revalidate = false`,
- * which is honest rather than lazy. A published version is frozen, so there is
- * nothing for a revalidation window to catch, and even `main` - the one tree
- * that does move - is safe: the cache is per-deployment, and `main` only
- * changes when a recompile is deployed.
- *
- * `dynamicParams` is therefore on, which makes `notFound()` below the thing
- * that rejects an unknown version or type. Before, the absence of a prerendered
- * file did that.
+ * They look like the same string and are not. Cross-references follow the URL
+ * the reader is on, so an unversioned page links unversioned. Images cannot:
+ * `assets.ts` rewrites a doc image through `public/docs/assets.json`, whose
+ * keys are `/docs/sdk/<version>/images/...` - 1,080 of its 1,085 entries. Built
+ * from an unversioned base every key would miss, and `assetUrl` returns the URL
+ * unchanged on a miss, so the page would render with broken images and no error
+ * anywhere. `imageRoot` therefore always names a version.
  */
+export type TypeReferenceProps = {
+  /** The compiled version to read from. Always concrete, never `latest`. */
+  version: string;
+  typeName: string;
+  /** Prefix for cross-references and breadcrumbs: versioned or not. */
+  linkBase: string;
+  /** Prefix for image URLs. Versioned, always. See above. */
+  imageRoot: string;
+};
 
-export const dynamicParams = true;
-export const revalidate = false;
-
-/**
- * Empty deliberately.
- *
- * An empty list is what puts this route on the incremental path instead of
- * making it fully dynamic; returning a subset would prerender that subset, and
- * the whole point is that no amount of it fits.
- */
-export function generateStaticParams() {
-  return [];
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps<'/docs/sdk/[version]/[type]'>): Promise<Metadata> {
-  const { version, type } = await params;
-  const resolved = resolveVersion(version);
-  const view = resolved && buildTypeView((name) => sdkType(resolved, name), type);
-  if (!view) return {};
-
-  return {
-    title: `${view.type.name} - Titanium SDK`,
-    description: view.type.summary?.replace(/<[^>]+>/g, '').slice(0, 160),
-    // The versioned path is canonical; /latest redirects here rather than
-    // duplicating pages, so the two never compete in search results.
-    alternates: { canonical: `${SITE_URL}/docs/sdk/${resolved}/${type}` },
-  };
-}
-
-export default async function TypePage({ params }: PageProps<'/docs/sdk/[version]/[type]'>) {
-  const { version, type } = await params;
-  const resolved = resolveVersion(version);
-  if (!resolved) notFound();
-
-  const view = buildTypeView((name) => sdkType(resolved, name), type);
+export function TypeReference({ version, typeName, linkBase, imageRoot }: TypeReferenceProps) {
+  const view = buildTypeView((name) => sdkType(version, name), typeName);
   if (!view) notFound();
 
-  const base = `/docs/sdk/${resolved}`;
+  const base = linkBase;
 
   // Already parsed and cached by generateStaticParams, so this is a map lookup.
-  const types = sdkIndex(resolved)?.types ?? [];
+  const types = sdkIndex(version)?.types ?? [];
 
   // Every type with a page in this tree lives under `base`, so a reference to
   // one is always a path - but not every name in a signature has a page, and
@@ -98,7 +57,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
   const { type: api } = view;
   const since = formatSince(api.since);
   const subtypes = subtypesOf(types, api.name);
-  const newer = newerVersion(resolved, api.name);
+  const newer = newerVersion(version, api.name);
 
   // Window has a method `open()` and an event `open`; allocated together, they
   // no longer both claim `id="open"`.
@@ -121,8 +80,8 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
   // apidoc images sit beside the YAML, so relative references resolve against
   // the source file's own directory.
   const sourceDir = api.source.split('/').slice(0, -1).join('/');
-  const imageBase = `${base}/images${sourceDir ? `/${sourceDir}` : ''}`;
-  const editUrl = sourceUrl(resolved, api.source);
+  const imageBase = `${imageRoot}/images${sourceDir ? `/${sourceDir}` : ''}`;
+  const editUrl = sourceUrl(version, api.source);
 
   return (
     // Explicit placement rather than source order: the rail has to come second
@@ -142,7 +101,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
               })),
             ]}
           />
-          {resolved === MAIN && (
+          {version === MAIN && (
             <span className="rounded border border-warning px-1.5 py-0.5 text-xs text-warning">
               unreleased
             </span>
@@ -152,12 +111,12 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
               rail appears and the article's right edge moves ~192px inward, so
               the copy in the rail column takes over - see below. */}
           <VersionSwitcher
-            current={resolved}
+            current={version}
             options={versionOptions(api.name)}
             className="ml-auto xl:hidden"
           />
         </div>
-        {newer && <OlderVersionNotice current={resolved} newer={newer} type={api.name} />}
+        {newer && <OlderVersionNotice current={version} newer={newer} type={api.name} />}
 
         <header className="mt-3">
           <h1 className="font-mono text-3xl font-semibold tracking-tight break-words">
@@ -280,7 +239,7 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
           has no rail and puts it at the end of its own heading row. Only one of
           the two copies is ever displayed, so nothing is announced twice. */}
       <div className="hidden py-10 xl:col-start-2 xl:row-start-1 xl:block">
-        <VersionSwitcher current={resolved} options={versionOptions(api.name)} />
+        <VersionSwitcher current={version} options={versionOptions(api.name)} />
         <OnThisPage
           links={api.examples?.length ? [{ id: 'examples', title: 'Examples' }] : []}
           groups={groups}
@@ -290,7 +249,6 @@ export default async function TypePage({ params }: PageProps<'/docs/sdk/[version
     </div>
   );
 }
-
 /**
  * The types that extend this one - the edge the registry does not store.
  *

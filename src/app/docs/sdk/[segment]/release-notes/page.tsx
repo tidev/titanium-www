@@ -13,7 +13,7 @@ import { notFound } from 'next/navigation';
  * A static segment beside `[type]`, so `/docs/sdk/13.4.1/release-notes` resolves
  * here rather than being read as a type named `release-notes`.
  *
- * Prerendered, unlike the type pages: there are 56 of these against 45,610 of
+ * Prerendered, unlike the type pages: there are 56 of these against 5,680 of
  * those, and they are the pages a release announcement links to, so they should
  * not pay a cold render. Together they are about 1.2MB of source.
  */
@@ -21,13 +21,13 @@ import { notFound } from 'next/navigation';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return versionsWithNotes().map((version) => ({ version }));
+  return versionsWithNotes().map((segment) => ({ segment }));
 }
 
 export async function generateMetadata({
   params,
-}: PageProps<'/docs/sdk/[version]/release-notes'>): Promise<Metadata> {
-  const { version } = await params;
+}: PageProps<'/docs/sdk/[segment]/release-notes'>): Promise<Metadata> {
+  const { segment: version } = await params;
   const note = releaseNote(version);
   if (!note) return {};
   return {
@@ -39,8 +39,8 @@ export async function generateMetadata({
 
 export default async function ReleaseNotes({
   params,
-}: PageProps<'/docs/sdk/[version]/release-notes'>) {
-  const { version } = await params;
+}: PageProps<'/docs/sdk/[segment]/release-notes'>) {
+  const { segment: version } = await params;
   const note = releaseNote(version);
   if (!note) notFound();
 

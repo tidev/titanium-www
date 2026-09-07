@@ -202,7 +202,7 @@ export default function Home() {
               Install Titanium
             </Link>
             <Link
-              href="/docs/sdk/latest"
+              href="/docs/sdk"
               className="rounded-md border border-border-strong px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
             >
               API reference
@@ -260,7 +260,7 @@ export default function Home() {
               <dt className="text-base font-semibold tracking-tight">JavaScript and TypeScript</dt>
               <dd className="mt-2 text-sm leading-relaxed text-text-muted">
                 Write the language you already know, against{' '}
-                <Link href="/docs/sdk/latest" className="text-link hover:text-link-hover">
+                <Link href="/docs/sdk" className="text-link hover:text-link-hover">
                   a documented API
                 </Link>{' '}
                 for both platforms. Type definitions ship with the SDK.
@@ -293,7 +293,7 @@ export default function Home() {
             binding and a build step that compiles it all down to the SDK calls above.
           </p>
           <Link
-            href="/docs/sdk/latest"
+            href="/docs/sdk"
             className="mt-6 inline-block text-sm text-link hover:text-link-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           >
             Alloy documentation <span aria-hidden>→</span>
@@ -346,7 +346,7 @@ export default function Home() {
             Where to go next
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:auto-rows-fr lg:grid-cols-4">
-            <Pillar title="API reference" href="/docs/sdk/latest" cta="Browse the API">
+            <Pillar title="API reference" href="/docs/sdk" cta="Browse the API">
               Every namespace, method, property and event in the SDK, generated from the source it
               documents.
             </Pillar>

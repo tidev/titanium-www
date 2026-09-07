@@ -35,7 +35,7 @@ creates, builds, runs and packages projects.
 3. [Project structure](/docs/build/project-structure) explains what the
    generated project contains and what `tiapp.xml` configures.
 
-The [API reference](/docs/sdk/latest) documents every type, method, property and
+The [API reference](/docs/sdk) documents every type, method, property and
 event in the SDK, for every released version. It is complete and searchable
 today.
 

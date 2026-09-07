@@ -1,31 +1,20 @@
 import { OlderVersionNotice, VersionSwitcher } from '@/components/docs/version-switcher';
-import { sdkIndex, sdkVersions, resolveVersion, MAIN } from '@/lib/docs/registry';
+import { sdkIndex, MAIN } from '@/lib/docs/registry';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
-import { SITE_URL } from '@/lib/site';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-/** The type list for one compiled SDK version. */
-
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return sdkVersions().map((version) => ({ version }));
-}
-
-export async function generateMetadata({
-  params,
-}: PageProps<'/docs/sdk/[version]'>): Promise<Metadata> {
-  const { version } = await params;
-  const resolved = resolveVersion(version);
-  if (!resolved) return {};
-  return {
-    title: `SDK API reference ${resolved} - Titanium SDK`,
-    description: `Every Titanium SDK type, method, property, and event in ${resolved}.`,
-    alternates: { canonical: `${SITE_URL}/docs/sdk/${resolved}` },
-  };
-}
+/**
+ * The type list for one compiled SDK version (TI-79).
+ *
+ * Two routes render it: `/docs/sdk/13.4.1` pinned under `ApiNav`, and
+ * `/docs/sdk` at the latest version inside the documentation. Only `linkBase`
+ * differs - there are no images here, so this needs nothing like the
+ * `imageRoot` split that `TypeReference` carries.
+ *
+ * The heading says "Titanium API" rather than "SDK API reference" so it agrees
+ * with the sidebar row that leads here.
+ */
 
 const KIND_ORDER = ['module', 'proxy', 'view', 'pseudo'] as const;
 const KIND_LABELS: Record<string, string> = {
@@ -35,16 +24,12 @@ const KIND_LABELS: Record<string, string> = {
   pseudo: 'Dictionaries and namespaces',
 };
 
-export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[version]'>) {
-  const { version } = await params;
-  const resolved = resolveVersion(version);
-  if (!resolved) notFound();
-
-  const index = sdkIndex(resolved);
+export function VersionIndex({ version, linkBase }: { version: string; linkBase: string }) {
+  const index = sdkIndex(version);
   if (!index) notFound();
 
-  const base = `/docs/sdk/${resolved}`;
-  const newer = newerVersion(resolved);
+  const base = linkBase;
+  const newer = newerVersion(version);
   const byKind = new Map<string, typeof index.types>();
   for (const t of index.types) {
     byKind.set(t.kind, [...(byKind.get(t.kind) ?? []), t]);
@@ -60,25 +45,25 @@ export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[ver
       <div className="min-w-0 max-w-4xl xl:col-start-1 xl:row-start-1">
         <header>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight">SDK API reference</h1>
+            <h1 className="text-3xl font-semibold tracking-tight">Titanium API</h1>
             {/* Below `xl` there is no second column, so this is the end of the
               heading row - which is where a type page puts it at that width too. */}
             <VersionSwitcher
-              current={resolved}
+              current={version}
               options={versionOptions()}
               className="ml-auto xl:hidden"
             />
           </div>
           <p className="mt-2 text-text-muted">
-            <span className="font-mono">{resolved}</span>
-            {resolved === MAIN && ' - compiled from the development branch, not a release'}
+            <span className="font-mono">{version}</span>
+            {version === MAIN && ' - compiled from the development branch, not a release'}
             {' · '}
             {index.counts.types} types, {index.counts.members.toLocaleString()} declared members
-            {hasReleaseNote(resolved) && (
+            {hasReleaseNote(version) && (
               <>
                 {' · '}
                 <a
-                  href={`/docs/sdk/${resolved}/release-notes`}
+                  href={`/docs/sdk/${version}/release-notes`}
                   className="text-link hover:underline"
                 >
                   Release notes
@@ -86,7 +71,7 @@ export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[ver
               </>
             )}
           </p>
-          {newer && <OlderVersionNotice current={resolved} newer={newer} />}
+          {newer && <OlderVersionNotice current={version} newer={newer} />}
         </header>
 
         {KIND_ORDER.filter((k) => byKind.has(k)).map((kind) => (
@@ -117,7 +102,7 @@ export default async function VersionIndex({ params }: PageProps<'/docs/sdk/[ver
       {/* The switcher's own column, empty otherwise. Matches the head of the
           rail on a type page. */}
       <div className="hidden xl:col-start-2 xl:row-start-1 xl:block">
-        <VersionSwitcher current={resolved} options={versionOptions()} />
+        <VersionSwitcher current={version} options={versionOptions()} />
       </div>
     </div>
   );

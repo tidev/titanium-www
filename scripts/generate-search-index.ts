@@ -88,7 +88,9 @@ for (const entry of sdkIndex.types) {
   if (!type) continue;
 
   records.push({
-    url: `/docs/sdk/${version}/${entry.name}`,
+    // Unversioned, which is the canonical address for the latest release and
+    // the only version indexed. See TI-79.
+    url: `/docs/sdk/${entry.name}`,
     title: entry.name,
     kind: 'api',
     body: `${entry.name} ${plain(entry.summary ?? type.summary)} ${plain(type.description)}`,
@@ -116,7 +118,7 @@ for (const entry of sdkIndex.types) {
     // have, falling back silently to an anchor the page does not render.
     for (const member of members.filter((m) => !m.inheritedFrom)) {
       records.push({
-        url: `/docs/sdk/${version}/${entry.name}#${anchor(member)}`,
+        url: `/docs/sdk/${entry.name}#${anchor(member)}`,
         title: `${entry.name}.${member.name}`,
         kind: 'api',
         // The bare name as well as the qualified one, and it is load-bearing:

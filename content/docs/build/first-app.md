@@ -297,7 +297,7 @@ it in.
   iOS and Android genuinely differ.
 - [Alloy](/docs/alloy) is the framework in depth: views, styles, models and
   widgets.
-- The [API reference](/docs/sdk/latest) documents every type and method, and is
+- The [API reference](/docs/sdk) documents every type and method, and is
   complete for every released version.
 
 For a worked example larger than a tutorial, read

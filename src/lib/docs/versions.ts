@@ -26,6 +26,19 @@ export type VersionOption = {
 };
 
 /**
+ * The one canonical address for a version's index or type page (TI-79).
+ *
+ * The unversioned path is canonical for the latest release: it is what the
+ * guides link, what `latest` resolves to, and the copy that sits inside the
+ * documentation. Every other version is canonical to itself, `main` included -
+ * those are real, distinct pages rather than aliases of this one.
+ */
+export function canonicalPath(version: string, type?: string): string {
+  const base = version === latestSdkVersion() ? '/docs/sdk' : `/docs/sdk/${version}`;
+  return type ? `${base}/${type}` : base;
+}
+
+/**
  * Every compiled version, newest first, addressed for the page being read.
  *
  * @param type  the type on screen, if this is a type page rather than an index
@@ -38,7 +51,9 @@ export function versionOptions(type?: string): VersionOption[] {
       version,
       // Somewhere that exists either way: a version that never had this type
       // sends the reader to that version's index rather than to a 404.
-      href: present && type ? `/docs/sdk/${version}/${type}` : `/docs/sdk/${version}`,
+      // Canonical rather than raw, so picking "latest" lands on the unversioned
+      // page rather than on a second copy of it.
+      href: canonicalPath(version, present && type ? type : undefined),
       present,
       latest: version === latest,
       unreleased: version === MAIN,
@@ -61,7 +76,7 @@ export function newerVersion(
   const present = !type || sdkTypeNames(latest).has(type);
   return {
     version: latest,
-    href: present && type ? `/docs/sdk/${latest}/${type}` : `/docs/sdk/${latest}`,
+    href: canonicalPath(latest, present && type ? type : undefined),
   };
 }
 

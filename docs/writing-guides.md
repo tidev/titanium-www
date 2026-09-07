@@ -353,9 +353,11 @@ Internal links are root-relative and have no extension: `/docs/build/ui/layout`.
 A link to a `/docs` path the structure does not define **fails the build**, so
 you can link a page that is not written yet as long as it exists in `ia.ts`.
 
-Link to the API reference by its real URL - `/docs/sdk/latest/Titanium.UI.Window`
-
-- and write the type name as the link text.
+Link to the API reference unversioned - `/docs/sdk/Titanium.UI.Window` - and
+write the type name as the link text. That is the canonical address and it
+tracks the newest release, so a link written today keeps pointing at current
+documentation. `/docs/sdk/13.4.1/Titanium.UI.Window` is a real page too, and
+what you want only when the passage is about that release in particular.
 
 Do not write "click here", and do not link a bare URL. The link text should say
 where it goes when read on its own, because that is how it is read aloud.

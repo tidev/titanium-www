@@ -3,35 +3,23 @@ import { MAIN, latestSdkVersion } from './src/lib/docs/registry.ts';
 import type { NextConfig } from 'next';
 
 /**
- * `/docs/sdk/latest/*` redirects to the concrete version rather than rendering
- * a second copy of every page. One canonical set of URLs, so the versioned and
- * unversioned paths never compete in search results.
+ * `latest` is spelling, not an address.
  *
- * Not permanent: which version `latest` points at moves with each release.
+ * `/docs/sdk` is the reference at the newest release and is canonical (TI-79),
+ * so `latest` folds into it rather than into a concrete version. That leaves
+ * one set of unversioned URLs and one set of pinned ones, which is what keeps
+ * them out of each other's way in search.
+ *
+ * `/docs/sdk` itself is no longer here: it used to redirect because it was a
+ * bare prefix with no page, and now it is the page.
+ *
+ * Not permanent. The rule outlives any one release, but a client that cached a
+ * 308 would keep following it after `latest` had moved on.
  */
 function latestRedirects() {
-  const latest = latestSdkVersion();
-  if (!latest) return [];
   return [
-    // `/docs` used to redirect here, because the reference was all that lived
-    // under it. TI-32 made `/docs` a real index over the guide tree, so that
-    // rule is gone; this one stays, since `/docs/sdk` is still a bare prefix
-    // with no page of its own.
-    {
-      source: '/docs/sdk',
-      destination: `/docs/sdk/${latest}`,
-      permanent: false,
-    },
-    {
-      source: '/docs/sdk/latest',
-      destination: `/docs/sdk/${latest}`,
-      permanent: false,
-    },
-    {
-      source: '/docs/sdk/latest/:path*',
-      destination: `/docs/sdk/${latest}/:path*`,
-      permanent: false,
-    },
+    { source: '/docs/sdk/latest', destination: '/docs/sdk', permanent: false },
+    { source: '/docs/sdk/latest/:path*', destination: '/docs/sdk/:path*', permanent: false },
   ];
 }
 
@@ -58,11 +46,14 @@ function legacyApiRedirects() {
   /**
    * The committed map names `latest`, so it stays correct as releases ship and
    * never has to be regenerated for a version bump. Serving it verbatim would
-   * chain through latestRedirects() for a second hop, so the version is
-   * resolved here instead — at build time, on every deploy.
+   * chain through latestRedirects() for a second hop, so the prefix is
+   * rewritten here instead.
+   *
+   * It resolves to the unversioned path rather than to a concrete version now
+   * that one exists (TI-79), which is both the canonical destination and the
+   * one that does not need rewriting again when a release ships.
    */
-  const resolved = (destination: string) =>
-    destination.replace('/docs/sdk/latest', `/docs/sdk/${latest}`);
+  const resolved = (destination: string) => destination.replace('/docs/sdk/latest', '/docs/sdk');
 
   return [
     /**

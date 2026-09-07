@@ -23,7 +23,7 @@ import { brotliCompressSync } from 'node:zlib';
  *   { sdk, t: [[type, [member, ...]], ...], m: [[moduleId, [type, ...]], ...] }
  *
  * Hrefs are derived rather than stored, since they are mechanical: a type is
- * `/docs/sdk/<sdk>/<name>`, a member is that plus `#<anchor>`. The anchor is
+ * `/docs/sdk/<name>`, a member is that plus `#<anchor>`. The anchor is
  * usually the member's name, so it is written bare; where it is not - Window
  * has a method `open()` and an event `open`, and 41 types collide this way -
  * the member is written `name>anchor`. One character of overhead, only where

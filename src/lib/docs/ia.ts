@@ -334,9 +334,10 @@ export const SECTIONS: DocSection[] = [
   {
     slug: 'reference',
     title: 'Reference',
-    // `/docs/sdk/latest` rather than `/docs/sdk`: both redirect to the newest
-    // compiled version, and this is the spelling the prose and the writing
-    // guide already use.
+    // `/docs/sdk` is the reference at the newest release and is canonical since
+    // TI-79; `latest` now redirects into it. It is also the href the guides nav
+    // matches on to decide where to hang the namespace tree, so this string and
+    // `DocsShell`'s `base` have to agree.
     links: [
       {
         // Not "API reference". It is read under a heading that already says
@@ -345,7 +346,7 @@ export const SECTIONS: DocSection[] = [
         // because it sets the API against the CLI rows below it, which is the
         // distinction someone scanning this list is actually making.
         title: 'Titanium API',
-        href: '/docs/sdk/latest',
+        href: '/docs/sdk',
         blurb: 'Every type, method, property and event, for each released version.',
       },
     ],
