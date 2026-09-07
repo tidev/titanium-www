@@ -505,7 +505,7 @@ export function moduleMarkdown(id: string): string | undefined {
   // The newest release that carries compiled docs. One version only: the pages
   // render a union across platforms, and a flat name list gains nothing from
   // being printed twice.
-  for (const version of [...new Set(releases.map((r) => r.version))]) {
+  for (const version of new Set(releases.map((r) => r.version))) {
     const api = moduleApiIndex(id, version);
     if (!api) continue;
     out.push(`## API, at ${version}`, '');
@@ -600,7 +600,19 @@ export function markdownFor(path: string): string | undefined {
 // --------------------------------------------------------------------- index
 
 export type LlmsEntry = { title: string; path: string; blurb?: string };
-export type LlmsGroup = { heading: string; entries: LlmsEntry[] };
+export type LlmsGroup = {
+  heading: string;
+  /**
+   * Whether these entries are guide prose, and so belong in `llms-full.txt`.
+   *
+   * Stated rather than inferred from the path. `/docs/sdk` is under `/docs` and
+   * is not a guide, and a prefix test that happened to work only because
+   * `guideMarkdown` returns nothing for it would break the moment a guide
+   * section gained a generated index.
+   */
+  guides: boolean;
+  entries: LlmsEntry[];
+};
 
 /**
  * The curated index, as sections of linked entries.
@@ -650,12 +662,13 @@ export function llmsGroups(): LlmsGroup[] {
       }
     }
 
-    if (entries.length) groups.push({ heading: section.title, entries });
+    if (entries.length) groups.push({ heading: section.title, guides: true, entries });
   }
 
   const version = corpusVersion();
   groups.push({
     heading: 'API reference',
+    guides: false,
     entries: [
       {
         title: `Titanium API index (${version})`,
@@ -667,6 +680,7 @@ export function llmsGroups(): LlmsGroup[] {
 
   groups.push({
     heading: 'Modules',
+    guides: false,
     entries: [
       {
         title: 'Module index',
@@ -738,8 +752,11 @@ export type LlmsFull = {
  * The reference is deliberately absent and the file says so, with the address
  * of the index that does carry it. A model that needs `Titanium.UI.Window` can
  * fetch one type rather than be handed 13MB it did not ask for.
+ *
+ * @param cap  the ceiling, overridable so the truncation path can be tested
+ *             without writing a megabyte of fixture prose to cross it
  */
-export function llmsFullTxt(): LlmsFull {
+export function llmsFullTxt(cap = LLMS_FULL_CAP_BYTES): LlmsFull {
   const version = corpusVersion();
   const header = [
     '# Titanium SDK guides',
@@ -749,7 +766,7 @@ export function llmsFullTxt(): LlmsFull {
     ...banner().map((line) => `- ${line}`),
     `- Scope: guide prose. The API reference is ${sdkIndex(version)?.counts.types ?? 0} types, served one type at a time; its index is at ${mdUrl('/docs/sdk')}.`,
     `- Curated index of everything below: ${url('/llms.txt')}.`,
-    `- Size cap: ${LLMS_FULL_CAP_BYTES.toLocaleString('en-US')} bytes. Pages are emitted in site order and the first that would exceed the cap ends the file. Anything dropped is listed at the end with its own address.`,
+    `- Size cap: ${cap.toLocaleString('en-US')} bytes. Pages are emitted in site order and the first that would exceed the cap ends the file. Anything dropped is listed at the end with its own address.`,
     '',
   ].join('\n');
 
@@ -760,7 +777,7 @@ export function llmsFullTxt(): LlmsFull {
   for (const group of llmsGroups()) {
     // Only the guide tree. The reference and module groups in the index point
     // into trees this file does not carry.
-    if (!group.entries.every((entry) => entry.path.startsWith('/docs/'))) continue;
+    if (!group.guides) continue;
 
     for (const entry of group.entries) {
       const page = guideMarkdown(entry.path.split('/').slice(2));
@@ -769,7 +786,7 @@ export function llmsFullTxt(): LlmsFull {
       // Once one page has been dropped, every later page is dropped too. Filling
       // the remaining space with whichever short page happened to fit next would
       // make the contents depend on page length rather than on site order.
-      if (omitted.length || size + sizeOf(chunk) > LLMS_FULL_CAP_BYTES) {
+      if (omitted.length || size + sizeOf(chunk) > cap) {
         omitted.push(entry.path);
         continue;
       }
@@ -786,7 +803,7 @@ export function llmsFullTxt(): LlmsFull {
         '',
         `## Omitted for size (${omitted.length})`,
         '',
-        `These pages were dropped at the ${LLMS_FULL_CAP_BYTES.toLocaleString('en-US')} byte cap. Each is served on its own:`,
+        `These pages were dropped at the ${cap.toLocaleString('en-US')} byte cap. Each is served on its own:`,
         '',
         ...omitted.map((path) => `- ${mdUrl(path)}`),
         '',
