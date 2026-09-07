@@ -101,8 +101,13 @@ function Label({ node, base, current }: { node: NavNode; base: string; current: 
     <a
       href={`${base}/${node.name}`}
       aria-current={current ? 'page' : undefined}
+      // Sans, like every other row in either sidebar. A type name is code in
+      // prose and gets a mono face there, but a nav row is a label: set in mono
+      // it read as a different kind of thing from the guide rows above it, and
+      // mono is wider, which cost characters on the names that truncate.
+      //
       // min-w-0 so truncate still shrinks when this is the flex child of a summary.
-      className={`block min-w-0 truncate py-1 font-mono ${
+      className={`block min-w-0 truncate py-1 ${
         current
           ? 'font-semibold text-link underline decoration-link decoration-2 underline-offset-4'
           : 'text-text hover:text-link'
