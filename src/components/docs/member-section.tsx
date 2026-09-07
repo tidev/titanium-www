@@ -132,9 +132,13 @@ function Member({
         {/* A signature is one unbroken token as far as the browser is
             concerned, and the longest -
             `Promise<Titanium.Android.RequestPermissionAccessResult>` - measures
-            429px, which scrolled the whole page at 320px. Same fix and same
-            reasoning as the `.prose-docs` link and inline-code rules: break
-            inside the word only because the word is wider than the screen. */}
+            429px, which scrolled the whole page at 320px. `break-all` rather
+            than the `overflow-wrap: anywhere` the `.prose-docs` rules use,
+            matching the other mono strings here (the "See also" list below,
+            module ids, filenames): these are single tokens, so the two behave
+            alike on them, and `break-all` is what the rest of the file reaches
+            for. `min-w-0` is what lets either do anything, since a flex item
+            defaults to `min-width: auto`. */}
         {member.type && (
           <span className="min-w-0 font-mono text-sm break-all text-text-muted">
             <TypeRefText refs={member.type} link={link} />

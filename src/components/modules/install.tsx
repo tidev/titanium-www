@@ -11,8 +11,14 @@ import { PLATFORM_LABELS } from '@/lib/docs/module-summary';
  * `<slot>` is `iphone` for iOS everywhere it appears.
  */
 
+// Focusable because it scrolls: the unpack commands are wider than the box on
+// a phone, and without a tab stop a keyboard has no route to the end of one
+// (WCAG 2.1.1). Same as `Terminal`, `Chrome` and the prose blocks.
 const Snippet = ({ children, label }: { children: string; label?: string }) => (
-  <pre className="mt-2 overflow-x-auto rounded-md border border-border bg-surface p-3 font-mono text-xs leading-relaxed">
+  <pre
+    tabIndex={0}
+    className="mt-2 overflow-x-auto rounded-md border border-border bg-surface p-3 font-mono text-xs leading-relaxed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+  >
     <code>{children}</code>
     {label && <span className="sr-only">{label}</span>}
   </pre>

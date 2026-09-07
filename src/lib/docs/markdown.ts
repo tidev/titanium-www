@@ -193,9 +193,14 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
  *
  * Runs last, after highlighting, so a block Shiki coloured and one it declined
  * to are treated alike - the second kind still scrolls.
+ *
+ * Shiki already writes `tabindex="0"` on the blocks it did colour, so the
+ * lookahead skips those: a second copy of the attribute is invalid HTML, and
+ * the parser keeps the first, which would quietly discard any value Shiki
+ * chose in future. In practice this only has to reach the untagged blocks.
  */
 function focusableCodeBlocks(html: string): string {
-  return html.replace(/<pre(?=[\s>])/g, '<pre tabindex="0"');
+  return html.replace(/<pre(?=[\s>])(?![^>]*\btabindex=)/g, '<pre tabindex="0"');
 }
 
 /** Single-paragraph render for summaries, which should not become block elements. */

@@ -166,11 +166,18 @@ describe('renderMarkdown, accessibility', () => {
   test('makes every code block focusable, highlighted or not', () => {
     // A block scrolls sideways rather than widening the page, so a keyboard
     // needs a way to reach the end of a long line.
-    assert.match(
-      renderMarkdown('```js\nvar win = Ti.UI.createWindow();\n```', { link }),
-      /<pre tabindex="0"[^>]*class="[^"]*shiki/
-    );
+    const highlighted = renderMarkdown('```js\nvar win = Ti.UI.createWindow();\n```', { link });
+    assert.match(highlighted, /<pre[^>]*\btabindex="0"/);
+    assert.match(highlighted, /<pre[^>]*class="[^"]*shiki/);
     // No language, so Shiki declines to colour it - it still scrolls.
     assert.match(renderMarkdown('```\nError: Rebuild failed\n```', { link }), /<pre tabindex="0"/);
+  });
+
+  test('does not write a second tabindex over the one Shiki already wrote', () => {
+    // Two copies of the attribute is invalid HTML, and a parser keeps the
+    // first, so Shiki's own value would be silently discarded.
+    const opening = renderMarkdown('```js\nvar a = 1;\n```', { link }).match(/<pre[^>]*>/)?.[0];
+    assert.ok(opening, 'expected a <pre>');
+    assert.equal(opening.match(/\btabindex=/g)?.length, 1);
   });
 });

@@ -24,9 +24,13 @@ under [Method](#method) and are a dozen lines each.
 | Contrast, rendered elements                       | 3,992 pass, **0 violations**, 14,320 not resolvable by axe (see [Contrast](#contrast))             |
 | `prefers-reduced-motion`                          | respected; **0** elements keep a transition or animation                                           |
 
-Before this pass the same sweep reported 8 rules including 2 critical
-(`image-alt`, `label`) and 2 serious (`scrollable-region-focusable`,
-`link-in-text-block`), plus one page scrolling sideways at 320px.
+Before this pass the same sweep reported 8 rules: 2 critical (`image-alt`,
+`label`), 4 serious (`scrollable-region-focusable`, `link-in-text-block`,
+`target-size`, `nested-interactive`) and 2 moderate (`landmark-unique`,
+`heading-order`), plus one page scrolling sideways at 320px. Five of the eight
+are gone. The three that remain are `target-size`, `nested-interactive` and
+`heading-order`, at the same node counts as before, and they are open findings
+9, 8 and 11 below.
 
 ## Method
 
@@ -73,20 +77,53 @@ manual inspection rather than a tool.
 
 ### Fixed in this pass
 
-| #   | Page                          | Component                                                | WCAG                         | Severity | Finding and fix                                                                                                                                                                                                                                                                                                 |
-| --- | ----------------------------- | -------------------------------------------------------- | ---------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | API reference (both routes)   | `src/lib/docs/markdown.ts`                               | 1.1.1 Non-text Content       | critical | About twenty images in the apidoc corpus are hand-written HTML with no `alt`, so a screen reader announced the filename (`7618194ed3a17536.png`). The renderer now defaults `alt=""`, marking them decorative. See [open finding 10](#still-open) for the real fix.                                             |
-| 2   | API reference, all three      | `docs/api-nav.tsx`, `docs/guide-nav.tsx`                 | 4.1.2 Name, Role, Value      | critical | The phone disclosure is a `peer sr-only` checkbox whose only label is `lg:hidden`. Above `lg` that left a 1x1 unnamed checkbox in the tab order, confirmed as a real focus stop by walking Tab. Both inputs now carry `lg:hidden` too; `peer-checked` is a sibling selector and does not care about `display`.  |
-| 3   | Landing, guides, API, modules | `markdown.ts`, `app/page.tsx`, `docs/member-section.tsx` | 2.1.1 Keyboard               | serious  | Code blocks and the parameters tables scroll sideways so they cannot widen the page, but nothing could focus them, so a keyboard had no route to the end of a long line. Up to 27 such regions on one page. All now take `tabindex="0"` with a visible ring, which is what `Terminal` already did for its rows. |
-| 4   | CI builds                     | `downloads/branch-builds.tsx`                            | 1.4.1 Use of Color           | serious  | "open an issue" sits mid-sentence in a `text-text-muted` paragraph, and `--link` against that is under 3:1 in the light theme, so colour alone marked it as a link. Now underlined at rest.                                                                                                                     |
-| 5   | Module API reference          | `docs/member-section.tsx`                                | 1.3.1 Info and Relationships | moderate | `aria-labelledby` promoted every member group to a `region` landmark, so a module page offered eight landmarks all called "Properties". Nested groups keep the heading and give up the landmark; page-level groups keep both.                                                                                   |
-| 6   | Module API reference          | `docs/member-section.tsx`                                | 1.4.10 Reflow                | serious  | The page scrolled sideways at 320px: `Promise<Titanium.Android.RequestPermissionAccessResult>` is one 429px token. Type and return signatures now break inside the word, the same trade `.prose-docs` already makes for links and inline code. This was the last horizontal scroll on the site.                 |
-| 7   | Every page                    | `theme-toggle.tsx`                                       | 2.1.1 Keyboard, 4.1.2        | serious  | The control claims `role="radiogroup"` and behaved like three unrelated buttons: three separate tab stops, and the arrow keys did nothing. Now a roving `tabindex` with Arrow, Home and End, per the ARIA authoring practices. Verified: `tabIndex` is `[-1, 0, -1]` and ArrowRight moves the selection.        |
+| #   | Page                          | Component                                                                       | WCAG                         | Severity | Finding and fix                                                                                                                                                                                                                                                                                                                                           |
+| --- | ----------------------------- | ------------------------------------------------------------------------------- | ---------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | API reference (both routes)   | `src/lib/docs/markdown.ts`                                                      | 1.1.1 Non-text Content       | critical | About twenty images in the apidoc corpus are hand-written HTML with no `alt`, so a screen reader announced the filename (`7618194ed3a17536.png`). The renderer now defaults `alt=""`, marking them decorative. See [open finding 10](#still-open) for the real fix.                                                                                       |
+| 2   | API reference, all three      | `docs/api-nav.tsx`, `docs/guide-nav.tsx`                                        | 4.1.2 Name, Role, Value      | critical | The phone disclosure is a `peer sr-only` checkbox whose only label is `lg:hidden`. Above `lg` that left a 1x1 unnamed checkbox in the tab order, confirmed as a real focus stop by walking Tab. Both inputs now carry `lg:hidden` too; `peer-checked` is a sibling selector and does not care about `display`.                                            |
+| 3   | Landing, guides, API, modules | `markdown.ts`, `app/page.tsx`, `docs/member-section.tsx`, `modules/install.tsx` | 2.1.1 Keyboard               | serious  | Code blocks and the parameters tables scroll sideways so they cannot widen the page, but nothing could focus them, so a keyboard had no route to the end of a long line. All now take `tabindex="0"` with a visible ring, which is what `Terminal` already did for its rows. Counts are in [What this cost the tab order](#what-this-cost-the-tab-order). |
+| 4   | CI builds                     | `downloads/branch-builds.tsx`                                                   | 1.4.1 Use of Color           | serious  | "open an issue" sits mid-sentence in a `text-text-muted` paragraph, and `--link` against that is under 3:1 in the light theme, so colour alone marked it as a link. Now underlined at rest.                                                                                                                                                               |
+| 5   | Module API reference          | `docs/member-section.tsx`                                                       | 1.3.1 Info and Relationships | moderate | `aria-labelledby` promoted every member group to a `region` landmark, so a module page offered eight landmarks all called "Properties". Nested groups keep the heading and give up the landmark; page-level groups keep both.                                                                                                                             |
+| 6   | Module API reference          | `docs/member-section.tsx`                                                       | 1.4.10 Reflow                | serious  | The page scrolled sideways at 320px: `Promise<Titanium.Android.RequestPermissionAccessResult>` is one 429px token. Type and return signatures now break inside the word, the same trade `.prose-docs` already makes for links and inline code. This was the last horizontal scroll on the site.                                                           |
+| 7   | Every page                    | `theme-toggle.tsx`                                                              | 2.1.1 Keyboard, 4.1.2        | serious  | The control claims `role="radiogroup"` and behaved like three unrelated buttons: three separate tab stops, and the arrow keys did nothing. Now a roving `tabindex` with Arrow, Home and End, per the ARIA authoring practices. Verified: `tabIndex` is `[-1, 0, -1]` and ArrowRight moves the selection.                                                  |
 
 Finding 5's first fix introduced the same problem one level down: naming the
 parameters wrapper `role="region"` gave a type page sixty landmarks called
 "Parameters". It ships as `role="group"`, which takes a name without joining the
 landmark list. Worth knowing before someone reaches for `region` again.
+Re-checked after the fact: `group` does not repeat the mistake a level further
+down, and `landmark-unique` is clean on every page in the sweep.
+
+Finding 3 has a trap of its own. The landing page block sits in an
+`overflow-hidden` wrapper it fills exactly, so a ring offset outwards is clipped
+on three sides and the new stop had no visible indicator at all: WCAG 2.4.7,
+introduced by the fix for 2.1.1. That one block draws its ring inset instead.
+Anything given a tab stop needs its ring looked at, not assumed.
+
+### What this cost the tab order
+
+Making the scrolling boxes focusable adds stops, and it is worth being exact
+about how many, because it is the largest single behaviour change in this pass.
+Measured on the shipped build:
+
+| Page                                | Blocks | Parameter tables | Added stops | Of those, scrolling at 320px | At 1280px |
+| ----------------------------------- | ------ | ---------------- | ----------- | ---------------------------- | --------- |
+| `/`                                 | 2      | 0                | 2           | 2                            | 0         |
+| `/docs/setup/macos`                 | 18     | 0                | 18          | 5                            | 1         |
+| `/docs/sdk/Titanium.UI.Window`      | 28     | 36               | 64          | 64                           | 5         |
+| `/docs/sdk/main/Titanium.UI.Window` | 28     | 36               | 64          | 64                           | 5         |
+| `/modules/appcelerator.ble`         | 61     | 0                | 61          | 55                           | 3         |
+| `/modules/appcelerator.ble/api`     | 3      | 97               | 100         | 100                          | 0         |
+
+So the worst page gains 100 stops, not the couple of dozen a spot check
+suggests. The defence is the second-to-last column: at 320px, where the scroll
+trade is what stops the page moving sideways, every one of those boxes really
+does scroll and really does need a keyboard route. At 1280px almost none of them
+do, and those stops are surplus.
+
+`tabindex` is written at render time and cannot know the viewport, so this is
+the cost of doing it without script. Whether 100 stops reads as help or as an
+obstacle is the sort of question only the screen reader pass below can settle.
 
 ### Still open
 
@@ -204,8 +241,9 @@ result. axe checks that names and roles exist; it cannot tell you whether the
 reference page is comprehensible read aloud. The flows worth walking:
 
 - Landing to a guide to a code sample, now that every code block is a tab stop.
-  That is 27 extra stops on the longest guide, and it should be confirmed that
-  it reads as a help rather than as an obstacle.
+  That is 18 extra stops on the macOS setup guide and 100 on the busiest module
+  API page, and it should be confirmed that it reads as a help rather than as an
+  obstacle. See [What this cost the tab order](#what-this-cost-the-tab-order).
 - Search: type, arrow through the grouped results, choose one. The combobox
   wiring checks out statically, including a resolving `aria-activedescendant`.
 - The API rail on a type page, which is where open finding 8 lives. A link
