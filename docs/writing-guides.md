@@ -462,6 +462,28 @@ what you want only when the passage is about that release in particular.
 Do not write "click here", and do not link a bare URL. The link text should say
 where it goes when read on its own, because that is how it is read aloud.
 
+## Your page is also published as markdown
+
+Every guide is served a second time as plain markdown at its own address plus
+`.md`, and is listed in `/llms.txt` and concatenated into `/llms-full.txt`. That
+is the corpus models read, and it is generated from the same file you are
+editing, so there is nothing to add and nothing to keep in step.
+
+Two things follow for how you write.
+
+**A directive has to survive being turned into text.** `:::platform ios` becomes
+"Applies to iOS only." and `@tab macOS` becomes a bold label. A reader with no
+tab strip and no badges gets the same facts, but only because those markers
+carry them. Do not use a tab group where the difference between panels is
+invisible in the panel text itself.
+
+**`description` is read out of context.** It becomes the one line under the
+entry in `/llms.txt`, next to forty others, which is the only thing a model sees
+before deciding whether to fetch your page.
+
+`pnpm check:docs` prints both corpus sizes and fails on an index entry that
+resolves to nothing.
+
 ## Before you open a pull request
 
 ```sh
