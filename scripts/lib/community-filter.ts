@@ -38,8 +38,12 @@ export function excludedBecause(
   // something to reach for is the listing being wrong, not the module.
   if (repo.archived) return 'archived';
 
-  // A fork is nearly always somebody's patch of a module already listed, and a
-  // search sorted by stars surfaces the original anyway.
+  // A backstop, not an active rule: GitHub's repository search omits forks
+  // unless the query says `fork:true`, and ours does not - the first real run
+  // dropped 0 of 302 candidates here. It stays because that is a property of
+  // the query rather than of the data, so a future edit to QUERY could start
+  // admitting them, and because a fork is nearly always somebody's patch of a
+  // module already listed.
   if (repo.fork) return 'fork';
 
   return null;

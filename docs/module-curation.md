@@ -93,8 +93,10 @@ Not "it is bad". Blocking is for listings that mislead:
 - Its author asked to be delisted.
 - It ships something hostile.
 
-Forks and archived repositories are excluded by the generator, so they never
-need an entry.
+Forks and archived repositories are excluded before the list is built, so they
+never need an entry. Archived is the generator's own rule; forks are omitted by
+GitHub's search to begin with, and the generator's fork check is a backstop
+against a future change to the query.
 
 ## Delisting
 
