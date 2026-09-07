@@ -129,6 +129,7 @@ Properties the SDK itself reads:
 | `ti.skipAppIdValidation`    | Skips the app id format check                                 |
 | `ti.skipVersionValidation`  | Skips the `version` format check                              |
 | `ti.facebook.appid`         | Wires the Facebook URL scheme into `Info.plist`               |
+| `ti.android.debug`          | Debug logging in the Android runtime. Off unless `true`       |
 | `ti.android.loadfromsdcard` | Loads JavaScript off the SD card, for development             |
 | `android.javac.maxMemory`   | Heap for the Java compiler, when a large project runs out     |
 
