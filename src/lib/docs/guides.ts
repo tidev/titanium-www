@@ -12,7 +12,7 @@ import {
 import { renderMarkdown } from './markdown.ts';
 import { DirectiveError, expandDirectives, referencedPartials } from './partials.ts';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { z } from 'zod';
 
@@ -53,9 +53,26 @@ import { z } from 'zod';
  * Section and page structure lives in `ia.ts`, not in the directory listing. A
  * file with no entry there is an error rather than a page, because a guide that
  * exists but appears in no sidebar is invisible, and that failure is silent.
+ *
+ * An archived major is the same tree under a different root, and every function
+ * here takes one: `content/docs-archive/v13/setup/macos.md` is read by exactly
+ * this code and rendered by exactly the same pipeline. Which roots exist, and
+ * which URL each answers at, is `doc-versions.ts` (TI-59). Nothing in this file
+ * knows about versions, and that is what keeps a snapshot from being a second
+ * kind of content.
  */
 
 const CONTENT = join(process.cwd(), 'content/docs');
+
+/**
+ * Everything under here is a real content tree: the current major and the
+ * archived snapshots beside it (TI-59). Anything outside it is a fixture.
+ *
+ * Spelled out rather than imported from `doc-versions.ts`, which reads this
+ * module. The two facts are one line apart and a cycle is not worth avoiding
+ * that.
+ */
+const CONTENT_PARENT = join(process.cwd(), 'content') + sep;
 
 /** Overridable so tests can run the real pipeline over a fixture tree. */
 const partialsIn = (root: string) => join(root, '_partials');
@@ -71,8 +88,13 @@ const FrontmatterSchema = z
      */
     platforms: z.array(z.enum(PLATFORM_IDS as [PlatformId, ...PlatformId[]])).optional(),
     /**
-     * The SDK version a page's content assumes, shown as a notice. Prose is
-     * unversioned by URL (TI-59) and says so inline where it matters.
+     * The SDK release a page's content assumes, shown as a notice.
+     *
+     * Finer than the URL, and not a substitute for it. The major a page belongs
+     * to is decided once for the whole tree in `content/doc-versions.json`
+     * (TI-59); this says which release *within* that major a passage started
+     * being true, for a reader on 13.0.0 reading the v13 guides. Never write a
+     * major here that disagrees with the tree the file sits in.
      */
     since: z.string().optional(),
     /**
@@ -205,10 +227,14 @@ const CACHEABLE = process.env.NODE_ENV === 'production';
  * rather than a 404, because the URL is real and will be filled.
  */
 export function guide(segments: string[], root = CONTENT): Guide | undefined {
-  // Only the real tree is cached. A fixture root is a test, and caching those
+  // Only real trees are cached. A fixture root is a test, and caching those
   // would leak one test's content into the next.
-  const live = CACHEABLE && root === CONTENT;
-  const key = segments.join('/');
+  //
+  // The key carries the root because an archived major is a second real tree
+  // holding the same segments (TI-59). Keying on segments alone would serve one
+  // major's macOS setup page from another's.
+  const live = CACHEABLE && root.startsWith(CONTENT_PARENT);
+  const key = `${root}::${segments.join('/')}`;
   if (live) {
     const hit = cache.get(key);
     if (hit !== undefined) return hit ?? undefined;
@@ -289,21 +315,47 @@ export type Problem = { where: string; message: string };
  *
  * The link check is why this lives here rather than in a script: it needs the
  * rendered HTML, which needs the whole pipeline.
+ *
+ * ## Running it over an archived major
+ *
+ * An archived snapshot is content like any other and gets the same checks, so a
+ * partial that went missing from a snapshot fails the build rather than
+ * rendering a hole (TI-59). Two things differ, and both are options rather than
+ * conditionals in here:
+ *
+ *   - `base` prefixes the reported paths, so a problem in the v13 tree reads as
+ *     `/docs/v13/setup/macos` and not as a phantom problem in current.
+ *   - `structure` is off for archives. `ia.ts` is one tree shared by every
+ *     major, so checking it once per major would report every structural
+ *     mistake as many times as there are snapshots.
+ *
+ * Links inside an archived page are checked against the *current* IA, because
+ * that is what the snapshot's own markdown was written against and what the
+ * route resolves them to inside the archive. A page whose IA entry is deleted
+ * later is reported as an orphan, which is the honest outcome: unreachable
+ * archived content is worse than a build failure that names it.
  */
-export function validateGuides(root = CONTENT): Problem[] {
+export function validateGuides(
+  root = CONTENT,
+  { base = '', structure = true }: { base?: string; structure?: boolean } = {}
+): Problem[] {
   const problems: Problem[] = [];
   const known = new Set<string>(['/docs']);
+  // Facts about `ia.ts`, which is one tree behind every major. Gathered
+  // separately from the content problems so a run over an archive can drop them
+  // rather than report the same structural mistake once per snapshot.
+  const structural: Problem[] = [];
 
   for (const section of SECTIONS) {
     const at = `ia.ts: ${section.slug}`;
     if (!isValidSlug(section.slug)) {
-      problems.push({ where: at, message: `not a valid slug` });
+      structural.push({ where: at, message: `not a valid slug` });
     }
     known.add(`/docs/${section.slug}`);
 
     for (const page of section.pages) {
       const path = `/docs/${section.slug}/${page.slug}`;
-      if (!isValidSlug(page.slug)) problems.push({ where: path, message: 'not a valid slug' });
+      if (!isValidSlug(page.slug)) structural.push({ where: path, message: 'not a valid slug' });
       // A page directly under /docs would shadow a section; one nested inside a
       // section cannot, so only the top level is checked against the list.
       known.add(path);
@@ -311,10 +363,10 @@ export function validateGuides(root = CONTENT): Problem[] {
       for (const child of page.pages ?? []) {
         const childPath = `${path}/${child.slug}`;
         if (!isValidSlug(child.slug)) {
-          problems.push({ where: childPath, message: 'not a valid slug' });
+          structural.push({ where: childPath, message: 'not a valid slug' });
         }
         if (childPath.split('/').length - 2 > MAX_DEPTH) {
-          problems.push({ where: childPath, message: `deeper than ${MAX_DEPTH} segments` });
+          structural.push({ where: childPath, message: `deeper than ${MAX_DEPTH} segments` });
         }
         known.add(childPath);
       }
@@ -324,20 +376,25 @@ export function validateGuides(root = CONTENT): Problem[] {
   for (const reserved of reservedSegments()) {
     const claimed = SECTIONS.some((s) => s.pages.some((p) => p.slug === reserved));
     if (claimed) {
-      problems.push({
+      structural.push({
         where: `ia.ts`,
         message: `a page claims the reserved segment "${reserved}"`,
       });
     }
   }
 
+  if (structure) problems.push(...structural);
+
   for (const segments of contentFiles(root)) {
-    const path = ['/docs', ...segments].join('/');
+    const path = [`/docs${base}`, ...segments].join('/');
 
     if (segments.length && !findPage(segments)) {
       problems.push({
         where: path,
-        message: 'file has no entry in ia.ts, so it would appear in no sidebar',
+        message: base
+          ? 'file has no entry in ia.ts, so this snapshot page is unreachable: ' +
+            'restore the entry, or delete the file from the snapshot'
+          : 'file has no entry in ia.ts, so it would appear in no sidebar',
       });
       continue;
     }

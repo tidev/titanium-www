@@ -1,3 +1,4 @@
+import docVersions from './content/doc-versions.json';
 import legacyApi from './src/lib/docs/legacy-api-redirects.json';
 import { MAIN, latestSdkVersion } from './src/lib/docs/registry.ts';
 import type { NextConfig } from 'next';
@@ -21,6 +22,38 @@ function latestRedirects() {
     { source: '/docs/sdk/latest', destination: '/docs/sdk', permanent: false },
     { source: '/docs/sdk/latest/:path*', destination: '/docs/sdk/:path*', permanent: false },
   ];
+}
+
+/**
+ * The guides' version prefixes, which the unversioned URLs are canonical for.
+ *
+ * Prose is versioned by SDK major (TI-59) and the current major carries no
+ * prefix, so three spellings have to fold into it rather than render a second
+ * copy of every page:
+ *
+ *   /docs/latest/...  the spelling people type. Never a built page, here or in
+ *                     the reference.
+ *   /docs/v14/...     the current major named explicitly. Real while v14 is
+ *                     current only as a redirect; it becomes a set of built
+ *                     pages the moment v15 ships and v14 is snapshotted.
+ *   /docs/v11/...     a major that fell out of the retention window. Its pages
+ *                     are gone, and the same page in current is the closest
+ *                     true answer.
+ *
+ * All temporary. Every one of these rules moves when a major ships, and a
+ * client that cached a 308 would keep following it afterwards.
+ *
+ * This is version housekeeping, not the legacy redirect map: TI-39 owns
+ * `/guide/...`, which carries no version and targets current.
+ */
+function docsVersionRedirects() {
+  const { current, dropped } = docVersions;
+  const folds = ['latest', current, ...dropped];
+
+  return folds.flatMap((prefix) => [
+    { source: `/docs/${prefix}`, destination: '/docs', permanent: false },
+    { source: `/docs/${prefix}/:path*`, destination: '/docs/:path*', permanent: false },
+  ]);
 }
 
 /**
@@ -133,7 +166,7 @@ const nextConfig: NextConfig = {
   headers: registryApiHeaders,
   rewrites: async () => hideInternalReadme,
   redirects: async () => {
-    const rules = [...latestRedirects(), ...legacyApiRedirects()];
+    const rules = [...latestRedirects(), ...docsVersionRedirects(), ...legacyApiRedirects()];
 
     // A surviving `latest` in a legacy destination is the two-hop chain the
     // substitution above exists to prevent, and it would only show up as slow

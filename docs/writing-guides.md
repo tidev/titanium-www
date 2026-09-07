@@ -70,6 +70,74 @@ content/docs/_partials/install.md   ->  not a page
 
 Three segments after `/docs` is the ceiling, and only `build` uses the third.
 
+## Versioning
+
+The guides are versioned by **SDK major**. The current major is unversioned and
+is the one you edit; older majors are frozen snapshots under a prefix.
+
+```
+/docs/setup/macos       the current major. Canonical, indexed, and the URL to link.
+/docs/v13/setup/macos   an archived major. Frozen, banner at the top, canonical
+                        pointing at the current page.
+```
+
+The current major is written down in exactly one place,
+[`content/doc-versions.json`](../content/doc-versions.json). It is never in
+frontmatter: every page in a tree has the same answer and they all change at
+once, so a per-page copy is only a chance to disagree.
+
+The API reference is versioned differently, per release
+(`/docs/sdk/13.4.1/...`), because its surface changes per release and prose does
+not. The switcher shows "Guides v13" in one place and "Version 13.4.1" in the
+other so the two are not mistaken for one scheme.
+
+### Cutting a major
+
+When an SDK major ships, one command snapshots the current guides and moves the
+live set on:
+
+```sh
+pnpm docs:snapshot v14 --dry-run   # see the plan
+pnpm docs:snapshot v14             # cut it
+```
+
+That copies `content/docs` to `content/docs-archive/v13`, points the manifest at
+`v14`, drops anything past the retention window, and tells you what to commit.
+Do not do it by hand: the copy has to take `_partials` as well as the pages, and
+the manifest and the directories have to move together or the build fails.
+
+After it, keep editing `content/docs` as normal. The snapshot is a separate
+tree and does not follow.
+
+`pnpm docs:snapshot:check` reports drift between the manifest and the
+directories. `pnpm check:docs` runs the same check, plus the full content
+pipeline over every archived tree, so a partial you rename in current cannot
+silently break an archived page that still includes it.
+
+### Retention
+
+Two archived majors, and the current one. Older majors are deleted and their
+URLs redirect to the same page in current. One archived major costs about 13MB
+of built output against a 100MB deployment cap, so this is a budget; guides for
+a major nobody runs are read by nobody and invite someone to follow instructions
+that stopped being true years ago.
+
+### Fixing an archived page
+
+**Patch it.** An archive is not a historical record of what the site once said;
+it is the manual for a major some readers are still running, and a known-wrong
+instruction in it costs them the same afternoon it would cost in current. Edit
+the file under `content/docs-archive/<major>/`, and say what changed in the pull
+request as you would for any other page.
+
+Two things not to do: do not rewrite an archived page to describe a newer major,
+and do not add pages to an archive. Both make the snapshot a worse answer to
+"what did this look like in v13" without making it a better answer to anything
+else.
+
+The blog is outside all of this. A post is dated and describes a moment, so it
+is never versioned and never snapshotted.
+
 ## Frontmatter
 
 ```yaml
@@ -87,7 +155,7 @@ draft: false
 | `title`       | yes      | The `<h1>`, the tab title, and the breadcrumb. Do not repeat it as a heading in the body.                                                                  |
 | `description` | no       | One sentence, for the search result and the tab preview. It is not shown on the page, so do not write it as a lede - the body's opening paragraph is that. |
 | `platforms`   | no       | What the page applies to: `macos`, `windows`, `linux`, `ios`, `android`. Absent means all of them. Drives `:::only`.                                       |
-| `since`       | no       | The SDK version the page's content assumes. Renders as a line under the title.                                                                             |
+| `since`       | no       | The SDK release the page's content assumes, within its major. Renders as a line under the title. Not the major: that is the tree the file is in.           |
 | `draft`       | no       | Renders at its URL, is not linked from the sidebar, says so at the top, and asks search engines to skip it.                                                |
 
 Unknown keys fail the build. A misspelled `platform` would otherwise silently
@@ -377,6 +445,11 @@ prose as well, so the page still works when the screenshot is a year stale.
 Internal links are root-relative and have no extension: `/docs/build/ui/layout`.
 A link to a `/docs` path the structure does not define **fails the build**, so
 you can link a page that is not written yet as long as it exists in `ia.ts`.
+
+Never write the version into a guide link. Inside an archived major the site
+rewrites `/docs/build/ui/layout` to `/docs/v13/build/ui/layout` when it renders,
+so one link is correct in every major and the archive does not walk a reader
+back into current without saying so.
 
 Link to the API reference unversioned - `/docs/sdk/Titanium.UI.Window` - and
 write the type name as the link text. That is the canonical address and it
