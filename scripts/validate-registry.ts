@@ -20,6 +20,7 @@ import {
   VerifiedListSchema,
   ModuleVersionSchema,
   SdkVersionSchema,
+  ToolchainSchema,
 } from '../src/lib/registry/index.ts';
 import { POOL_DIR } from './lib/pool.ts';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -53,6 +54,7 @@ function schemaFor(rel: string): ZodType | null {
     if (parts.length === 2) return BuildListSchema;
     if (file === CONTENTS) return ContentsSchema;
     if (file === 'metadata.json') return SdkVersionSchema;
+    if (file === 'toolchain.json') return ToolchainSchema;
   }
 
   if (parts[0] === 'modules') {

@@ -41,6 +41,51 @@ export const SdkVersionSchema = z
   })
   .loose();
 
+/**
+ * What one SDK release declares it needs from the machine building with it.
+ *
+ * Transcribed from the release's own `package.json` files rather than
+ * interpreted: `node` from the root, and the two `vendorDependencies` maps
+ * verbatim from `android/package.json` and `iphone/package.json`. Those are the
+ * same declarations the tooling checks against - `node-titanium-sdk`'s
+ * `lib/android.js` reads `vendorDependencies` to decide whether an installed
+ * component is supported, and `titanium-cli`'s `src/cli.js` reads
+ * `vendorDependencies.node` to refuse an SDK on the wrong Node - so a page
+ * rendered from this says what `ti info` says.
+ *
+ * Ranges are kept as authored (`>=23.x <=36.x`), not parsed into a min and a
+ * max. Reformatting them would be this repository restating someone else's
+ * constraint, and the raw string is what the CLI prints beside "Supported:".
+ *
+ * `vendor` is loose because the key set is the SDK's to change: 12.5.0 and
+ * 13.4.1 already disagree on the ranges, and a release adding a component must
+ * appear on the page rather than fail validation.
+ */
+export const ToolchainSchema = z.strictObject({
+  schemaVersion: SchemaVersion,
+  version: VersionString,
+  /** The tree this was read from. Matches the sibling `metadata.json` source. */
+  source: z.object({ repo: z.string(), ref: z.string(), commit: z.string() }).loose(),
+  /** `vendorDependencies.node` from the release's root `package.json`. */
+  node: z.string().optional(),
+  android: z
+    .object({
+      minSdkVersion: z.string().optional(),
+      compileSdkVersion: z.string().optional(),
+      vendor: z.record(z.string(), z.string()),
+    })
+    .strict(),
+  ios: z
+    .object({
+      minIosVersion: z.string().optional(),
+      minWatchosVersion: z.string().optional(),
+      vendor: z.record(z.string(), z.string()),
+    })
+    .strict(),
+});
+
+export type Toolchain = z.infer<typeof ToolchainSchema>;
+
 // ------------------------------------------------------------- modules
 
 /** Per-platform manifest. The two can disagree on minsdk, architectures, even apiversion. */
