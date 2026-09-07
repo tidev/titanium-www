@@ -9,20 +9,21 @@ import { fileURLToPath } from 'node:url';
  *
  * The archive was written against the old documentation wiki, so its bodies
  * carry absolute `https://titaniumsdk.com/guide/…_Release_Note.html` addresses
- * that this site does not serve. Measured before the rewrite: 47 of the 49
- * distinct internal paths linked from post bodies had no page here.
+ * that this site does not serve. Measured before the rewrite: of the 47
+ * distinct non-asset internal paths linked from post bodies, 46 had no page
+ * here. `/contribute` was the only one that resolved.
  *
  * ## Why this sits beside the importer rather than being a one-off edit
  *
  * `import-tidev-blog.ts` is re-runnable by design, and `docs/blog-split.md`
  * says to re-run it if tidev.io gains posts before the cutover. A hand edit to
- * `content/blog` would be silently undone by that run, and the same 44 dead
- * links would come back. It already rewrites image references for exactly this
+ * `content/blog` would be silently undone by that run, and all 87 dead links
+ * would come back. It already rewrites image references for exactly this
  * reason; links are the same problem one field over.
  *
  * ## What it does not do
  *
- * Link targets only. Four posts referenced the old site as bare prose rather
+ * Link targets only. Three posts referenced the old site as bare prose rather
  * than as a link - "browse the docs https://titaniumsdk.com/" - and turning
  * those into something that reads well is an edit to somebody's sentence, not
  * a substitution. Those were fixed by hand, and a re-import would reintroduce

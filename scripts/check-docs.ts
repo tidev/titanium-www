@@ -24,8 +24,9 @@ import { validateGuides } from '../src/lib/docs/guides.ts';
  * need the rendered HTML, which needs the whole pipeline, which needs the IA. A
  * broken link between two guides is otherwise invisible until someone clicks
  * it, and the legacy corpus has 21 pages whose links died exactly that way. The
- * blog arrived in the same condition and worse: 44 of its 164 internal links
- * pointed into a documentation wiki this site does not serve.
+ * blog arrived in the same condition and worse: 87 of its 164 internal links
+ * pointed at a path this site does not serve, most of them into the old
+ * documentation wiki.
  */
 
 const problems = [...validateGuides(), ...validatePosts()];

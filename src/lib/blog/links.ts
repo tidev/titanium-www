@@ -11,8 +11,9 @@ import { join } from 'node:path';
  * Every internal link in a post body resolves (TI-67).
  *
  * The 50 posts were written for the old documentation wiki and arrived
- * pointing at it: 47 of the 49 distinct internal paths in their bodies had no
- * page here, most of them per-version release notes. Fixing that once is not
+ * pointing at it: 46 of the 47 distinct non-asset internal paths in their
+ * bodies had no page here, 87 links in all, most of them per-version release
+ * notes. `/contribute` was the only one that resolved. Fixing that once is not
  * enough on its own. The archive is content other people wrote, more posts
  * will be added by hand, and a dead link in prose is invisible until a reader
  * clicks it, so this is a check that fails the build rather than a pass someone
