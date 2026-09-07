@@ -138,12 +138,12 @@ separate numbers and both matter.
 
 ## Other elements
 
-| Element         | What                               |
-| --------------- | ---------------------------------- |
-| `fullscreen`    | Hide the status bar                |
-| `navbar-hidden` | Hide the title bar                 |
-| `transpile`     | Whether JS is transpiled           |
-| `sourcemaps`    | Emit source maps                   |
+| Element         | What                     |
+| --------------- | ------------------------ |
+| `fullscreen`    | Hide the status bar      |
+| `navbar-hidden` | Hide the title bar       |
+| `transpile`     | Whether JS is transpiled |
+| `sourcemaps`    | Emit source maps         |
 
 ## Next
 
