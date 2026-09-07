@@ -196,6 +196,27 @@ describe('renderToolchain', () => {
     assert.doesNotMatch(html, /<td>`16\.x<\/td>/);
   });
 
+  test('a newline in a captured value cannot end the row', () => {
+    // `vendorDependencies` is the SDK's to shape and this repository transcribes
+    // it verbatim, so a wrapped value is the SDK's to introduce. A pipe can be
+    // escaped; a newline cannot, so it has to be folded before it is written.
+    const wrapped = at('13.4.1', '>=20.18.1', '>=17.x\n  || >=21.x');
+    const out = renderToolchain([wrapped], '');
+    assert.doesNotMatch(out.split('### What each release needs')[1], /\n\s*\|\| >=21/);
+    assert.match(renderMarkdown(out, {}), /<code>&gt;=17\.x \|\| &gt;=21\.x<\/code>/);
+  });
+
+  test('a pipe in a vendor key cannot end the row either', () => {
+    const odd: Toolchain = {
+      schemaVersion: 1,
+      version: '13.4.1',
+      source: { repo: 'tidev/titanium-sdk', ref: '13.4.1', commit: 'c'.repeat(40) },
+      android: { vendor: { 'build|tools': '35.x' } },
+      ios: { vendor: {} },
+    };
+    assert.match(renderToolchain([odd], ''), /\| Build\\\|tools /);
+  });
+
   test('the current release is the newest that is not main', () => {
     const out = renderToolchain(
       [at('main', '>=22.19.0', '>=17.x'), at('13.4.1', '>=20.18.1', '>=17.x')],

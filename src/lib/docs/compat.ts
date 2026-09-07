@@ -256,14 +256,23 @@ const COLUMNS: { key: string; label: string; from: 'android' | 'ios' }[] = [
 ];
 
 /**
- * One range, as a code span safe to put in a table cell.
+ * Anything that would end a table cell early, neutralised.
  *
  * `16.x || 18.x || 20.x` is a real value and its pipes end the cell: markdown-it
  * splits a table row on unescaped `|` before it parses any inline, so a code
  * span does not protect them. Escaped, GFM puts the literal pipe back inside
- * the span.
+ * the span. A newline ends the row outright and cannot be escaped at all, so it
+ * is folded to a space.
+ *
+ * Every string this module puts in a toolchain cell goes through here, keys
+ * included. They come from `vendorDependencies`, whose shape is the SDK's to
+ * change, so a release could introduce either without this repository being
+ * asked first.
  */
-const code = (v: string | undefined) => (v ? `\`${v.replace(/\|/g, '\\|')}\`` : '-');
+const cellSafe = (v: string) => v.replace(/\|/g, '\\|').replace(/\s*[\r\n]+\s*/g, ' ');
+
+/** One range, as a code span safe to put in a table cell. */
+const code = (v: string | undefined) => (v ? `\`${cellSafe(v)}\`` : '-');
 
 /** Every compiled version that has been captured, newest first, `main` last. */
 export function readToolchains(): Toolchain[] {
@@ -338,7 +347,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
   return `${out.join('\n')}\n`;
 }
 
-const plain = (v: string | undefined) => v ?? '-';
+const plain = (v: string | undefined) => (v ? cellSafe(v) : '-');
 
 /** `main` is the development tree, so it is named as one rather than as a version. */
 const releaseLabel = (t: Toolchain) =>
@@ -356,5 +365,5 @@ function label(key: string): string {
     'android tools': 'Android tools',
     'android ndk': 'Android NDK',
   };
-  return special[key] ?? key.replace(/^./, (c) => c.toUpperCase());
+  return special[key] ?? cellSafe(key.replace(/^./, (c) => c.toUpperCase()));
 }

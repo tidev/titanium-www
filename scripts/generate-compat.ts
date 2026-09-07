@@ -60,6 +60,20 @@ const banner = (from: string) =>
 
 const toolchains = readToolchains();
 
+// The matrix is generated from `version`, and the toolchain section names the
+// newest release a capture exists for. Those are the same release right up
+// until someone compiles one and does not run `pnpm registry:toolchain`, at
+// which point the page states two different newest releases and says nothing
+// about it. Capturing is a separate manual step, so this is the ordinary way to
+// get it wrong rather than an unlikely one.
+if (toolchains.length && !toolchains.some((t) => t.version === version)) {
+  console.error(
+    `registry/sdk/${version} has no toolchain.json, so the toolchain tables would describe\n` +
+      `an older release than the matrix above them. Run: pnpm registry:toolchain ${version}`
+  );
+  process.exit(1);
+}
+
 const files: { name: string; body: string }[] = [
   {
     name: 'platform-support.md',

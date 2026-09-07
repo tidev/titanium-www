@@ -59,8 +59,27 @@ const SDK_DIR = join(ROOT, 'registry/sdk');
 const argv = process.argv.slice(2);
 const force = argv.includes('--force');
 const checkoutAt = argv.indexOf('--checkout');
-const givenCheckout = checkoutAt >= 0 ? argv[checkoutAt + 1] : undefined;
-const wanted = argv.filter((a, i) => !a.startsWith('--') && i !== checkoutAt + 1);
+const inlineCheckout = argv.find((a) => a.startsWith('--checkout='));
+const givenCheckout = inlineCheckout
+  ? inlineCheckout.slice('--checkout='.length)
+  : checkoutAt >= 0
+    ? argv[checkoutAt + 1]
+    : undefined;
+
+// Without a path there is nothing to read, and falling through would clone the
+// repository instead: the opposite of what `--checkout` was passed to do.
+if ((checkoutAt >= 0 || inlineCheckout) && !givenCheckout) {
+  console.error('--checkout needs a path, as in: --checkout ~/ti/titanium-sdk');
+  process.exit(1);
+}
+
+// Every positional is a version to capture. The one exception is the argument
+// `--checkout` consumes, and it is skipped by index only when that flag is
+// actually present: `checkoutAt` is -1 otherwise, and skipping index 0 would
+// drop the first version asked for without saying so.
+const wanted = argv.filter(
+  (a, i) => !a.startsWith('--') && !(checkoutAt >= 0 && i === checkoutAt + 1)
+);
 
 const run = (args: string[], cwd: string) =>
   execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
@@ -121,8 +140,16 @@ function repository(repo: string): {
 function packageJson(dir: string, commit: string, path: string): Record<string, unknown> | null {
   try {
     return JSON.parse(run(['show', `${commit}:${path}`], dir)) as Record<string, unknown>;
-  } catch {
-    return null;
+  } catch (err) {
+    // A path the release does not carry is a fact about the release. Anything
+    // else - a fetch that did not land, an unreadable object, malformed JSON -
+    // is a failure, and reporting it as "not carried" would write a
+    // toolchain.json with the field silently missing. No later run would fill
+    // it in either, because `todo` skips a version already captured, so the
+    // page would state `-` for that release permanently.
+    const stderr = String((err as { stderr?: unknown }).stderr ?? '');
+    if (/does not exist|exists on disk, but not in/.test(stderr)) return null;
+    throw err;
   }
 }
 
