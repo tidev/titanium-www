@@ -1,4 +1,5 @@
 import { branchIds, buildNavTree, type NavNode, type NavType } from '@/lib/docs/tree';
+import Link from 'next/link';
 
 /**
  * The namespace tree itself, without the rail around it.
@@ -65,7 +66,14 @@ function Node({
 
   return (
     <li>
-      <details open={open.has(node.id)}>
+      {/* Keyed on the active type so it remounts on every navigation.
+          `open` is a React-uncontrolled DOM attribute: clicking the link inside
+          a <summary> toggles the browser's own disclosure, and once the DOM and
+          the vdom disagree React will not put it back, because the prop it
+          renders has not changed. Remounting settles it from the route, which is
+          the only thing that should decide it. Full page loads used to make this
+          invisible; client navigation does not. */}
+      <details key={`${node.id}:${active}`} open={open.has(node.id)}>
         {/* The namespace's own page is a link inside the summary. Clicking it
             toggles the details as well, which nobody sees because every link
             here is a full page load - and it buys one row per namespace
@@ -73,9 +81,6 @@ function Node({
         <summary className="flex cursor-pointer list-none items-center gap-1.5 py-1 [&::-webkit-details-marker]:hidden">
           <Chevron className="transition-transform" />
           <Label node={node} base={base} current={current} />
-          <span className="ml-auto pl-2 font-mono text-xs text-text-subtle">
-            {node.children.length}
-          </span>
         </summary>
         {/* Tighter than it looks like it should be, deliberately. Reserving the
             chevron slot on every row moved all 284 labels 18px right and pushed
@@ -98,8 +103,12 @@ function Label({ node, base, current }: { node: NavNode; base: string; current: 
   }
 
   return (
-    <a
+    <Link
       href={`${base}/${node.name}`}
+      // 284 links in a scrolling rail, and a type page renders on demand: left
+      // to prefetch on sight, opening the tree would ask the server to build
+      // most of a version. The navigation is still client-side.
+      prefetch={false}
       aria-current={current ? 'page' : undefined}
       // Sans, like every other row in either sidebar. A type name is code in
       // prose and gets a mono face there, but a nav row is a label: set in mono
@@ -114,7 +123,7 @@ function Label({ node, base, current }: { node: NavNode; base: string; current: 
       } ${node.deprecated ? 'line-through decoration-danger' : ''}`}
     >
       {node.label}
-    </a>
+    </Link>
   );
 }
 

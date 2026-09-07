@@ -2,6 +2,7 @@ import { OlderVersionNotice, VersionSwitcher } from '@/components/docs/version-s
 import { sdkIndex, MAIN } from '@/lib/docs/registry';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 /**
@@ -85,12 +86,15 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
             <ul className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2">
               {byKind.get(kind)!.map((t) => (
                 <li key={t.name} className="truncate">
-                  <a
+                  {/* Client-side, and not prefetched: this list is the whole
+                      version, and a type page renders on demand. */}
+                  <Link
                     href={`${base}/${t.name}`}
+                    prefetch={false}
                     className="font-mono text-sm text-link hover:underline"
                   >
                     {t.name}
-                  </a>
+                  </Link>
                   {t.deprecated && <span className="ml-2 text-xs text-danger">deprecated</span>}
                 </li>
               ))}
