@@ -3,7 +3,7 @@ import { allPaths } from '../docs/ia.ts';
 import { renderMarkdown } from '../docs/markdown.ts';
 import { latestSdkVersion, sdkTypeNames, sdkVersions } from '../docs/registry.ts';
 import { releaseNote } from '../docs/release-notes.ts';
-import { allPosts, allTags, CATEGORIES, pageCount } from './posts.ts';
+import { activeCategories, allPosts, allTags, pageCount } from './posts.ts';
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -105,7 +105,10 @@ export function unresolved(path: string): string | null {
         : 'not a route this site serves';
 
   if (!why) return null;
-  return looksLikeFile(clean) ? 'no such file under public/' : why;
+  // Added to the reason rather than replacing it: `/docs/build/deploy.html`
+  // ends in something that reads as an extension but is an IA problem, and
+  // saying only "no such file" sends the author to look in the wrong place.
+  return looksLikeFile(clean) ? `${why}, and no such file under public/` : why;
 }
 
 function unresolvedBlog(rest: string[]): string | null {
@@ -116,7 +119,10 @@ function unresolvedBlog(rest: string[]): string | null {
     return rest.length === 2 && page >= 1 && page <= pageCount() ? null : 'no such blog page';
   }
   if (first === 'category') {
-    const known = CATEGORIES.map((c) => c.toLowerCase());
+    // The categories with posts in them, not the three the type allows: the
+    // route sets `dynamicParams = false` and generates its params from the
+    // same call, so an empty category is a 404 rather than an empty archive.
+    const known = activeCategories().map(({ category }) => category.toLowerCase());
     return rest.length === 2 && known.includes(second) ? null : 'no such blog category';
   }
   if (first === 'tag') {
@@ -183,8 +189,13 @@ const SELF = /^https?:\/\/(?:www\.)?titaniumsdk\.com(?=\/|$)/;
  * here: https://…" - which `linkify: false` renders as text rather than as an
  * anchor. A dead address a reader is invited to copy is still a dead address,
  * and the link check cannot see one.
+ *
+ * The host is anchored, and the bare-path form has to start a token. `/guide/`
+ * on its own is somebody else's URL as often as it is ours - Android's docs
+ * live under `developer.android.com/guide/` - and a check that cannot tell
+ * them apart fails the build on a link there is no way to write.
  */
-const LEGACY_GUIDE = /(?:titaniumsdk\.com)?\/guide\//;
+export const LEGACY_GUIDE = /https?:\/\/(?:www\.)?titaniumsdk\.com\/guide\/|(?:^|[\s(])\/guide\//;
 
 /**
  * Every problem with the links in `content/blog`, gathered rather than thrown.

@@ -68,6 +68,8 @@ describe('rewriteLink', () => {
 
   test('retires the downloads subdomain', () => {
     assert.equal(rewriteLink('https://downloads.titaniumsdk.com/'), '/downloads');
+    // The host, not a prefix of one.
+    assert.equal(rewriteLink('https://downloads.titaniumsdk.community/x'), null);
   });
 
   test('normalises both spellings of Slack onto one', () => {
@@ -102,5 +104,25 @@ describe('rewriteLinks', () => {
       rewriteLinks(body),
       'See the [release notes](/docs/sdk/13.4.1/release-notes) and ![shot](/blog/titanium-general.png).'
     );
+  });
+
+  test('leaves an image reference to the importer, host and all', () => {
+    // `rewriteImage` returns the reference untouched when it cannot find the
+    // asset. Stripping the host here would turn that into `/images/foo.png`,
+    // which nothing serves and `validatePosts` - which reads anchors - would
+    // not report.
+    const body = '![shot](https://titaniumsdk.com/images/foo.png)';
+    assert.equal(rewriteLinks(body), body);
+  });
+
+  test('is idempotent', () => {
+    const body =
+      'See the [release notes](https://titaniumsdk.com/guide/Titanium_SDK/' +
+      'Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/' +
+      'Titanium_SDK_13.4.1.GA_Release_Note.html), [donate](/donate), ' +
+      '[chat](https://slack.tidev.io/) and [this post](/posts/2025/sdk_13_0_0_ga.md).';
+
+    const once = rewriteLinks(body);
+    assert.equal(rewriteLinks(once), once);
   });
 });

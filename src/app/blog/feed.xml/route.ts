@@ -27,6 +27,18 @@ const escape = (s: string) =>
 /** RFC 822, which is what RSS requires - not the ISO date the frontmatter uses. */
 const rfc822 = (date: string) => new Date(`${date}T00:00:00Z`).toUTCString();
 
+/**
+ * Root-relative links and images, resolved against the site.
+ *
+ * A page should not spell its own origin out, and after TI-67 the posts do not:
+ * their links and their images are paths. A feed item is read somewhere else
+ * entirely, though, and readers do not agree on what a bare `/blog/…` in
+ * `content:encoded` resolves against, so what ships here has to carry the
+ * origin the pages are right to leave out. Protocol-relative `//host` is
+ * already absolute and stays as it is.
+ */
+const absolutise = (html: string) => html.replace(/( (?:href|src)=")\/(?!\/)/g, `$1${SITE_URL}/`);
+
 export function GET() {
   const posts = publishedPosts();
   const updated = posts[0] ? rfc822(posts[0].date) : new Date(0).toUTCString();
@@ -34,7 +46,7 @@ export function GET() {
   const items = posts
     .map((post) => {
       // `]]>` inside a post would close the CDATA early and break the feed.
-      const html = renderMarkdown(post.body, {}).replace(/]]>/g, ']]&gt;');
+      const html = absolutise(renderMarkdown(post.body, {})).replace(/]]>/g, ']]&gt;');
       return `    <item>
       <title>${escape(post.title)}</title>
       <link>${SITE_URL}/blog/${post.slug}</link>

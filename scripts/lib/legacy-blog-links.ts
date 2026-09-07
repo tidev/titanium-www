@@ -103,12 +103,22 @@ function releaseNotesPath(version: string): string | null {
  * is. Truncating to the nearest real ancestor uses the mapping for what it is
  * good for, which is naming the section a legacy page belongs to, without
  * trusting a leaf it predicted.
+ *
+ * Truncation stops above `/docs`, which is where every unrecognised
+ * destination would otherwise end up. The index names no section, and because
+ * it is a page the result would pass `check:docs` - leaving a reader dropped
+ * on the docs front door indistinguishable, afterwards, from a link that
+ * resolved. Null instead, so the legacy address survives to be reported. A
+ * mapping that names `/docs` outright is a decision rather than a guess, and
+ * is honoured.
  */
 function nearestKnown(destination: string): string | null {
   const known = new Set(allPaths());
+  if (known.has(destination)) return destination;
+
   for (
-    let path = destination;
-    path.startsWith('/docs');
+    let path = destination.slice(0, destination.lastIndexOf('/'));
+    path.startsWith('/docs/');
     path = path.slice(0, path.lastIndexOf('/'))
   ) {
     if (known.has(path)) return path;
@@ -130,7 +140,7 @@ function guidePath(path: string): string | null {
  * are correct as written.
  */
 export function rewriteLink(href: string): string | null {
-  if (/^https?:\/\/downloads\.titaniumsdk\.com/.test(href)) return '/downloads';
+  if (/^https?:\/\/downloads\.titaniumsdk\.com(?=[/:?#]|$)/.test(href)) return '/downloads';
   if (/^https?:\/\/(?:slack\.tidev\.io|tidev\.slack\.com)\/?$/.test(href)) {
     return href === SLACK ? null : SLACK;
   }
@@ -155,10 +165,23 @@ export function rewriteLink(href: string): string | null {
   return path === href ? null : path;
 }
 
-/** Every markdown link target in a body, rewritten where it needs to be. */
+/**
+ * Every markdown link target in a body, rewritten where it needs to be.
+ *
+ * Image references are left to `rewriteImage` in the importer, which is the
+ * pass that knows where the asset went. Sharing this one would strip the host
+ * off an image the copy failed to find and leave a path nothing serves - and
+ * `validatePosts` reads `<a href>`, so a broken `<img>` reports nothing.
+ */
 export function rewriteLinks(body: string): string {
-  return body.replace(/(\]\()([^)\s]+)(\))/g, (all, open: string, href: string, close: string) => {
-    const to = rewriteLink(href);
-    return to === null ? all : `${open}${to}${close}`;
-  });
+  return body.replace(
+    /(\]\()([^)\s]+)(\))/g,
+    (all, open: string, href: string, close: string, offset: number) => {
+      const label = body.lastIndexOf('[', offset);
+      if (label > 0 && body[label - 1] === '!') return all;
+
+      const to = rewriteLink(href);
+      return to === null ? all : `${open}${to}${close}`;
+    }
+  );
 }
