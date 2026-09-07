@@ -142,7 +142,6 @@ separate numbers and both matter.
 | --------------- | ---------------------------------- |
 | `fullscreen`    | Hide the status bar                |
 | `navbar-hidden` | Hide the title bar                 |
-| `analytics`     | Whether the SDK's analytics are on |
 | `transpile`     | Whether JS is transpiled           |
 | `sourcemaps`    | Emit source maps                   |
 
