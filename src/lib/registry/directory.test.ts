@@ -56,6 +56,26 @@ describe('no published email addresses', () => {
     reject({ links: [{ label: 'jo@example.com', url: 'https://example.com' }] }, 'address in a label');
   });
 
+  test('a scheme written in capitals is rejected', () => {
+    // `new URL()` lowercases the protocol, so the refinement sees `mailto:`
+    // either way. Pinned because a reader can reasonably wonder, and because
+    // the answer being yes is the only reason the check can be a plain regex.
+    reject({ contact: { label: 'Email', url: 'MAILTO:jo@example.com' } }, 'uppercase mailto');
+    reject({ contact: { label: 'Hi', url: 'JavaScript:alert(1)' } }, 'uppercase javascript');
+    reject({ contact: { label: 'Hi', url: '  javascript:alert(1)' } }, 'leading whitespace');
+  });
+
+  test('an unparseable URL is rejected rather than throwing', () => {
+    // `new URL()` throws on these, and zod runs a chained refinement even after
+    // `z.url()` has already failed, so an unguarded `new URL` in the protocol
+    // check escapes `safeParse` altogether. That crashed `pnpm check:registry`
+    // on the commonest possible mistake - a URL with no scheme - before it
+    // could name the file at fault, and took every later check down with it.
+    for (const url of ['example.com/enquiries', '//example.com', 'not a url', '']) {
+      reject({ contact: { label: 'Contact', url } }, `unparseable: ${JSON.stringify(url)}`);
+    }
+  });
+
   test('an ordinary https contact is accepted', () => {
     assert.equal(DeveloperProfileSchema.safeParse(valid).success, true);
   });

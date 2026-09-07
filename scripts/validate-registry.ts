@@ -205,10 +205,21 @@ if (existsSync(directoryDir)) {
   const now = new Date();
   for (const name of readdirSync(directoryDir).sort()) {
     if (!name.endsWith('.json')) continue;
-    const parsed = DeveloperProfileSchema.safeParse(
-      JSON.parse(readFileSync(join(directoryDir, name), 'utf8'))
-    );
-    // Already reported by the walk above; do not report it twice.
+
+    // Both failures below are already reported by the walk above, so this pass
+    // skips them rather than reporting them twice. Broken JSON has to be caught
+    // rather than left to throw: the walk prints a usable `FAIL ... not valid
+    // JSON` line, and an uncaught SyntaxError here would then kill the script
+    // before the summary, taking every other listing's id and expiry check with
+    // it.
+    let data: unknown;
+    try {
+      data = JSON.parse(readFileSync(join(directoryDir, name), 'utf8'));
+    } catch {
+      continue;
+    }
+
+    const parsed = DeveloperProfileSchema.safeParse(data);
     if (!parsed.success) continue;
 
     const problems: string[] = [];

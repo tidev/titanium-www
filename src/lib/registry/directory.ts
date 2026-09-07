@@ -45,6 +45,26 @@ export const LISTING_DAYS = 92;
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
 
 /**
+ * Is this an `http(s)` URL?
+ *
+ * `new URL()` throws on anything it cannot parse, and zod runs every check in a
+ * chain even after an earlier one has failed - so an unparseable string reaches
+ * this refinement whether or not `z.url()` has already rejected it, and an
+ * unguarded throw escapes `safeParse` entirely. A listing whose URL is missing
+ * its scheme (`example.com/enquiries`, far and away the commonest way to get
+ * this field wrong) would crash `pnpm check:registry` with a raw stack trace
+ * before it printed which file was at fault, and take the rest of the registry
+ * walk down with it. Unparseable is simply not an http(s) URL, so say so.
+ */
+function isHttpUrl(value: string): boolean {
+  try {
+    return /^https?:$/.test(new URL(value).protocol);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Rejects everything but `http(s)`.
  *
  * `z.url()` alone does not: it parses with `new URL()`, which accepts
@@ -55,7 +75,7 @@ const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
 const PublicUrl = z
   .url()
   .max(300)
-  .refine((value) => /^https?:$/.test(new URL(value).protocol), {
+  .refine(isHttpUrl, {
     message: 'must be an http(s) URL. Link to a page you control, never a mailto: or tel: address',
   })
   .refine((value) => !EMAIL.test(value), {

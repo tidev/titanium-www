@@ -126,8 +126,10 @@ export default async function ProfilePage({ params }: PageProps<'/directory/[pro
 
         {profile.links.length > 0 && (
           <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {/* Keyed on both halves: nothing in the schema stops one listing
+                pointing two differently labelled links at the same URL. */}
             {profile.links.map((link) => (
-              <li key={link.url}>
+              <li key={`${link.label} ${link.url}`}>
                 <a
                   href={link.url}
                   rel="noopener noreferrer"

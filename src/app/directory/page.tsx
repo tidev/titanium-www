@@ -46,6 +46,12 @@ export default function DirectoryIndex() {
   const individuals = profiles.length - agencies;
   const examples = profiles.some((p) => p.placeholder);
 
+  // The renewal claim below is only true of listings that actually renew, and
+  // `neverExpires` is an opt-out from exactly that. Every listing page is
+  // careful to say so on the exempt ones; the index would otherwise make the
+  // opposite claim about the same listing on the page before it.
+  const allRenewed = profiles.every((p) => !p.neverExpires);
+
   return (
     <div className="max-w-5xl py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Developer directory</h1>
@@ -63,9 +69,12 @@ export default function DirectoryIndex() {
         ) : (
           <>
             {individuals} individual{individuals === 1 ? '' : 's'} and {agencies} agenc
-            {agencies === 1 ? 'y' : 'ies'}, each of whom confirmed within the last three months that
-            they are available. Listings are shown in a rotating order that changes daily, so no
-            name, and no amount of renaming, buys a place at the top.
+            {agencies === 1 ? 'y' : 'ies'}
+            {allRenewed
+              ? ', each of whom confirmed within the last three months that they are available'
+              : '. Most confirmed within the last three months that they are available; the few exempt from renewal say so on their own page'}
+            . Listings are shown in a rotating order that changes daily, so no name, and no amount
+            of renaming, buys a place at the top.
           </>
         )}
       </p>
