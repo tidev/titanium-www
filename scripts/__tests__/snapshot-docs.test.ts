@@ -143,6 +143,25 @@ describe('cutting a major', () => {
       { ...PAGES, 'content/docs-archive/v13/index.md': '---\ntitle: Old\n---\n' }
     );
     assert.match(failure(dir, 'v14'), /already exists/);
+    // The existing snapshot is left exactly as it was. Copying over it would
+    // merge two majors into one directory, which reads as neither.
+    assert.equal(
+      readFileSync(join(dir, 'content/docs-archive/v13/index.md'), 'utf8'),
+      '---\ntitle: Old\n---\n'
+    );
+    assert.equal(existsSync(join(dir, 'content/docs-archive/v13/setup/macos.md')), false);
+  });
+
+  test('takes every file, not only the markdown', () => {
+    // A snapshot is a copy of a tree. Filtering by extension loses the first
+    // non-markdown file anyone adds, and the archived page that needed it
+    // renders a hole with nothing in the build to say why.
+    const dir = repo(
+      { current: 'v13', archived: [], dropped: [], retain: 2 },
+      { ...PAGES, 'content/docs/setup/versions.json': '{ "node": "22" }\n' }
+    );
+    run(dir, 'v14');
+    assert.ok(existsSync(join(dir, 'content/docs-archive/v13/setup/versions.json')));
   });
 
   test('--dry-run writes nothing', () => {
@@ -151,6 +170,15 @@ describe('cutting a major', () => {
     assert.match(out, /"current": "v14"/);
     assert.equal(manifestOf(dir).current, 'v13');
     assert.equal(existsSync(join(dir, 'content/docs-archive')), false);
+  });
+
+  test('--dry-run still reports what would stop the real run', () => {
+    // A plan that would fail is not a plan.
+    const dir = repo(
+      { current: 'v13', archived: [], dropped: [], retain: 2 },
+      { ...PAGES, 'content/docs-archive/v13/index.md': '---\ntitle: Old\n---\n' }
+    );
+    assert.match(failure(dir, 'v14', '--dry-run'), /already exists/);
   });
 });
 
@@ -230,6 +258,14 @@ describe('--check', () => {
       { ...PAGES, 'content/docs-archive/v13/index.md': '---\ntitle: v13\n---\n' }
     );
     assert.match(failure(dir, '--check'), /the manifest does not list/);
+  });
+
+  test('refuses to be combined with work it will not do', () => {
+    // `--check` writes nothing, so dropping the major and exiting 0 would read
+    // as a snapshot that had been cut.
+    const dir = repo({ current: 'v13', archived: [], dropped: [], retain: 2 }, PAGES);
+    assert.match(failure(dir, 'v14', '--check'), /Run it on its own/);
+    assert.equal(manifestOf(dir).current, 'v13');
   });
 
   test('fails when more majors are kept than the window allows', () => {

@@ -111,8 +111,10 @@ tree and does not follow.
 
 `pnpm docs:snapshot:check` reports drift between the manifest and the
 directories. `pnpm check:docs` runs the same check, plus the full content
-pipeline over every archived tree, so a partial you rename in current cannot
-silently break an archived page that still includes it.
+pipeline over every archived tree, so an archive that has lost a partial of its
+own, or a page whose `ia.ts` entry was deleted out from under it, fails the
+build instead of rendering a hole. A snapshot carries its own `_partials`, so
+renaming one in current does not reach into an archive.
 
 ### Retention
 

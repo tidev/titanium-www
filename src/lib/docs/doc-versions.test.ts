@@ -118,6 +118,13 @@ describe('versionizeLinks', () => {
     assert.equal(html(other), other);
   });
 
+  test('only matches /docs at a path boundary', () => {
+    // Without the boundary the prefix is spliced into the middle of a word:
+    // `/docsearch` becomes `/docs/v1earch`, which is neither path.
+    const other = '<a href="/docsearch">search</a><a href="/docs-archive">archive</a>';
+    assert.equal(html(other), other);
+  });
+
   test('does not touch an image path', () => {
     // `/docs/guides/*.png` is a file under `public/`, shared by every major.
     // One copy, and a prefix would break it in the archive.

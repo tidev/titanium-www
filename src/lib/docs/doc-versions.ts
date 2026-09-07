@@ -206,7 +206,10 @@ export function versionizeLinks(html: string, major: DocMajor): string {
   const prefix = basePath(major);
   if (!prefix) return html;
 
-  return html.replace(/href="\/docs([^"]*)"/g, (whole, rest: string) => {
+  // `/docs` has to end at a path boundary. Without the lookahead `/docsearch`
+  // is a match with `rest` of `earch`, and the rewrite splices the prefix into
+  // the middle of a word.
+  return html.replace(/href="\/docs(?=["/#?])([^"]*)"/g, (whole, rest: string) => {
     const first = rest.split('/')[1] ?? '';
     // A fragment or a query directly on /docs is still the docs index.
     const segment = first.split(/[#?]/)[0];
@@ -286,7 +289,7 @@ export function routedPaths(major: DocMajor): string[] {
  *
  * Only pages that have content: the IA defines paths that are not written yet,
  * and listing one tells a crawler to come and look at a page that says it does
- * not exist. Archived majors are deliberately absent; see `archivedRobots`.
+ * not exist. Archived majors are deliberately absent; see `archivedSeo`.
  *
  * TI-48 owns `sitemap.ts`. This is the one function it calls for guides, so the
  * seam between the two tickets is a single import.

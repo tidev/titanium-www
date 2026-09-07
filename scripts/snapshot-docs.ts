@@ -6,7 +6,7 @@ import {
   type DocVersionManifest,
 } from '../src/lib/docs/doc-versions.ts';
 import { RESERVED_ROOTS } from '../src/lib/docs/ia.ts';
-import { copyFileSync, mkdirSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 /**
@@ -91,7 +91,11 @@ function snapshotFiles(root: string): string[] {
           );
         }
         walk(full);
-      } else if (entry.name.endsWith('.md')) {
+      } else {
+        // Every file, not only markdown. A snapshot is a copy of a tree, and a
+        // filter here silently loses the first non-markdown file anyone adds
+        // under `content/docs` - which surfaces much later as an archived page
+        // rendering a hole, with nothing in the build to say why.
         out.push(rel);
       }
     }
@@ -116,6 +120,13 @@ function write(next: DocVersionManifest) {
 // ------------------------------------------------------------------- --check
 
 if (flag('check')) {
+  // `--check` writes nothing, so combining it with work is a request the script
+  // cannot honour. Silently dropping the major and exiting 0 would read as a
+  // snapshot that succeeded.
+  if (target || flag('prune')) {
+    die('--check reports drift and writes nothing. Run it on its own.');
+  }
+
   const problems = validateDocVersions();
   if (!problems.length) {
     const { current, archived, dropped } = manifest();
@@ -154,15 +165,17 @@ if (target) {
       `into content/docs-archive/${before.current}, and making ${target} current.`
   );
 
-  if (!dryRun) {
-    try {
-      statSync(archiveDir);
-      die(`content/docs-archive/${before.current} already exists. Delete it or fix the manifest.`);
-    } catch {
-      // Absent, which is the only state a snapshot may be cut into.
-    }
-    copyTree(CURRENT_ROOT, archiveDir, files);
+  // An absent directory is the only state a snapshot may be cut into. Checked
+  // outside the `--dry-run` branch, because a plan that would fail is not a
+  // plan; and outside a `try`, because a `die` inside one is only safe while
+  // nothing it calls can throw - an EPIPE on the message would be swallowed by
+  // the catch and the copy would run on over the existing snapshot, merging two
+  // majors into one directory.
+  if (existsSync(archiveDir)) {
+    die(`content/docs-archive/${before.current} already exists. Delete it or fix the manifest.`);
   }
+
+  if (!dryRun) copyTree(CURRENT_ROOT, archiveDir, files);
 
   next = { ...next, current: target, archived: [before.current, ...next.archived] };
 } else if (!flag('prune')) {
