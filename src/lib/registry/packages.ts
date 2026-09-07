@@ -190,7 +190,7 @@ const RepoSlug = z.string().regex(/^[\w.-]+\/[\w.-]+$/, 'expected an owner/name 
 export const VerifiedListSchema = z.object({
   $comment: z.string(),
   /**
-   * Authors whose modules are all vouched for.
+   * GitHub usernames whose modules are all vouched for.
    *
    * Vouching per author rather than per repo, for the authors who publish a
    * dozen modules to the same standard: hansemannn alone is 41 of the 112
@@ -203,20 +203,15 @@ export const VerifiedListSchema = z.object({
    * snapshot the answer and leave anything newer unverified until someone
    * noticed.
    *
+   * Bare usernames, with none of the provenance a `modules` entry carries. The
+   * list is short enough to read at a glance and `git log` answers who added a
+   * name and when, which is what those fields were for.
+   *
    * It is a bet on the author rather than the module, which is a weaker claim
    * than a per-repo entry. Withdrawing it is one deletion, and a single module
    * that should not carry it goes in `blocked.json`.
    */
-  owners: z
-    .array(
-      z.object({
-        owner: z.string().min(1),
-        by: z.string().min(1),
-        at: z.string().min(1),
-        note: z.string().optional(),
-      })
-    )
-    .default([]),
+  owners: z.array(z.string().min(1)).default([]),
   modules: z.array(
     z.object({
       repo: RepoSlug,

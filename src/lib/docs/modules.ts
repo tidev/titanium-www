@@ -222,7 +222,7 @@ function vouchedFor(): { repos: Set<string>; owners: Set<string> } {
   const parsed = VerifiedListSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
   return {
     repos: new Set(parsed.modules.map((m) => m.repo.toLowerCase())),
-    owners: new Set(parsed.owners.map((o) => o.owner.toLowerCase())),
+    owners: new Set(parsed.owners.map((o) => o.toLowerCase())),
   };
 }
 

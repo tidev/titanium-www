@@ -1,18 +1,5 @@
 {
   "$comment": "Community modules TiDev vouches for. EDITED BY HAND - see docs/module-curation.md. Being listed here is a listing-quality statement and nothing more: it does not add the repo to scripts/docgen/sources.json, so the regen never fetches or runs against it.",
-  "owners": [
-    {
-      "owner": "hansemannn",
-      "by": "@cb1kenobi",
-      "at": "2026-09-07",
-      "note": "Long-standing Titanium contributor. Publishes to a consistent standard with tagged releases and packaged assets; 41 of the listings are his."
-    },
-    {
-      "owner": "m1ga",
-      "by": "@cb1kenobi",
-      "at": "2026-09-07",
-      "note": "Long-standing Titanium contributor, Android side. Actively maintained, with tagged releases and packaged assets."
-    }
-  ],
+  "owners": ["hansemannn", "m1ga"],
   "modules": []
 }

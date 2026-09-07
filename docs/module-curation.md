@@ -36,9 +36,10 @@ security boundary before it is a curation list, which is why nothing here
 widens it.
 
 `registry/modules/verified.json` is the vouching list, at two granularities. A
-`modules` entry vouches for one repository; an `owners` entry vouches for
-everything an author publishes. Either records who vouched and when, because a
-verification nobody signed cannot be revisited.
+`modules` entry vouches for one repository and records who vouched and when,
+because a per-module verification nobody signed cannot be revisited. `owners` is
+a plain list of GitHub usernames: short enough to read at a glance, and `git log`
+answers who added a name and when.
 
 `registry/modules/blocked.json` is the exclusion list. An entry records why,
 for the same reason. Forks and archived repositories do **not** belong here:
@@ -68,7 +69,7 @@ blocked.
 
 ### Vouching for an author
 
-An `owners` entry says the four above hold for everything that author
+A username in `owners` says the four above hold for everything that author
 publishes, including what they publish next. Use it for someone with a track
 record and a consistent standard, where listing their modules one at a time
 would be a list that goes stale every release.
@@ -105,7 +106,7 @@ without anyone doing anything.
 Remove it from `verified.json` and it falls back to Unverified with its listing
 intact. Blocking is a stronger statement and is not the tool for staleness.
 
-**49 of the 112 are verified**, by two `owners` entries. The other 63 are
+**49 of the 112 are verified**, by two usernames in `owners`. The other 63 are
 Unverified: nobody has looked at them, one at a time, and the badge says so.
 
 ## Who decides
