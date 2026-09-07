@@ -12,6 +12,8 @@ import {
   ApiIndexSchema,
   ApiTypeSchema,
   BranchesSchema,
+  DeveloperProfileSchema,
+  expiryProblem,
   BuildListSchema,
   CliReleasesSchema,
   PrunedListSchema,
@@ -25,7 +27,7 @@ import {
 } from '../src/lib/registry/index.ts';
 import { POOL_DIR } from './lib/pool.ts';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative } from 'node:path';
+import { basename, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ZodType } from 'zod';
 
@@ -44,6 +46,12 @@ function schemaFor(rel: string): ZodType | null {
     if (parts[1] === 'pruned') return PrunedListSchema;
     return BuildListSchema;
   }
+
+  // Developer directory listings (TI-58), one file per person or company.
+  // Checked here rather than by a script of its own so that a listing carrying
+  // a mailto: fails the same gate as a malformed module manifest, and so that
+  // adding one is a pull request against a directory CI already walks.
+  if (parts[0] === 'directory' && parts.length === 2) return DeveloperProfileSchema;
 
   // docgen rebuilds from scratch when it cannot read its own manifest, so a
   // corrupt one costs time rather than correctness. Nothing to enforce.
@@ -173,6 +181,48 @@ for (const dir of versionDirs(root)) {
     if (!path || seen.has(path)) continue;
     seen.add(path);
     check(path, `${relative(root, dir)} -> ${entry}`, schema);
+  }
+}
+
+/**
+ * The two directory rules a schema cannot see (TI-58).
+ *
+ * A listing's `id` is its URL, so it has to equal the filename: nothing in a
+ * Zod schema knows what file it is parsing, and a mismatch would render a page
+ * at one address while every link pointed at another.
+ *
+ * The expiry cap is checked here for a subtler reason. It is written as "no
+ * further ahead than three months from today", which only ever becomes more
+ * true as time passes, so a commit that passes now still passes when CI re-runs
+ * it next year. A check that also failed on a date in the *past* would turn
+ * every expired listing into a red build on pull requests that never touched
+ * the directory, and expiry is the mechanism working rather than a defect.
+ * Expired listings simply stop being rendered; see
+ * `src/lib/directory/profile.ts`.
+ */
+const directoryDir = join(root, 'directory');
+if (existsSync(directoryDir)) {
+  const now = new Date();
+  for (const name of readdirSync(directoryDir).sort()) {
+    if (!name.endsWith('.json')) continue;
+    const parsed = DeveloperProfileSchema.safeParse(
+      JSON.parse(readFileSync(join(directoryDir, name), 'utf8'))
+    );
+    // Already reported by the walk above; do not report it twice.
+    if (!parsed.success) continue;
+
+    const problems: string[] = [];
+    if (parsed.data.id !== basename(name, '.json')) {
+      problems.push(`id is "${parsed.data.id}"; it must match the filename`);
+    }
+    const expiry = expiryProblem(parsed.data, now);
+    if (expiry) problems.push(expiry);
+
+    if (problems.length) {
+      failed++;
+      console.log(`  FAIL  directory/${name}`);
+      for (const problem of problems) console.log(`          ${problem}`);
+    }
   }
 }
 

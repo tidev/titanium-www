@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "example-agency",
+  "name": "Example Agency",
+  "kind": "agency",
+  "summary": "A worked example, not a real company. It shows what an agency listing looks like, and it stops being shown the day the first real listing is merged.",
+  "location": "Toronto, Canada",
+  "timezone": "America/Toronto",
+  "availability": ["full-time", "contract"],
+  "specialisms": ["cross-platform-ui", "ci-cd", "app-store-release", "training"],
+  "skills": ["Maintenance retainers", "Legacy app rescue", "Team of six"],
+  "contact": {
+    "label": "Enquiries",
+    "url": "https://example.com/enquiries"
+  },
+  "links": [{ "label": "Website", "url": "https://example.com" }],
+  "neverExpires": true,
+  "placeholder": true
+}

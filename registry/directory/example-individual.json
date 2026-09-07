@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "example-individual",
+  "name": "Example Individual",
+  "kind": "individual",
+  "summary": "A worked example, not a real person. It shows what an individual listing looks like, and it stops being shown the day the first real listing is merged.",
+  "location": "Remote, Europe",
+  "timezone": "Europe/Berlin",
+  "availability": ["part-time", "contract"],
+  "specialisms": ["alloy", "sdk-upgrades", "native-modules-ios", "code-review"],
+  "skills": ["JavaScript", "TypeScript", "Swift", "Kotlin"],
+  "contact": {
+    "label": "Contact form",
+    "url": "https://example.com/contact"
+  },
+  "links": [
+    { "label": "Website", "url": "https://example.com" },
+    { "label": "Source", "url": "https://github.com/tidev" }
+  ],
+  "neverExpires": true,
+  "placeholder": true
+}

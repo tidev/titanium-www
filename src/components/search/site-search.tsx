@@ -17,7 +17,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
  * visitors never need.
  */
 
-type Kind = 'symbol' | 'api' | 'module' | 'blog';
+type Kind = 'symbol' | 'api' | 'module' | 'blog' | 'directory';
 
 type Hit = {
   url: string;
@@ -41,6 +41,9 @@ const GROUPS: { kind: Kind; label: string }[] = [
   { kind: 'api', label: 'API reference' },
   { kind: 'module', label: 'Modules' },
   { kind: 'blog', label: 'Blog' },
+  // Last, and deliberately: people are what someone searches for when the
+  // documentation did not answer them, not before they have tried it.
+  { kind: 'directory', label: 'Developer directory' },
 ];
 
 /**

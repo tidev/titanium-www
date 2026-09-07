@@ -1,4 +1,6 @@
 import { publishedPosts } from '../src/lib/blog/posts.ts';
+import { SPECIALISM_LABELS } from '../src/lib/directory/profile.ts';
+import { listedProfiles } from '../src/lib/directory/read.ts';
 import { anchorAllocator } from '../src/lib/docs/links.ts';
 import { apiIndexAt, apiTypeAt, latestSdkVersion } from '../src/lib/docs/registry.ts';
 import { viewOf } from '../src/lib/docs/type-view.ts';
@@ -35,7 +37,7 @@ import * as pagefind from 'pagefind';
 const OUT = join(import.meta.dirname, '../public/_pagefind');
 
 /** What the results list groups by. Guides join this when TI-32 lands. */
-type Kind = 'api' | 'module' | 'blog';
+type Kind = 'api' | 'module' | 'blog' | 'directory';
 
 type Entry = {
   url: string;
@@ -170,6 +172,36 @@ for (const id of readdirSync(MODULES)) {
       });
     }
   }
+}
+
+// ---- Developer directory ----------------------------------------------------
+/**
+ * Listings, minus the expired ones (TI-58).
+ *
+ * The third of the three places expiry has to reach, after the listing page and
+ * the sitemap. Filtered here rather than at query time for the same reason it
+ * is filtered at build everywhere else: a record written now is served until
+ * the next rebuild, and the nightly rebuild is what keeps that window to a day.
+ *
+ * The specialism labels are indexed as well as the raw values, so "iOS modules"
+ * finds someone whose listing says `native-modules-ios`.
+ */
+for (const profile of listedProfiles()) {
+  records.push({
+    url: `/directory/${profile.id}`,
+    title: profile.name,
+    kind: 'directory',
+    body: [
+      profile.name,
+      profile.summary,
+      profile.location,
+      ...profile.skills,
+      ...profile.specialisms,
+      ...profile.specialisms.map((s) => SPECIALISM_LABELS[s]),
+      ...profile.availability,
+    ].join(' '),
+    summary: profile.summary,
+  });
 }
 
 // ---- Blog -------------------------------------------------------------------
