@@ -23,7 +23,7 @@ Hello/
     iphone/             iOS-only assets
   platform/
     android/            files copied verbatim into the native build
-  DefaultIcon.png       source image for every generated app icon
+  DefaultIcon.png       source image for the generated iOS app icons
   tiapp.xml             app configuration
   LICENSE
   README.md
@@ -52,7 +52,7 @@ Hello/
     config.json         per-environment and per-platform settings
   plugins/ti.alloy/     the compiler hook, installed by alloy new
   Resources/            generated at build time, not yours to edit
-  DefaultIcon.png       source image for every generated app icon
+  DefaultIcon.png       source image for the generated iOS app icons
   tiapp.xml             app configuration
   .gitignore
 ```
@@ -88,8 +88,12 @@ Contents are copied into the generated native project without being processed,
 which is how the template ships `platform/android/build.gradle` and the launcher
 icon resources. Use it when you need to reach the native build directly.
 
-**Icons** come from `DefaultIcon.png` at the project root. Titanium generates
-every size each platform asks for from that one image.
+**Icons** are not shared between the platforms, despite the name. iOS
+generates its whole icon set from `DefaultIcon.png` at the project root.
+Android never reads that file: its launcher icon is the adaptive-icon set under
+`platform/android/res/mipmap-*`, which `tiapp.xml` points at with
+`android:icon="@mipmap/ic_launcher"`. See
+[Icons and launch screens](/docs/build/ui/icons-and-launch-screens).
 
 ## tiapp.xml
 
