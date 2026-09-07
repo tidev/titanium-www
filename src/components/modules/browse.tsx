@@ -57,7 +57,7 @@ const PLATFORMS: { value: PlatformFilter; label: string }[] = [
 const SOURCES: { value: SourceFilter; label: string }[] = [
   { value: 'all', label: 'All modules' },
   { value: 'tidev', label: 'Official' },
-  { value: 'community', label: 'Community' },
+  { value: 'community', label: 'Verified' },
   { value: 'unverified', label: 'Unverified' },
 ];
 
@@ -239,7 +239,7 @@ function CommunityCard({ module: m }: { module: CommunityListing }) {
   const pushed = formatDate(m.pushedAt);
 
   return (
-    <Card stripe={SOURCE_STRIPE.community}>
+    <Card stripe={SOURCE_STRIPE[m.source]}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <h2 className="font-mono text-base font-semibold break-all">
           <a

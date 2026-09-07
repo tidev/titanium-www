@@ -8,24 +8,37 @@ import type { ModuleSource } from '@/lib/registry';
  * The badge said "TiDev" and was read as a statement about the owner. It never
  * was: `tidev` means the module is curated here, with verified releases and a
  * compiled reference, and the giveaway is tidev/ti.worker - a TiDev repository
- * that nothing on this site documents, so it lists as community. Naming the
- * status rather than the org is what makes the two readable together.
+ * that nothing on this site documents. Naming the status rather than the org is
+ * what makes the three readable together.
+ *
+ * ## The colours are a scale, not three categories
+ *
+ * Official is `link`, the same blue as every link on the site, because it is
+ * the one tier that leads somewhere here - a compiled API reference. Verified
+ * is `success`, which is the strongest thing that can be said about a module
+ * nothing here hosts. Unverified is `text-subtle`, deliberately the quietest
+ * thing on the card.
+ *
+ * It used to warn in amber, which was wrong twice over: it read as a defect
+ * report on 63 modules nobody has examined, and amber against green made the
+ * two look like a pass and a fail rather than two points on a scale. Not
+ * reviewed is an absence of information, and it should look like one.
  */
 const SOURCE_STYLE: Record<ModuleSource, { label: string; className: string; title: string }> = {
   tidev: {
     label: 'Official',
-    className: 'border-success text-success',
+    className: 'border-link text-link',
     title: 'Maintained by TiDev: verified releases and a compiled API reference here',
   },
   community: {
-    label: 'Community',
-    className: 'border-border-strong text-text-subtle',
-    title: 'Published on GitHub by its author; not documented here',
+    label: 'Verified',
+    className: 'border-success text-success',
+    title: 'Reviewed by TiDev and vouched for. Published on GitHub by its author',
   },
   unverified: {
     label: 'Unverified',
-    className: 'border-warning text-warning',
-    title: 'Not reviewed by TiDev',
+    className: 'border-border-strong text-text-subtle',
+    title: 'Listed because it carries the titanium topic on GitHub. Nobody has reviewed it',
   },
 };
 
@@ -36,9 +49,9 @@ const SOURCE_STYLE: Record<ModuleSource, { label: string; className: string; tit
  * changes colour on hover, and a left border would be overwritten by it.
  */
 export const SOURCE_STRIPE: Record<ModuleSource, string> = {
-  tidev: 'before:bg-success',
-  community: 'before:bg-border-strong',
-  unverified: 'before:bg-warning',
+  tidev: 'before:bg-link',
+  community: 'before:bg-success',
+  unverified: 'before:bg-border-strong',
 };
 
 export function SourceBadge({ source }: { source: ModuleSource }) {
