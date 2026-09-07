@@ -2,6 +2,7 @@ import {
   CommunityIndexSchema,
   ModuleIndexSchema,
   ModuleVersionSchema,
+  VerifiedListSchema,
   type ApiIndex,
   type ApiType,
   type ModuleIndex,
@@ -203,17 +204,44 @@ export function moduleSummaries(): ModuleSummary[] {
 }
 
 /**
+ * Repos TiDev has vouched for, lowercased for slug comparison (TI-23).
+ *
+ * Hand-maintained, and deliberately not folded into `community.json`. That file
+ * holds what GitHub said and is rewritten daily; this holds a judgement. Keeping
+ * them apart means a regen cannot overwrite a verification, and a verification
+ * does not have to be re-applied after one. See `docs/module-curation.md`.
+ */
+function verifiedRepos(): Set<string> {
+  const path = join(MODULES_DIR, 'verified.json');
+  if (!existsSync(path)) return new Set();
+
+  const parsed = VerifiedListSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
+  return new Set(parsed.modules.map((m) => m.repo.toLowerCase()));
+}
+
+/**
  * The community index, or nothing if it has not been generated.
  *
  * Absence is not an error: `pnpm registry:community` needs a GitHub token, so a
  * checkout that has never run it still builds - with the curated modules only.
+ *
+ * The curation status is joined on here rather than stored in the scrape. Every
+ * listing is `unverified` until a person puts it on the verified list, which is
+ * the honest default: carrying the `titanium` topic is how these are found, and
+ * nothing about that is a review.
  */
 export function communityListings(): CommunityListing[] {
   const path = join(MODULES_DIR, 'community.json');
   if (!existsSync(path)) return [];
 
   const parsed = CommunityIndexSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
-  return parsed.modules.map((m) => ({ kind: 'community' as const, ...m }));
+  const verified = verifiedRepos();
+
+  return parsed.modules.map((m) => ({
+    kind: 'community' as const,
+    source: verified.has(m.id.toLowerCase()) ? ('community' as const) : ('unverified' as const),
+    ...m,
+  }));
 }
 
 /**

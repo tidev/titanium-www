@@ -1,0 +1,4 @@
+{
+  "$comment": "Repos the community scrape must never list. EDITED BY HAND - see docs/module-curation.md. Forks are excluded automatically by the generator and do not belong here; this is for judgement calls.",
+  "modules": []
+}

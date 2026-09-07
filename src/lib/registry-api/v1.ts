@@ -45,6 +45,8 @@ export type ListedModule =
       id: string;
       name: string;
       owner: string;
+      /** `community` once vouched for, `unverified` until then. Never `tidev`. */
+      source: string;
       description?: string;
       /** Its repository. There is nothing here to install - see the notes. */
       url: string;
@@ -65,7 +67,9 @@ export const RESOLUTION_RULES = [
   'A release may carry both platforms. When it does, the same version appears under each key.',
   '`minsdk` is the Titanium SDK a release requires, copied verbatim from that platform manifest. It is not normalised: expect both "12.7.0" and "10.0.0.GA", sometimes on the same module, so strip any suffix before comparing. Absent means the manifest did not declare one.',
   'Entries with `"kind": "community"` are repositories, not packages. They carry no version list and nothing to install.',
-  '`kind` is whether this site has a page for a module; `source` is who stands behind it. They agree for every module today, but they are not the same question - a repository owned by TiDev that nothing here documents is `"kind": "community"` with no `source` at all.',
+  '`kind` is whether this site has a page for a module; `source` is who stands behind it. They are not the same question: a repository owned by TiDev that nothing here documents is `"kind": "community"`.',
+  '`source` is one of three. `tidev` means TiDev maintains it and this site compiles its reference. `community` means TiDev has reviewed the repository and vouches for it, without hosting anything. `unverified` means it was found by its `titanium` topic and nobody has reviewed it - which is most of them. Only `tidev` implies anything about the code.',
+  'Being listed is not an endorsement. An `unverified` entry is a search result, and the bar for appearing at all is a `titanium` topic plus a platform directory. Archived repositories and forks are excluded.',
 ] as const;
 
 function minsdkPerPlatform(index: ModuleIndex): Partial<Record<Platform, string>> {
@@ -102,6 +106,7 @@ export function listModules(): ListedModule[] {
     id: m.id,
     name: m.name,
     owner: m.owner,
+    source: m.source,
     ...(m.description ? { description: m.description } : {}),
     url: m.url,
     platforms: m.platforms,

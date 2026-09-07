@@ -24,8 +24,13 @@ export const metadata: Metadata = {
 
 export default function ModulesIndex() {
   const official = moduleSummaries();
-  const community = communityListings();
+  const listings = communityListings();
   const releases = official.reduce((n, m) => n + m.releases, 0);
+  // Counted from `source` rather than from the two arrays, because the split
+  // this sentence describes is the curation one and not the has-a-page-here
+  // one. See `docs/module-curation.md`.
+  const vouched = listings.filter((m) => m.source === 'community').length;
+  const found = listings.length - vouched;
 
   return (
     <div className="max-w-5xl py-10">
@@ -33,12 +38,22 @@ export default function ModulesIndex() {
       <p className="mt-3 max-w-2xl text-text-muted">
         Native functionality Titanium does not ship in the core SDK, packaged per platform.{' '}
         <strong className="font-medium text-text">{official.length} official modules</strong> are
-        documented here, with {releases.toLocaleString()} releases between them and an API reference
-        for each. Another {community.length} are published by the community on GitHub and link
-        straight to their repositories.
+        maintained by TiDev and documented here, with {releases.toLocaleString()} releases between
+        them and an API reference for each.
+        {vouched > 0 && (
+          <>
+            {' '}
+            {vouched === 1
+              ? 'Another is a community module'
+              : `Another ${vouched} are community modules`}{' '}
+            TiDev has reviewed and vouches for.
+          </>
+        )}{' '}
+        A further {found.toLocaleString()} were found by their <code>titanium</code> topic on GitHub
+        and link straight to their repositories. Those are listed, not reviewed.
       </p>
 
-      <Browse modules={[...official, ...community]} />
+      <Browse modules={[...official, ...listings]} />
     </div>
   );
 }

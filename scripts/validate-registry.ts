@@ -14,8 +14,10 @@ import {
   BranchesSchema,
   BuildListSchema,
   PrunedListSchema,
+  BlockedListSchema,
   CommunityIndexSchema,
   ModuleIndexSchema,
+  VerifiedListSchema,
   ModuleVersionSchema,
   SdkVersionSchema,
 } from '../src/lib/registry/index.ts';
@@ -57,6 +59,13 @@ function schemaFor(rel: string): ZodType | null {
     // The community index sits beside the curated directories rather than in
     // one of them: it describes repos this site does not host pages for.
     if (parts.length === 2 && file === 'community.json') return CommunityIndexSchema;
+
+    // The two hand-maintained curation lists, beside the scrape they qualify
+    // (TI-23). They have to be named here or they are not checked at all: this
+    // function falls through to `null`, which skips rather than fails, so an
+    // unlisted file passes CI silently however malformed it is.
+    if (parts.length === 2 && file === 'verified.json') return VerifiedListSchema;
+    if (parts.length === 2 && file === 'blocked.json') return BlockedListSchema;
 
     // modules/<id>/index.json describes the package: versions, platforms, repo.
     // The compiled API reference for a version no longer collides with it -

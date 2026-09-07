@@ -1,0 +1,59 @@
+name: 'Refresh Community Modules'
+
+# The community half of the module list is a GitHub topic search, so it goes
+# stale on its own: repos gain the `titanium` topic, get archived, or disappear
+# without anything in this repository changing. module-search-www regenerated
+# by hand and its committed data.json was last refreshed in March 2024.
+#
+# Deliberately not a CI step. The upstream is GitHub's search index, which
+# drifts hourly, so a staleness check would fail pull requests that touched
+# nothing to do with it. The schedule is the mechanism; CI is not.
+#
+# Curation is not regenerated. verified.json and blocked.json are hand-written
+# judgements and this never touches them - see docs/module-curation.md.
+on:
+  schedule:
+    # Daily, off the hour and off :00 — GitHub drops scheduled runs that pile
+    # onto one minute, and every cron in the world is written for midnight.
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-community-modules
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Regenerate the community index
+        run: pnpm registry:community
+        env:
+          # The search API refuses anonymous callers at this volume, and runner
+          # IPs share the anonymous quota.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The generated file is a public API response shape, so a malformed one
+      # must not be committed.
+      - name: Validate the registry
+        run: pnpm check:registry
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: 'Refresh the community module index'

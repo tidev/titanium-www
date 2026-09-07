@@ -169,6 +169,50 @@ export const CommunityIndexSchema = z.strictObject({
   modules: z.array(CommunityModuleSchema),
 });
 
+/**
+ * The two hand-maintained curation lists (TI-23).
+ *
+ * Keyed on the `owner/name` slug rather than a module id, because a community
+ * module has none: nothing about it is knowable without cloning it, which is
+ * the same reason `CommunityModuleSchema` keys that way.
+ *
+ * Loose where the generated shapes are strict, and for the mirror-image reason.
+ * A key nobody parses is a note somebody left on purpose; the generated files
+ * are strict because an unexpected key there is a generator bug.
+ *
+ * These are the curation half of `docs/module-curation.md`. The scrape stays
+ * purely what GitHub said, and the two are joined at read time in
+ * `communityListings()` - so a regen can never overwrite a judgement, and a
+ * judgement never has to be re-applied after one.
+ */
+const RepoSlug = z.string().regex(/^[\w.-]+\/[\w.-]+$/, 'expected an owner/name slug');
+
+export const VerifiedListSchema = z.object({
+  $comment: z.string(),
+  modules: z.array(
+    z.object({
+      repo: RepoSlug,
+      /** Who vouched. A verification with no name behind it cannot be revisited. */
+      by: z.string().min(1),
+      /** ISO date. How staleness is judged when the policy is re-applied. */
+      at: z.string().min(1),
+      note: z.string().optional(),
+    })
+  ),
+});
+
+export const BlockedListSchema = z.object({
+  $comment: z.string(),
+  modules: z.array(
+    z.object({
+      repo: RepoSlug,
+      /** Required: a blocklist whose entries cannot be explained cannot be reviewed. */
+      reason: z.string().min(1),
+      at: z.string().min(1),
+    })
+  ),
+});
+
 export type SdkVersion = z.infer<typeof SdkVersionSchema>;
 export type ModuleManifest = z.infer<typeof ModuleManifestSchema>;
 export type ModuleVersion = z.infer<typeof ModuleVersionSchema>;
@@ -176,3 +220,5 @@ export type ModuleIndex = z.infer<typeof ModuleIndexSchema>;
 export type ModuleSource = z.infer<typeof ModuleSourceSchema>;
 export type CommunityModule = z.infer<typeof CommunityModuleSchema>;
 export type CommunityIndex = z.infer<typeof CommunityIndexSchema>;
+export type VerifiedList = z.infer<typeof VerifiedListSchema>;
+export type BlockedList = z.infer<typeof BlockedListSchema>;

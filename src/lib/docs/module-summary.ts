@@ -57,6 +57,12 @@ export type ModuleSummary = {
  */
 export type CommunityListing = {
   kind: 'community';
+  /**
+   * Curation status (TI-23). `unverified` until someone vouches, which is every
+   * listing today - see `verified.json`. Never `tidev`: that means a compiled
+   * reference on this site, which by definition these do not have.
+   */
+  source: ModuleSource;
   /** `owner/name` - a community module has no manifest id to key on. */
   id: string;
   name: string;

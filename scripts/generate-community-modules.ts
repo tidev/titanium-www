@@ -1,4 +1,6 @@
 import './lib/env.ts';
+import { BlockedListSchema } from '../src/lib/registry/packages.ts';
+import { excludedBecause, type Exclusion } from './lib/community-filter.ts';
 import { paginate } from './lib/github.ts';
 import { MODULES_DIR } from './lib/registry-paths.ts';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -61,6 +63,7 @@ type SearchRepo = {
   pushed_at: string;
   stargazers_count: number;
   archived: boolean;
+  fork: boolean;
   owner: { login: string; html_url: string };
 };
 
@@ -143,8 +146,26 @@ async function platformsOf(fullName: string): Promise<('android' | 'ios')[]> {
   return (['android', 'ios'] as const).filter((p) => found.has(p));
 }
 
+/**
+ * Repos a person has decided must never be listed (TI-23).
+ *
+ * Separate from the fork and archived filters below, which are mechanical. This
+ * is for judgement: a broken module, a name-squat, a repo whose owner asked to
+ * be delisted. Each entry carries its reason, so the list can be re-reviewed by
+ * someone who was not there. See `docs/module-curation.md`.
+ */
+function blockedRepos(): Set<string> {
+  const file = join(root, MODULES_DIR, 'blocked.json');
+  if (!existsSync(file)) return new Set();
+  const parsed = BlockedListSchema.parse(JSON.parse(readFileSync(file, 'utf8')));
+  return new Set(parsed.modules.map((m) => m.repo.toLowerCase()));
+}
+
 const curated = curatedRepos();
 console.log(`${curated.size} curated repos will be skipped`);
+
+const blocked = blockedRepos();
+console.log(`${blocked.size} repos are blocked`);
 
 const candidates: SearchRepo[] = [];
 for await (const page of paginate<SearchRepo>('/search/repositories', {
@@ -155,8 +176,18 @@ for await (const page of paginate<SearchRepo>('/search/repositories', {
 }
 console.log(`${candidates.length} repos carry the topic`);
 
-const fresh = candidates.filter((r) => !curated.has(r.full_name.toLowerCase()));
-console.log(`${fresh.length} are not already in the registry`);
+// Ahead of the platform test below, which is a network round trip per repo, so
+// anything dropped here costs nothing. The rules are in `community-filter.ts`,
+// where they can be tested without a token.
+const dropped: Record<Exclusion, number> = { curated: 0, blocked: 0, archived: 0, fork: 0 };
+const fresh = candidates.filter((r) => {
+  const why = excludedBecause(r, curated, blocked);
+  if (why) dropped[why]++;
+  return why === null;
+});
+console.log(
+  `${fresh.length} remain (dropped ${dropped.curated} curated, ${dropped.blocked} blocked, ${dropped.archived} archived, ${dropped.fork} forks)`
+);
 
 const modules: CommunityModule[] = [];
 for (const repo of fresh) {
@@ -182,7 +213,6 @@ for (const repo of fresh) {
 modules.sort((a, b) => b.stars - a.stars || a.id.localeCompare(b.id));
 
 console.log(`${modules.length} have a platform directory`);
-console.log(`  ${modules.filter((m) => m.archived).length} archived`);
 console.log(`  ${modules.filter((m) => m.platforms.length === 2).length} ship both platforms`);
 
 const payload = {

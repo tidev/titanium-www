@@ -13,7 +13,7 @@ import {
   type ModuleSummary,
   type SortKey,
 } from '@/lib/docs/module-summary';
-import type { Platform } from '@/lib/registry';
+import type { ModuleSource, Platform } from '@/lib/registry';
 import { useMemo, useState } from 'react';
 
 /**
@@ -33,7 +33,7 @@ import { useMemo, useState } from 'react';
  */
 
 type PlatformFilter = Platform | 'all';
-type KindFilter = 'all' | 'registry' | 'community';
+type SourceFilter = 'all' | ModuleSource;
 
 const PLATFORMS: { value: PlatformFilter; label: string }[] = [
   { value: 'all', label: 'All platforms' },
@@ -41,21 +41,24 @@ const PLATFORMS: { value: PlatformFilter; label: string }[] = [
 ];
 
 /**
- * What this menu selects, which is not quite the module `source` field.
+ * Filters on `source`, not on `kind`.
  *
- * It filters on `kind` - whether an entry has a page on this site or is a
- * repository we merely list. `source` is the registry's own field, and it says
- * who stands behind a module: tidev/ti.worker is a TiDev repository that shows
- * as Community here because nothing on this site documents it.
+ * It used to be `kind` - whether an entry has a page here - and the two agreed
+ * for every module, so one menu served both readings. The note here predicted
+ * they would part company and guessed the wrong direction: curated modules are
+ * all still `tidev`, and it is the community half that split, into vouched-for
+ * and merely-found (TI-23).
  *
- * The two agree for every module today, which is why one menu can serve both
- * readings. If a curated module ever ships with `source: community`, they part
- * company and this needs splitting.
+ * Filtering on `kind` now would put a verified module and an unreviewed one
+ * behind the same option, which is the distinction the curation policy exists
+ * to draw. `source` is the field that carries it, so `source` is what the menu
+ * reads, and the three options are exactly the three badges.
  */
-const KINDS: { value: KindFilter; label: string }[] = [
+const SOURCES: { value: SourceFilter; label: string }[] = [
   { value: 'all', label: 'All modules' },
-  { value: 'registry', label: 'Official' },
+  { value: 'tidev', label: 'Official' },
   { value: 'community', label: 'Community' },
+  { value: 'unverified', label: 'Unverified' },
 ];
 
 /**
@@ -73,7 +76,7 @@ const SORTS: { value: SortKey; label: string }[] = [
 export function Browse({ modules }: { modules: ModuleListing[] }) {
   const [query, setQuery] = useState('');
   const [platform, setPlatform] = useState<PlatformFilter>('all');
-  const [source, setSource] = useState<KindFilter>('all');
+  const [source, setSource] = useState<SourceFilter>('all');
   const [sort, setSort] = useState<SortKey>('default');
 
   const ordered = useMemo(() => orderListings(modules, sort), [modules, sort]);
@@ -81,7 +84,7 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
   const shown = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return ordered.filter((m) => {
-      if (source !== 'all' && m.kind !== source) return false;
+      if (source !== 'all' && m.source !== source) return false;
       if (platform !== 'all' && !listingPlatforms(m).includes(platform)) return false;
       if (!needle) return true;
       // The owner is searchable for community entries: several authors publish
@@ -116,7 +119,7 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
           <Select
             label="Module source"
             hideLabel
-            options={KINDS}
+            options={SOURCES}
             value={source}
             onChange={setSource}
           />
@@ -255,7 +258,10 @@ function CommunityCard({ module: m }: { module: CommunityListing }) {
           </a>
         </h2>
         <span className="ml-auto flex flex-wrap items-center gap-2">
-          <SourceBadge source="community" />
+          <SourceBadge source={m.source} />
+          {/* Cannot fire today: the generator drops archived repos (TI-23). The
+              field stays because the registry API promises not to remove one,
+              and this renders correctly if the filter is ever relaxed. */}
           {m.archived && (
             <span
               title="The author archived this repository"

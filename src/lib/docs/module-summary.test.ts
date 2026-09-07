@@ -34,6 +34,9 @@ const community = (
   platforms: ('android' | 'ios')[] = ['android']
 ): CommunityListing => ({
   kind: 'community',
+  // Every scraped listing is unverified until someone vouches; the ordering and
+  // filtering under test do not read it.
+  source: 'unverified',
   id,
   name: id.split('/')[1],
   owner: id.split('/')[0],
