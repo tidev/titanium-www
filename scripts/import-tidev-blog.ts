@@ -1,3 +1,4 @@
+import { rewriteLinks } from './lib/legacy-blog-links.ts';
 import {
   copyFileSync,
   existsSync,
@@ -122,7 +123,7 @@ for (const file of posts) {
   // Both spellings. Four images in sdk_12_4_0_ga are `<img src>` rather than
   // markdown, and matching only the markdown form silently left them pointing
   // at a path this site does not serve.
-  const rewritten = body
+  const images = body
     .replace(
       /(!\[[^\]]*\]\()([^)]+)(\))/g,
       (_all, open: string, ref: string, close: string) => `${open}${rewriteImage(ref)}${close}`
@@ -131,6 +132,10 @@ for (const file of posts) {
       /(<img[^>]*\ssrc=")([^"]+)(")/g,
       (_all, open: string, ref: string, close: string) => `${open}${rewriteImage(ref)}${close}`
     );
+
+  // After the images, so a link rewrite sees `/blog/x.png` and leaves it be
+  // rather than deciding what `/images/x.png` on the old site meant (TI-67).
+  const rewritten = rewriteLinks(images);
 
   // Built by hand rather than dumped from an object, so the key order is stable
   // and a regenerated file diffs cleanly against the committed one.

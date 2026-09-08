@@ -27,7 +27,7 @@ While we are working on further improvements and the support of new features, yo
 
 You can also execute `titanium sdk install latest` to get the latest **GA** of the Titanium SDK.
 
-**NEW**: We just launched the revamped [Titanium SDK Downloads](https://downloads.titaniumsdk.com/) page, check it out!
+**NEW**: We just launched the revamped [Titanium SDK Downloads](/downloads) page, check it out!
 
 ## Rollback
 
@@ -59,4 +59,4 @@ Missing a known issue? Please report it via [GitHub](https://github.com/tidev/ti
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.
