@@ -1,3 +1,12 @@
 # Sole active maintainer. The email resolves to @cb1kenobi, whose GitHub
 # account carries this address.
 * me@chrisbarber.dev
+
+# Developer directory listings (TI-58). The wildcard above already covers this
+# path, and the entry is here anyway: CODEOWNERS is last-match-wins, so a future
+# rule adding an owner for `/registry/` would otherwise change who reviews a
+# listing as a side effect of a change about something else. Listings are about
+# people, and who approves one should be stated rather than inherited.
+#
+# See docs/developer-directory.md for what is being approved.
+/registry/directory/ me@chrisbarber.dev

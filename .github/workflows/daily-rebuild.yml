@@ -1,0 +1,72 @@
+name: 'Daily Rebuild'
+
+# The site is statically generated, which means it has no sense of time passing.
+# A developer directory listing that expires tomorrow keeps rendering until
+# something rebuilds, and nothing in this repository is going to change on the
+# day it expires. So this rebuilds, once a day.
+#
+# That gives day granularity on a three month window, which is plenty, and it
+# keeps every page static. The two alternatives were both worse:
+#
+#   - Filtering expiry in a dynamic route is exact to the second, and gives up
+#     static generation for the whole page to buy precision nobody asked for.
+#   - Filtering in the browser leaves expired listings in the HTML a crawler
+#     reads, so they stay indexed after they stop being shown. That is the one
+#     outcome a listee would actually mind.
+#
+# It does a second job at the same time. The directory's ordering is a rota
+# turned by the day number (see `fairOrder` in src/lib/directory/profile.ts), so
+# this deploy is also what moves everyone up a place. Without it the same person
+# would be at the top of the list forever.
+#
+# Deliberately not a CI step, for the same reason as refresh-community-modules:
+# what changes is the calendar, not the tree, so a staleness check would fail
+# pull requests that touched nothing. The schedule is the mechanism.
+#
+# This triggers a deploy rather than committing anything. There is nothing to
+# commit: the input is the date, and `next build` reads that from the clock.
+on:
+  schedule:
+    # Daily, shortly after midnight UTC, off the hour and off :00 - GitHub drops
+    # scheduled runs that pile onto one minute. Soon after midnight so that a
+    # listing expiring today is gone within the first hours of the day rather
+    # than most of the way through it.
+    - cron: '17 0 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-rebuild
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger a production deploy
+        env:
+          # A Vercel Deploy Hook: a URL that is itself the credential, which is
+          # why it is a secret and never interpolated into the run block with
+          # `${{ }}`. Create it under Settings, Git, Deploy Hooks, on the
+          # production branch, then add it as VERCEL_DEPLOY_HOOK_URL under
+          # Settings, Secrets and variables, Actions.
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${HOOK:-}" ]; then
+            echo "VERCEL_DEPLOY_HOOK_URL is unset, so nothing was rebuilt and expired"
+            echo "directory listings are still being served. Add the secret under"
+            echo "Settings, Secrets and variables, Actions."
+            exit 1
+          fi
+
+          # Fails loudly on a non-2xx. A hook that has been revoked would
+          # otherwise return 404 and this job would go green while the site
+          # quietly stopped being rebuilt, which is the failure mode that
+          # matters: nobody watches a cron that has always passed.
+          code=$(curl --silent --show-error --fail-with-body \
+            --output /dev/stderr --write-out '%{http_code}' \
+            -X POST "$HOOK")
+
+          echo "Deploy hook accepted the request (HTTP $code)."

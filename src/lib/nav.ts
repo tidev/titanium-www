@@ -20,6 +20,22 @@ export const primaryNav: NavItem[] = [
   { href: '/downloads', label: 'Downloads' },
   { href: '/modules', label: 'Modules' },
   { href: '/blog', label: 'Blog', also: { href: '/blog/feed.xml', label: 'RSS' } },
+  /**
+   * People available for Titanium work (TI-58).
+   *
+   * In the main nav rather than under Contribute, because the two audiences it
+   * serves are both arriving cold: a company deciding whether a Titanium
+   * codebase can still be maintained, and a developer looking for paid work.
+   * Neither would think to look inside a page about contributing.
+   *
+   * The only two-word label here, and it has to be. Both shorter spellings
+   * mislead: "Directory" names the format and not the contents, leaving a cold
+   * reader to guess a directory of what on a site whose other lists are all of
+   * software, and "Developers" is the name every enterprise site gives its
+   * developer-resources silo - which on this site is `/docs`, sitting three
+   * items to the left.
+   */
+  { href: '/directory', label: 'Developer Directory' },
 ];
 
 /**

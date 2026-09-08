@@ -1,4 +1,5 @@
 import { activeCategories, allTags, pageCount, publishedPosts } from './blog/posts.ts';
+import { listedProfiles } from './directory/read.ts';
 import { guide, indexableGuidePaths } from './docs/guides.ts';
 import { lastUpdated } from './docs/last-updated.ts';
 import { latestPerPlatform } from './docs/module-summary.ts';
@@ -48,7 +49,15 @@ import type { MetadataRoute } from 'next';
  * `lib/registry-api/v1.ts`.
  */
 export function sitemapEntries(): MetadataRoute.Sitemap {
-  return [...site(), ...docs(), ...reference(), ...modules(), ...downloads(), ...blog()];
+  return [
+    ...site(),
+    ...docs(),
+    ...reference(),
+    ...modules(),
+    ...downloads(),
+    ...directory(),
+    ...blog(),
+  ];
 }
 
 /** The pages that belong to no section. */
@@ -59,6 +68,30 @@ function site(): MetadataRoute.Sitemap {
     // The human page. `/registry/` with the slash is the JSON API, which
     // robots.txt disallows; see DISALLOW in lib/seo.
     { url: `${SITE_URL}/registry`, changeFrequency: 'monthly', priority: 0.3 },
+  ];
+}
+
+/**
+ * The developer directory and its listings (TI-58).
+ *
+ * The index is daily because what it holds turns over daily: the rota reorders
+ * and expired entries leave, both at the nightly rebuild.
+ *
+ * `listedProfiles()` is the same set `generateStaticParams` builds pages from,
+ * so the sitemap cannot name a URL that 404s. An expired listing leaves here at
+ * the same rebuild it leaves the index, which is the whole reason expiry is
+ * filtered at build rather than in the browser: a listing filtered out
+ * client-side would still be in this file, and would stay indexed after it
+ * stopped being shown.
+ */
+function directory(): MetadataRoute.Sitemap {
+  return [
+    { url: `${SITE_URL}/directory`, changeFrequency: 'daily', priority: 0.6 },
+    ...listedProfiles().map((profile) => ({
+      url: `${SITE_URL}/directory/${profile.id}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    })),
   ];
 }
 

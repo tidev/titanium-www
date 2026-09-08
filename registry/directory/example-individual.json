@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "example-individual",
+  "name": "Example Individual",
+  "kind": "individual",
+  "summary": "A worked example, not a real person. It shows what an individual listing looks like, and it stops being shown the day the first real listing is merged.",
+  "location": "Remote, Europe",
+  "timezone": "Europe/Berlin",
+  "availability": ["part-time", "contract"],
+  "specialisms": ["alloy", "sdk-upgrades", "native-modules-ios", "code-review"],
+  "skills": ["JavaScript", "TypeScript", "Swift", "Kotlin"],
+  "contact": {
+    "label": "Contact form",
+    "url": "https://example.com/contact"
+  },
+  "links": [
+    { "label": "Website", "url": "https://example.com" },
+    { "label": "GitHub", "url": "https://example.com/github" },
+    { "label": "LinkedIn", "url": "https://example.com/linkedin" },
+    { "label": "Bluesky", "url": "https://example.com/bluesky" },
+    { "label": "X", "url": "https://example.com/x" }
+  ],
+  "neverExpires": true,
+  "placeholder": true
+}
