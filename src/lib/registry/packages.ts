@@ -68,6 +68,19 @@ export const ToolchainSchema = z.strictObject({
   source: z.object({ repo: z.string(), ref: z.string(), commit: z.string() }).loose(),
   /** `vendorDependencies.node` from the release's root `package.json`. */
   node: z.string().optional(),
+  /**
+   * The version the tree calls itself, from `version` in the root
+   * `package.json`.
+   *
+   * Redundant for a release, where the directory name is the version and this
+   * agrees with it. It exists for `main`, whose directory name says only that
+   * it is the development tree: the version it will become is knowable, and
+   * without it the compatibility page can neither name `main` nor tell whether
+   * it is ahead of the newest release. Optional because the releases captured
+   * before it was recorded do not carry it, and re-cloning twenty tags to
+   * backfill a field only `main` reads would be a poor trade.
+   */
+  declared: z.string().optional(),
   android: z
     .object({
       minSdkVersion: z.string().optional(),

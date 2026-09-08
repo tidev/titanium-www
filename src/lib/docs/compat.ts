@@ -1,6 +1,14 @@
 import type { ApiPlatform, ApiType, Toolchain } from '../registry/index.ts';
 import { PLATFORM_LABELS, PLATFORM_ORDER } from './format.ts';
-import { apiTypeAt, REGISTRY, sdkIndex, sdkToolchain, sdkVersions, MAIN } from './registry.ts';
+import {
+  apiTypeAt,
+  compareVersions,
+  MAIN,
+  REGISTRY,
+  sdkIndex,
+  sdkToolchain,
+  sdkVersions,
+} from './registry.ts';
 import { join } from 'node:path';
 
 /**
@@ -293,6 +301,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
   if (!all.length) return `${generatedFrom}\n\nNo release has been captured yet.\n`;
 
   const current = all.find((t) => t.version !== MAIN) ?? all[0];
+  const rows = toolchainRows(all, current);
   const out: string[] = [
     generatedFrom,
     '',
@@ -319,7 +328,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
     '',
     ...table(
       ['SDK', 'Node.js', ...COLUMNS.map((c) => c.label)],
-      all.map((t) => [
+      rows.map((t) => [
         releaseLabel(t),
         code(t.node),
         ...COLUMNS.map((c) => code(t[c.from].vendor[c.key])),
@@ -334,7 +343,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
     '',
     ...table(
       ['SDK', 'Min Android API', 'Compiles against API', 'Min iOS', 'Min watchOS'],
-      all.map((t) => [
+      rows.map((t) => [
         releaseLabel(t),
         plain(t.android.minSdkVersion),
         plain(t.android.compileSdkVersion),
@@ -349,9 +358,47 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
 
 const plain = (v: string | undefined) => (v ? cellSafe(v) : '-');
 
-/** `main` is the development tree, so it is named as one rather than as a version. */
+/**
+ * The rows of both release tables: `main` first where it is ahead, then the
+ * releases newest first.
+ *
+ * `main` leads rather than trails because it is the row that answers a question
+ * the others cannot. A reader checking whether their Java or Xcode will still
+ * work is usually asking about the next SDK, not the last one, and `main`
+ * carries the only requirements on this page that have not shipped yet: it
+ * already wants Node 22.19.0 where 13.4.1 asks for 20.18.1.
+ *
+ * It is dropped when it is not ahead of the newest release, which is the window
+ * between a release shipping and `main` being bumped past it. There `main`
+ * declares the version that just shipped, so the row would duplicate the
+ * release above it while the word "unreleased" implied something newer exists.
+ *
+ * A `main` with no `declared` version is kept. It was captured before the field
+ * was recorded, and dropping a row for want of a comparison would hide the
+ * development tree entirely rather than admit the comparison cannot be made.
+ */
+function toolchainRows(all: readonly Toolchain[], current: Toolchain): Toolchain[] {
+  const main = all.find((t) => t.version === MAIN);
+  const releases = all.filter((t) => t.version !== MAIN);
+  if (!main) return [...releases];
+
+  const ahead =
+    main.declared === undefined ||
+    main === current ||
+    compareVersions(main.declared, current.version) < 0;
+  return ahead ? [main, ...releases] : [...releases];
+}
+
+/**
+ * `main` is the development tree, so it is named as one rather than as a
+ * version, with the version it will become in parentheses. Naming only `main`
+ * leaves the reader unable to tell which release the row is a preview of;
+ * naming only the version would present an unreleased tree as installable.
+ */
 const releaseLabel = (t: Toolchain) =>
-  t.version === MAIN ? '`main` (unreleased)' : `**${t.version}**`;
+  t.version === MAIN
+    ? `\`main\` (${t.declared ? `${t.declared}, ` : ''}unreleased)`
+    : `**${t.version}**`;
 
 /** `android build tools` reads as a column heading; `ios sdk` and `ndk` do not. */
 function label(key: string): string {

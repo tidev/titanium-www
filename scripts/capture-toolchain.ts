@@ -176,6 +176,7 @@ function capture(at: Compiled, dir: string): Toolchain {
   }
 
   const node = vendor(root).node;
+  const declared = str(root?.version);
   const minSdk = str(android?.minSDKVersion);
   const compileSdk = str(android?.compileSDKVersion);
   const minIos = str(ios?.minIosVersion);
@@ -186,6 +187,7 @@ function capture(at: Compiled, dir: string): Toolchain {
     version: at.version,
     source: { repo: at.repo, ref: at.ref, commit: at.commit },
     ...(node ? { node } : {}),
+    ...(declared ? { declared } : {}),
     android: {
       ...(minSdk ? { minSdkVersion: minSdk } : {}),
       ...(compileSdk ? { compileSdkVersion: compileSdk } : {}),

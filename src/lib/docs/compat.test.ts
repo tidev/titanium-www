@@ -226,6 +226,51 @@ describe('renderToolchain', () => {
     assert.match(out, /`main` \(unreleased\)/);
   });
 
+  const withDeclared = (t: Toolchain, declared: string): Toolchain => ({ ...t, declared });
+
+  test('main leads the tables, named with the version it will become', () => {
+    const out = renderToolchain(
+      [
+        withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0'),
+        at('13.4.1', '>=20.18.1', '>=17.x'),
+      ],
+      ''
+    );
+    assert.match(out, /`main` \(14\.0\.0, unreleased\)/);
+    // The headline still describes the newest release, not the tree.
+    assert.match(out, /### Titanium SDK 13\.4\.1/);
+
+    const rows = out.split('\n').filter((line) => /^\| (`main`|\*\*)/.test(line));
+    assert.equal(rows.length, 4, 'two tables of two rows');
+    for (const [i, line] of rows.entries()) {
+      assert.equal(line.includes('`main`'), i % 2 === 0, `row ${i} should lead its table`);
+    }
+  });
+
+  // The window between a release shipping and `main` being bumped past it. The
+  // row would repeat the release above it while calling itself unreleased.
+  test('main is dropped when it is not ahead of the newest release', () => {
+    const out = renderToolchain(
+      [
+        withDeclared(at('main', '>=20.18.1', '>=17.x'), '13.4.1'),
+        at('13.4.1', '>=20.18.1', '>=17.x'),
+      ],
+      ''
+    );
+    assert.equal(out.includes('`main`'), false);
+    assert.match(out, /\*\*13\.4\.1\*\*/);
+  });
+
+  // Captured before `declared` was recorded. Hiding the development tree for
+  // want of a comparison is worse than showing it without one.
+  test('main with no declared version is kept, and says only that it is unreleased', () => {
+    const out = renderToolchain(
+      [at('main', '>=22.19.0', '>=17.x'), at('13.4.1', '>=20.18.1', '>=17.x')],
+      ''
+    );
+    assert.match(out, /`main` \(unreleased\)/);
+  });
+
   test('a missing value reads as absent rather than as an empty cell', () => {
     const bare: Toolchain = {
       schemaVersion: 1,
