@@ -73,6 +73,46 @@ Note that `z.url()` on its own accepts `mailto:someone@example.com` as a
 perfectly valid URL. The protocol check in the schema is the only thing
 standing between the directory and an address on every card.
 
+## Pictures
+
+A listing may carry a photo, or a logo if it is a company. It is optional, and a
+listing without one shows the listee's initials instead, in the same box and at
+the same size. Nobody is moved down the page for declining to publish a
+photograph of themselves.
+
+**A picture is a file committed beside the listing**, at
+`registry/directory/<id>.png`, and nothing in the JSON refers to it. The
+filename is the link, so there is no field to get out of step with the file, and
+the schema does not change to accommodate pictures at all.
+
+**There is no option to link to one.** The obvious alternative - a URL in the
+listing, pointing anywhere - fails on two counts. The build refuses network
+access outright, so nothing remote can be checked at the point it matters. More
+seriously, an `<img>` aimed at a host of the listee's choosing reports every
+visitor's address, user agent and referer to that host on every page view, and
+can be swapped for a tracking pixel the day after review. This directory refuses
+to publish an email address because the cost lands on the listee; a hotlinked
+image puts a similar cost on the reader, who never asked to be here at all.
+
+What is enforced, in `src/lib/directory/avatar.ts` and checked by
+`pnpm check:registry`:
+
+- `.png`, `.jpg` or `.webp`, and the file has to actually be what its extension
+  says. A renamed file is refused rather than published.
+- **No SVG.** It is a document that can carry script and pull in remote
+  resources, and it would be served from this site's own origin. There is no
+  version of an avatar that needs to be a program.
+- **100KB per file.** A deployment budget rather than a matter of taste: the
+  size limit is measured against the whole static output, which the directory
+  shares with the compiled documentation, so the headroom for pictures is
+  measured in single-digit megabytes.
+- One picture per listing, and no orphans. A picture whose listing is gone fails
+  the build rather than staying served at a URL nothing links to.
+
+A picture is removed the way anything else is: by deleting the file. Deleting a
+listing deletes its picture in the same pull request, and the published copy is
+rebuilt from scratch on every deploy, so nothing survives the removal.
+
 ## Expiry, and why renewal is deliberately annoying
 
 **A listing runs for three months.** `expiresAt` is required, cannot be set more

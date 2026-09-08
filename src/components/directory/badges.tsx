@@ -1,5 +1,6 @@
 import {
   AVAILABILITY_LABELS,
+  initials,
   KIND_LABELS,
   SPECIALISM_LABELS,
   SPECIALISM_ORDER,
@@ -14,6 +15,60 @@ import {
  * imports from `lib/directory/profile.ts` only, which is the half of the
  * library with no filesystem in it.
  */
+
+/**
+ * A listing's picture: a photo for a person, a logo for a company.
+ *
+ * Falls back to a monogram rather than to nothing, so that a listing without a
+ * picture keeps the same shape as one with it and the names on a page of cards
+ * stay on one line. Nobody is pushed down the page for declining to publish a
+ * photograph of themselves.
+ *
+ * ## Three decisions worth the words
+ *
+ * **A plain `img`, not `next/image`.** The box is a fixed size in CSS, so there
+ * is no layout shift to prevent, which is most of what the component buys. The
+ * file is already capped at 100KB and served from this origin, so there is
+ * little left to optimise. `src/lib/og.tsx` is the only other image in the
+ * codebase and reaches the same conclusion for its own reasons.
+ *
+ * **`alt=""`.** The name is right beside it, every time - this is never
+ * rendered alone. Describing the picture as well would have a screen reader
+ * announce "Example Agency, Example Agency logo", and a decorative image
+ * correctly marked is silent rather than noisy.
+ *
+ * **Round for a person, square for a company.** A face and a wordmark want
+ * different frames, and a logo cropped to a circle usually loses part of itself.
+ */
+export function Picture({ profile, size }: { profile: Profile; size: 40 | 64 }) {
+  // Tailwind matches whole class names in the source, so these cannot be built
+  // by interpolation - the utility would never be generated.
+  const box = size === 64 ? 'size-16 text-lg' : 'size-10 text-xs';
+  const shape = profile.kind === 'agency' ? 'rounded-md' : 'rounded-full';
+
+  if (profile.avatar) {
+    return (
+      <img
+        src={profile.avatar}
+        alt=""
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        className={`${box} ${shape} shrink-0 border border-border object-cover`}
+      />
+    );
+  }
+
+  return (
+    <span
+      aria-hidden
+      className={`${box} ${shape} flex shrink-0 items-center justify-center border border-border font-medium text-text-subtle`}
+    >
+      {initials(profile.name)}
+    </span>
+  );
+}
 
 /**
  * Individual or agency, on every card.

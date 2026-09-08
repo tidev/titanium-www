@@ -27,8 +27,15 @@ export const primaryNav: NavItem[] = [
    * serves are both arriving cold: a company deciding whether a Titanium
    * codebase can still be maintained, and a developer looking for paid work.
    * Neither would think to look inside a page about contributing.
+   *
+   * The only two-word label here, and it has to be. Both shorter spellings
+   * mislead: "Directory" names the format and not the contents, leaving a cold
+   * reader to guess a directory of what on a site whose other lists are all of
+   * software, and "Developers" is the name every enterprise site gives its
+   * developer-resources silo - which on this site is `/docs`, sitting three
+   * items to the left.
    */
-  { href: '/directory', label: 'Directory' },
+  { href: '/directory', label: 'Developer Directory' },
 ];
 
 /**

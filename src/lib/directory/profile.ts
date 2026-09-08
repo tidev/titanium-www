@@ -17,7 +17,15 @@ import type {
  * The two things worth reading here are expiry and ordering.
  */
 
-export type Profile = DeveloperProfile;
+/**
+ * A listing, plus the one thing about it that is not in its JSON.
+ *
+ * `avatar` is the public URL of the picture committed beside the listing, filled
+ * in by `./read.ts` from the filename rather than from a field - see
+ * `./avatar.ts` for why the schema does not carry one. Optional, because most
+ * listings will not have a picture and every one of them still renders.
+ */
+export type Profile = DeveloperProfile & { avatar?: string };
 
 export const KIND_LABELS: Record<ProfileKind, string> = {
   individual: 'Individual',
@@ -54,6 +62,28 @@ export const SPECIALISM_LABELS: Record<Specialism, string> = {
  */
 export const SPECIALISM_ORDER = Object.keys(SPECIALISM_LABELS) as Specialism[];
 export const AVAILABILITY_ORDER = Object.keys(AVAILABILITY_LABELS) as Availability[];
+
+/**
+ * What stands in for a picture on a listing that has none.
+ *
+ * The first letter of the first two words, so "Example Agency" reads as EA and
+ * a one-word name gets a single letter. Deliberately dumb about scripts it
+ * cannot reason about: a name in Japanese or Arabic yields its own first
+ * characters, which is a better answer than transliterating somebody's name to
+ * fill a box.
+ *
+ * Upper-cased with `toLocaleUpperCase` and no locale argument, so it follows the
+ * runtime's rules rather than English's. This is drawn, never announced - the
+ * name itself is beside it - so a monogram that reads oddly costs nothing.
+ */
+export function initials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  return words
+    .slice(0, 2)
+    .map((word) => [...word][0] ?? '')
+    .join('')
+    .toLocaleUpperCase();
+}
 
 // ------------------------------------------------------------------- expiry
 

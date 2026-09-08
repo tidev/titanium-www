@@ -1,6 +1,7 @@
 import {
   daysRemaining,
   fairOrder,
+  initials,
   isExpired,
   liveProfiles,
   matches,
@@ -196,5 +197,32 @@ describe('matches', () => {
     assert.equal(matches(person, { ...all, query: 'kotlin' }), true);
     assert.equal(matches(person, { ...all, query: 'release automation' }), true);
     assert.equal(matches(person, { ...all, query: 'swift' }), false);
+  });
+});
+
+describe('initials', () => {
+  test('the first letter of the first two words', () => {
+    assert.equal(initials('Example Agency'), 'EA');
+    assert.equal(initials('Ada Lovelace Consulting'), 'AL');
+  });
+
+  test('a one-word name gets one letter', () => {
+    assert.equal(initials('Titanium'), 'T');
+  });
+
+  test('stray whitespace does not become a blank initial', () => {
+    assert.equal(initials('  grace   hopper  '), 'GH');
+  });
+
+  test('a name outside the Latin alphabet keeps its own characters', () => {
+    // Transliterating somebody's name to fill a box would be worse than
+    // showing the name's own first characters. This is drawn, never announced.
+    assert.equal(initials('東京 開発'), '東開');
+  });
+
+  test('an astral first character is not cut in half', () => {
+    // Split by code point, not code unit: name[0] on an emoji or an extended
+    // plane character yields half a surrogate pair and renders as a box.
+    assert.equal(initials('𝒜da Lovelace'), '𝒜L');
   });
 });

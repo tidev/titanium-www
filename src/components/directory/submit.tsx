@@ -38,7 +38,8 @@ export function HowToList({ className = '' }: { className?: string }) {
       </h2>
       <p className="mt-2 text-sm text-text-muted">
         Add one JSON file to <code className="font-mono text-xs">registry/directory/</code> and open
-        a pull request. No account, no form. Use the{' '}
+        a pull request. No account, no form. A photo or logo is optional: commit it beside the JSON,
+        named after your listing, at most 100KB. Use the{' '}
         <a href={TEMPLATE_URL} className="text-link hover:underline">
           listing template
         </a>{' '}

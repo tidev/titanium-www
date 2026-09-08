@@ -1,6 +1,7 @@
 import {
   AvailabilityChips,
   KindBadge,
+  Picture,
   PlaceholderBadge,
   SpecialismChips,
   Where,
@@ -64,16 +65,22 @@ export default async function ProfilePage({ params }: PageProps<'/directory/[pro
         </a>
       </p>
 
-      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{profile.name}</h1>
-        <span className="flex flex-wrap items-center gap-2">
-          {profile.placeholder && <PlaceholderBadge />}
-          <KindBadge profile={profile} />
-        </span>
-      </div>
+      <div className="mt-3 flex items-start gap-4">
+        <Picture profile={profile} size={64} />
 
-      <div className="mt-2">
-        <Where profile={profile} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <h1 className="text-3xl font-semibold tracking-tight">{profile.name}</h1>
+            <span className="flex flex-wrap items-center gap-2">
+              {profile.placeholder && <PlaceholderBadge />}
+              <KindBadge profile={profile} />
+            </span>
+          </div>
+
+          <div className="mt-2">
+            <Where profile={profile} />
+          </div>
+        </div>
       </div>
 
       <p className="mt-4 text-text-muted">{profile.summary}</p>

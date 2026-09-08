@@ -7,6 +7,7 @@
  *
  *   node scripts/validate-registry.ts [dir]
  */
+import { readAvatars } from '../src/lib/directory/avatar.ts';
 import { CONTENTS, ContentsSchema, poolPath } from '../src/lib/docs/pool.ts';
 import {
   ApiIndexSchema,
@@ -203,6 +204,7 @@ for (const dir of versionDirs(root)) {
 const directoryDir = join(root, 'directory');
 if (existsSync(directoryDir)) {
   const now = new Date();
+  const listingIds: string[] = [];
   for (const name of readdirSync(directoryDir).sort()) {
     if (!name.endsWith('.json')) continue;
 
@@ -221,6 +223,7 @@ if (existsSync(directoryDir)) {
 
     const parsed = DeveloperProfileSchema.safeParse(data);
     if (!parsed.success) continue;
+    listingIds.push(parsed.data.id);
 
     const problems: string[] = [];
     if (parsed.data.id !== basename(name, '.json')) {
@@ -234,6 +237,19 @@ if (existsSync(directoryDir)) {
       console.log(`  FAIL  directory/${name}`);
       for (const problem of problems) console.log(`          ${problem}`);
     }
+  }
+
+  /**
+   * Listing pictures, which are the one thing under `registry/` that is not
+   * JSON and so is invisible to the walk above.
+   *
+   * Checked here as well as at build time because this is the gate a submitter
+   * meets first, and because the build only reports the first thing wrong. All
+   * of them at once means one round trip rather than one per mistake.
+   */
+  for (const problem of readAvatars(directoryDir, listingIds).problems) {
+    failed++;
+    console.log(`  FAIL  directory/${problem}`);
   }
 }
 

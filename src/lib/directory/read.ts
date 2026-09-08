@@ -1,4 +1,5 @@
 import { DeveloperProfileSchema } from '../registry/directory.ts';
+import { avatarsByProfile, avatarUrl } from './avatar.ts';
 import { fairOrder, liveProfiles, type Profile } from './profile.ts';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
@@ -39,7 +40,7 @@ export function allProfiles(): Profile[] {
   if (all) return all;
   if (!existsSync(DIRECTORY_DIR)) return (all = []);
 
-  all = readdirSync(DIRECTORY_DIR)
+  const listings = readdirSync(DIRECTORY_DIR)
     .filter((name) => name.endsWith('.json'))
     .sort()
     .map((name) => {
@@ -53,6 +54,20 @@ export function allProfiles(): Profile[] {
       }
       return parsed;
     });
+
+  // A second pass, because a picture is matched to a listing by name and the
+  // orphan check needs to know every id before it can call one an orphan. Like
+  // the schema above, it throws rather than skipping: a committed file that
+  // cannot be published is a mistake somebody should be told about.
+  const pictures = avatarsByProfile(
+    DIRECTORY_DIR,
+    listings.map((profile) => profile.id)
+  );
+
+  all = listings.map((profile) => {
+    const picture = pictures.get(profile.id);
+    return picture ? { ...profile, avatar: avatarUrl(picture) } : profile;
+  });
   return all;
 }
 

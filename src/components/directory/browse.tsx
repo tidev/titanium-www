@@ -1,6 +1,13 @@
 'use client';
 
-import { AvailabilityChips, KindBadge, PlaceholderBadge, SpecialismChips, Where } from './badges';
+import {
+  AvailabilityChips,
+  KindBadge,
+  Picture,
+  PlaceholderBadge,
+  SpecialismChips,
+  Where,
+} from './badges';
 import { Select } from '@/components/ui/select';
 import {
   AVAILABILITY_LABELS,
@@ -132,25 +139,34 @@ export function Browse({ profiles }: { profiles: Profile[] }) {
 function ProfileCard({ profile }: { profile: Profile }) {
   return (
     <li className="relative flex flex-col rounded-lg border border-border p-4 transition-colors hover:border-border-strong">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <h2 className="text-base font-semibold">
-          {/* The whole card is not a link: it carries an outbound contact link
-              of its own, and nesting those is not something a keyboard user can
-              unpick. The name is the link to the listing's own page. */}
-          <a
-            href={`/directory/${profile.id}`}
-            className="text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-          >
-            {profile.name}
-          </a>
-        </h2>
-        <span className="ml-auto flex flex-wrap items-center gap-2">
-          {profile.placeholder && <PlaceholderBadge />}
-          <KindBadge profile={profile} />
-        </span>
-      </div>
+      <div className="flex items-start gap-3">
+        <Picture profile={profile} size={40} />
 
-      <Where profile={profile} />
+        {/* min-w-0, or a long unbroken name would push the badges out of the
+            card rather than wrapping: a flex item's floor is its content. */}
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <h2 className="text-base font-semibold">
+              {/* The whole card is not a link: it carries an outbound contact
+                  link of its own, and nesting those is not something a keyboard
+                  user can unpick. The name is the link to the listing's own
+                  page. */}
+              <a
+                href={`/directory/${profile.id}`}
+                className="text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              >
+                {profile.name}
+              </a>
+            </h2>
+            <span className="ml-auto flex flex-wrap items-center gap-2">
+              {profile.placeholder && <PlaceholderBadge />}
+              <KindBadge profile={profile} />
+            </span>
+          </div>
+
+          <Where profile={profile} />
+        </div>
+      </div>
 
       <p className="mt-2 text-sm text-text-muted">{profile.summary}</p>
 
