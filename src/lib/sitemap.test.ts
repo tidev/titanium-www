@@ -20,6 +20,22 @@ const entries = sitemapEntries();
 const paths = entries.map((entry) => entry.url.replace(SITE_URL, ''));
 
 describe('sitemap', () => {
+  // TI-59 archives a major by copying the guides to `/docs/v13/...` and leaving
+  // current unversioned. Those copies canonicalise to current and must not also
+  // be requested here, or the crawler is asked to rank three spellings of one
+  // page. Nothing filters for it: `indexableGuidePaths()` reads the current
+  // content root and archived majors simply never enter. That is quiet enough
+  // to be undone by accident, so it is asserted rather than trusted.
+  test('lists no archived major', () => {
+    for (const path of paths) {
+      assert.equal(
+        /^\/docs\/v\d+(\/|$)/.test(path),
+        false,
+        `${path} is an archived major and should not be in the sitemap`
+      );
+    }
+  });
+
   test('is absolute and free of duplicates', () => {
     for (const entry of entries) {
       assert.equal(entry.url.startsWith(`${SITE_URL}/`), true, entry.url);
