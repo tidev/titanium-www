@@ -1,6 +1,7 @@
 import { Breadcrumbs, type Crumb } from '@/components/docs/breadcrumbs';
 import { GuideNav } from '@/components/docs/guide-nav';
 import { GuideToc } from '@/components/docs/guide-toc';
+import { DocsNavDrawer } from '@/components/docs/nav-drawer';
 import { ArchivedVersionNotice, VersionSwitcher } from '@/components/docs/version-switcher';
 import {
   archivedSeo,
@@ -398,12 +399,14 @@ export default async function DocsPage({ params }: PageProps<'/docs/[[...slug]]'
 
   return (
     <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-x-8 px-4 py-8 sm:px-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:px-8 xl:grid-cols-[15rem_minmax(0,1fr)_13rem]">
-      <GuideNav
-        current={path}
-        written={written}
-        prefix={prefix}
-        pendingTitle={archived ? `Not in ${major}` : 'Not written yet'}
-      />
+      <DocsNavDrawer>
+        <GuideNav
+          current={path}
+          written={written}
+          prefix={prefix}
+          pendingTitle={archived ? `Not in ${major}` : 'Not written yet'}
+        />
+      </DocsNavDrawer>
 
       <article className="min-w-0">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
