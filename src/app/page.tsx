@@ -66,7 +66,19 @@ function Chrome({ name, children }: { name: string; children: React.ReactNode })
         <span className="size-2 rounded-full bg-border-strong" />
         <span className="font-mono text-xs text-text-subtle">{name}</span>
       </div>
-      <pre className="overflow-x-auto p-4 font-mono text-sm leading-relaxed">
+      {/* Focusable because it scrolls: without a tab stop there is no keyboard
+          route to the end of a line wider than the box (WCAG 2.1.1). Same
+          reasoning as `Terminal` and as the prose blocks in markdown.ts.
+
+          The ring is drawn *inside* the block, unlike everywhere else on the
+          site. The wrapper above is `overflow-hidden` for its rounded corners
+          and has no padding, so the `<pre>` fills it exactly and a ring offset
+          outwards is clipped away on three sides: the stop would have no
+          visible indicator at all, which is WCAG 2.4.7. */}
+      <pre
+        tabIndex={0}
+        className="overflow-x-auto p-4 font-mono text-sm leading-relaxed focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
+      >
         <code>{children}</code>
       </pre>
     </div>

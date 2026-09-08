@@ -156,7 +156,10 @@ function SectionHeading({ title }: { title: string }) {
 function ApiSubtree({ tree }: { tree: NonNullable<GuideNavProps['apiTree']> }) {
   return (
     <>
-      <input id="guide-api-toggle" type="checkbox" className="peer sr-only" />
+      {/* Hidden above `lg` for the reason `ApiNav`'s twin is: `sr-only` leaves
+          the control focusable and named only by a label that is itself
+          display:none at that width. See the note there. */}
+      <input id="guide-api-toggle" type="checkbox" className="peer sr-only lg:hidden" />
       <label
         htmlFor="guide-api-toggle"
         className="ml-3 flex cursor-pointer items-center gap-1.5 py-1 text-sm text-text-muted peer-checked:[&_svg]:rotate-90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus lg:hidden"

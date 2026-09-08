@@ -573,6 +573,14 @@ body {
     font-size: inherit;
   }
 
+  /* The block is focusable so a keyboard can scroll it (see
+     `focusableCodeBlocks` in markdown.ts), which is only half the job: a focus
+     stop nobody can see is WCAG 2.4.7. Same ring the rest of the site draws. */
+  .prose-docs pre:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
   /* Syntax highlighting (TI-10). Shiki writes one `--shiki-light` and one
      `--shiki-dark` custom property per token and no actual colour, so a single
      payload serves both themes and the toggle costs no re-render. These rules

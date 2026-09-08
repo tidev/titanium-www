@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Theme = 'light' | 'system' | 'dark';
 
@@ -45,6 +45,7 @@ export function ThemeToggle() {
   // The server cannot know the stored theme, so nothing is marked active
   // until after hydration. Avoids a mismatch and a flash of wrong selection.
   const [ready, setReady] = useState(false);
+  const group = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
@@ -64,10 +65,48 @@ export function ThemeToggle() {
     }
   }
 
+  /**
+   * Arrow keys move the selection, the way a radio group is expected to.
+   *
+   * Calling it a `radiogroup` is a promise about how it behaves, and three
+   * plain buttons under that role kept none of it: every one was its own tab
+   * stop, and the arrow keys did nothing. Native radios have this for free -
+   * `.prose-docs .tab-radio` keeps its inputs on screen rather than
+   * `display: none` for exactly that reason - but these carry an icon and a
+   * pressed shape a native input cannot, so the behaviour is written out.
+   *
+   * Wrapping rather than stopping at the ends, and moving selection with focus,
+   * both follow the ARIA authoring practices for the pattern.
+   */
+  function onKeyDown(event: React.KeyboardEvent) {
+    const step =
+      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+        ? 1
+        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+          ? -1
+          : 0;
+    let next: Theme | undefined;
+    if (step) {
+      const at = OPTIONS.findIndex((o) => o.value === theme);
+      next = OPTIONS[(at + step + OPTIONS.length) % OPTIONS.length]?.value;
+    } else if (event.key === 'Home') {
+      next = OPTIONS[0]?.value;
+    } else if (event.key === 'End') {
+      next = OPTIONS[OPTIONS.length - 1]?.value;
+    }
+    if (!next) return;
+    event.preventDefault();
+    choose(next);
+    // Focus follows selection, so the next arrow press moves on from here.
+    group.current?.querySelector<HTMLButtonElement>(`[data-theme-option="${next}"]`)?.focus();
+  }
+
   return (
     <div
+      ref={group}
       role="radiogroup"
       aria-label="Color theme"
+      onKeyDown={onKeyDown}
       className="inline-flex items-center gap-0.5 rounded-full border border-border p-0.5"
     >
       {OPTIONS.map((o) => {
@@ -80,6 +119,12 @@ export function ThemeToggle() {
             aria-checked={active}
             aria-label={o.label}
             title={o.label}
+            data-theme-option={o.value}
+            /* One tab stop for the group, not three: Tab reaches the control
+               and the arrows move within it. Keyed off `theme` rather than
+               `active` so the stop exists before hydration too, where `ready`
+               is false and the server has already rendered "system". */
+            tabIndex={theme === o.value ? 0 : -1}
             onClick={() => choose(o.value)}
             className={`grid size-7 place-items-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
               active ? 'bg-surface-raised text-text' : 'text-text-subtle hover:text-text'
