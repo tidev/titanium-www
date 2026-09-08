@@ -1,0 +1,188 @@
+import {
+  readMatrix,
+  readToolchains,
+  renderMatrix,
+  renderToolchain,
+} from '../src/lib/docs/compat.ts';
+import { latestSdkVersion } from '../src/lib/docs/registry.ts';
+import { CliReleasesSchema, SCHEMA_VERSION } from '../src/lib/registry/index.ts';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
+import { dirname, join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * Writes the two generated halves of `/docs/reference/compatibility` (TI-75).
+ *
+ *   node scripts/generate-compat.ts           write them
+ *   node scripts/generate-compat.ts --check   fail if what is committed is stale
+ *   node scripts/generate-compat.ts --refresh read npm for CLI releases first
+ *
+ * ## Why partials rather than a component
+ *
+ * `content/docs/_partials/` is the mechanism guide content already has for
+ * splicing in text written once and used elsewhere, and `:::include` resolves
+ * on the raw markdown before rendering. A generated partial therefore goes
+ * through the same parser, the same link check, the same heading anchors and
+ * the same em dash gate as anything hand-written, with no second rendering
+ * path. See `src/lib/docs/compat.ts` for what goes in them.
+ *
+ * ## Why the output is committed
+ *
+ * `pnpm check:docs`, `pnpm test` and `pnpm build` all render the page, and each
+ * has to be runnable on a clean checkout without a generation step having been
+ * remembered first. The build regenerates them anyway, before `check-docs`, so
+ * a stale commit cannot deploy; `--check` is what makes it visible in CI rather
+ * than silently corrected.
+ *
+ * Both inputs are files in this repository, so this is offline and
+ * deterministic: the same commit generates the same bytes.
+ *
+ * ## Why the CLI list is captured rather than fetched
+ *
+ * Deciding the minimum CLI needs every published `titanium` release and the
+ * Node each declares, which lives in the npm packument. This script runs inside
+ * `pnpm build`, so fetching it here would put npm on the critical path of every
+ * deploy and make one commit render differently on two days. It is captured to
+ * `registry/cli/releases.json` instead, the same shape of decision as capturing
+ * release notes rather than reading GitHub at build.
+ *
+ * `--refresh` is the fetch, run deliberately when a new CLI ships. Nothing else
+ * in this script touches the network.
+ */
+
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const PARTIALS = join(ROOT, 'content/docs/_partials');
+
+const check = process.argv.includes('--check');
+const refresh = process.argv.includes('--refresh');
+
+const CLI_RELEASES = join(ROOT, 'registry/cli/releases.json');
+const NPM = 'https://registry.npmjs.org';
+
+/**
+ * Read every `titanium` release and the Node it declares, and keep the two
+ * fields this page uses.
+ *
+ * The abbreviated packument is asked for by `Accept`: the full document carries
+ * dist metadata for every version and is an order of magnitude larger for no
+ * gain here.
+ */
+async function refreshCliReleases(): Promise<void> {
+  const res = await fetch(`${NPM}/titanium`, {
+    headers: { accept: 'application/vnd.npm.install-v1+json' },
+  });
+  if (!res.ok) throw new Error(`npm answered ${res.status} for titanium`);
+
+  const body = (await res.json()) as { versions?: Record<string, { engines?: { node?: string } }> };
+  const releases = Object.entries(body.versions ?? {})
+    .map(([version, info]) => ({
+      version,
+      ...(info.engines?.node ? { node: info.engines.node } : {}),
+    }))
+    .sort((a, b) => a.version.localeCompare(b.version));
+  if (!releases.length) throw new Error('the titanium packument listed no versions');
+
+  const value = CliReleasesSchema.parse({
+    schemaVersion: SCHEMA_VERSION,
+    fetchedAt: new Date().toISOString(),
+    source: { registry: NPM, package: 'titanium' },
+    releases,
+  });
+  mkdirSync(dirname(CLI_RELEASES), { recursive: true });
+  writeFileSync(CLI_RELEASES, `${JSON.stringify(value, null, 2)}\n`);
+  console.log(`registry/cli/releases.json: ${releases.length} CLI release(s)`);
+}
+
+if (refresh) await refreshCliReleases();
+
+if (!existsSync(CLI_RELEASES)) {
+  console.error(
+    'registry/cli/releases.json is missing, so the minimum Titanium CLI cannot be worked out.\n' +
+      'Run: pnpm docs:compat --refresh'
+  );
+  process.exit(1);
+}
+
+const cliReleases = CliReleasesSchema.parse(
+  JSON.parse(readFileSync(CLI_RELEASES, 'utf8'))
+).releases;
+
+const version = latestSdkVersion();
+if (!version) {
+  console.error('No compiled SDK version under registry/sdk/, so there is nothing to generate.');
+  process.exit(1);
+}
+
+const matrix = readMatrix(version);
+if (!matrix) {
+  console.error(`registry/sdk/${version} has no compiled API index.`);
+  process.exit(1);
+}
+
+/** Says where a partial came from, in the file, for whoever opens it to edit it. */
+const banner = (from: string) =>
+  `<!-- Generated by scripts/generate-compat.ts from ${from}. Do not edit by hand: run \`pnpm docs:compat\`. -->`;
+
+const toolchains = readToolchains();
+
+// The matrix is generated from `version`, and the toolchain section names the
+// newest release a capture exists for. Those are the same release right up
+// until someone compiles one and does not run `pnpm registry:toolchain`, at
+// which point the page states two different newest releases and says nothing
+// about it. Capturing is a separate manual step, so this is the ordinary way to
+// get it wrong rather than an unlikely one.
+if (toolchains.length && !toolchains.some((t) => t.version === version)) {
+  console.error(
+    `registry/sdk/${version} has no toolchain.json, so the toolchain tables would describe\n` +
+      `an older release than the matrix above them. Run: pnpm registry:toolchain ${version}`
+  );
+  process.exit(1);
+}
+
+const files: { name: string; body: string }[] = [
+  {
+    name: 'platform-support.md',
+    body: `${renderMatrix(matrix, banner(`registry/sdk/${version}`))}`,
+  },
+  {
+    name: 'toolchain.md',
+    body: renderToolchain(toolchains, cliReleases, banner('registry/sdk/*/toolchain.json')),
+  },
+];
+
+let stale = 0;
+
+for (const { name, body } of files) {
+  const path = join(PARTIALS, name);
+  const rel = relative(ROOT, path);
+  const current = existsSync(path) ? readFileSync(path, 'utf8') : null;
+
+  if (current === body) {
+    console.log(`${rel} up to date`);
+    continue;
+  }
+  if (check) {
+    console.error(`${rel} is stale`);
+    stale++;
+    continue;
+  }
+  writeFileSync(path, body);
+  console.log(`${rel} written`);
+}
+
+console.log(
+  `\nSDK ${version}: ${matrix.rows.length} types, ` +
+    `${matrix.members.toLocaleString('en-US')} members, ` +
+    `${toolchains.length} release(s) with a captured toolchain`
+);
+
+if (!toolchains.length) {
+  console.error('\nNo toolchain.json anywhere. Run: node scripts/capture-toolchain.ts');
+  process.exit(1);
+}
+
+if (stale) {
+  console.error(`\n${stale} partial(s) behind the registry. Run: pnpm docs:compat`);
+  process.exit(1);
+}

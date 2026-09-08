@@ -57,6 +57,12 @@ jobs:
       - name: Em dashes
         run: pnpm check:em-dash
 
+      # The compatibility page is generated from the registry. The build
+      # regenerates it, so a stale commit could not deploy, but it could sit in
+      # `main` looking hand-written. This says so instead.
+      - name: Compatibility page
+        run: pnpm docs:compat:check
+
       # The build reads the whole registry and renders from it, so it is also
       # the broadest check that the compiled corpus is intact.
       - name: Build

@@ -127,6 +127,21 @@ export function releases(channel: Channel): Build[] {
   return byDateDesc(list ?? []);
 }
 
+/**
+ * The GA release for a compiled SDK version, or null.
+ *
+ * `13.4.1` names the reference; `13.4.1.GA` names the download. This is the
+ * join between them, so the API reference for a version can offer the archives
+ * that version ships in without restating how a release is addressed.
+ *
+ * GA only. Every version with a compiled reference is a GA release or `main`,
+ * and `main` is a moving branch build rather than something `ti sdk install`
+ * resolves by name.
+ */
+export function releaseForVersion(version: string): Build | null {
+  return releases('ga').find((b) => b.version === version) ?? null;
+}
+
 /** The version the install instructions name. */
 export function latestRelease(channel: Channel = 'ga'): Build | null {
   return releases(channel)[0] ?? null;

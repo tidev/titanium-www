@@ -1,7 +1,6 @@
-import { AssetLinks } from './asset-links';
 import { ExpiryGate } from './expiry-gate';
-import { InstallCommand } from './install-command';
-import { formatDate, installCommand } from '@/lib/downloads/format';
+import { InstallRow } from './install-row';
+import { formatDate } from '@/lib/downloads/format';
 import type { Build } from '@/lib/registry';
 
 /**
@@ -92,18 +91,8 @@ function BuildRow({
           squeezed into a column instead of wrapping. Below `sm` there is no
           width to fit them in anyway, so they take their own line and are
           allowed to wrap within it. */}
-      <div className="mt-3 flex flex-wrap items-center gap-3">
-        <InstallCommand
-          command={installCommand(build.name, branch)}
-          label={`Copy the install command for ${build.name}`}
-        />
-        {build.assets.length ? (
-          <div className="min-w-full sm:min-w-max">
-            <AssetLinks assets={build.assets} />
-          </div>
-        ) : (
-          <p className="text-sm text-text-subtle">No archives were published for this build.</p>
-        )}
+      <div className="mt-3">
+        <InstallRow build={build} branch={branch} />
       </div>
 
       {build.expires && (

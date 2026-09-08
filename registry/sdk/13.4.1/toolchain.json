@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "version": "13.4.1",
+  "source": {
+    "repo": "tidev/titanium-sdk",
+    "ref": "13.4.1",
+    "commit": "a1564fc0bb21f3190e55ef2b36bbfae4fc015342"
+  },
+  "node": ">=20.18.1",
+  "declared": "13.4.1",
+  "cli": ">=3.2.1",
+  "android": {
+    "minSdkVersion": "24",
+    "compileSdkVersion": "36",
+    "vendor": {
+      "android sdk": ">=23.x <=36.x",
+      "android build tools": ">=30.0.2 <=35.x",
+      "android platform tools": "33.x",
+      "android tools": "<=35.x",
+      "android ndk": ">=r21 <=r22b",
+      "java": ">=17.x"
+    }
+  },
+  "ios": {
+    "minIosVersion": "15.0",
+    "minWatchosVersion": "8.0",
+    "vendor": {
+      "xcode": ">=15.0 <=26.x",
+      "ios sdk": ">=17.0 <=26.x"
+    }
+  }
+}
