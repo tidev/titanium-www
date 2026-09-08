@@ -4,6 +4,7 @@ import { OsIconDefs } from '@/components/downloads/os-icon';
 import { sdkIndex, MAIN } from '@/lib/docs/registry';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
+import { formatDate } from '@/lib/downloads/format';
 import { releaseForVersion } from '@/lib/downloads/registry';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -56,6 +57,15 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
           <p className="mt-2 text-text-muted">
             <span className="font-mono">{version}</span>
             {version === MAIN && ' - compiled from the development branch, not a release'}
+            {/* The date the version this reference documents was published. It
+                comes from the release rather than from the compile, which can
+                be days later and would date the page rather than the SDK. */}
+            {release && (
+              <>
+                {' · '}
+                Released {formatDate(release.date)}
+              </>
+            )}
             {hasReleaseNote(version) && (
               <>
                 {' · '}
