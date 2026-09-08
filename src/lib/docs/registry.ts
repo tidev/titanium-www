@@ -2,9 +2,11 @@ import {
   ApiIndexSchema,
   ApiTypeSchema,
   SdkVersionSchema,
+  ToolchainSchema,
   type ApiIndex,
   type ApiType,
   type SdkVersion,
+  type Toolchain,
 } from '../registry/index.ts';
 import { CONTENTS, contentsOf, poolPath } from './pool.ts';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -133,6 +135,18 @@ export function sdkMetadata(version: string): SdkVersion | null {
 
 export const sourceUrl = (version: string, sourcePath: string): string | null =>
   blobUrl(sdkMetadata(version)?.source as CompiledSource | undefined, sourcePath);
+
+/**
+ * What this release declares it needs from the machine: Node, the JDK, Xcode,
+ * the Android SDK. Written by `scripts/capture-toolchain.ts`.
+ *
+ * Null for a version captured before that script existed, which the caller has
+ * to handle: the compatibility page states the versions it has rather than
+ * inventing a row for one it does not.
+ */
+export function sdkToolchain(version: string): Toolchain | null {
+  return readJson(join(SDK_DIR, version, 'toolchain.json'), (v) => ToolchainSchema.parse(v));
+}
 
 export const sdkType = (version: string, name: string): ApiType | null =>
   apiTypeAt(join(SDK_DIR, version), name);

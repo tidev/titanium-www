@@ -13,6 +13,7 @@ import {
   ApiTypeSchema,
   BranchesSchema,
   BuildListSchema,
+  CliReleasesSchema,
   PrunedListSchema,
   BlockedListSchema,
   CommunityIndexSchema,
@@ -20,6 +21,7 @@ import {
   VerifiedListSchema,
   ModuleVersionSchema,
   SdkVersionSchema,
+  ToolchainSchema,
 } from '../src/lib/registry/index.ts';
 import { POOL_DIR } from './lib/pool.ts';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -47,12 +49,17 @@ function schemaFor(rel: string): ZodType | null {
   // corrupt one costs time rather than correctness. Nothing to enforce.
   if (file === 'docgen-manifest.json') return null;
 
+  // One document, not a directory: the CLI is a single package with one
+  // release history, unrelated to any SDK version's directory.
+  if (parts[0] === 'cli' && file === 'releases.json') return CliReleasesSchema;
+
   if (parts[0] === 'sdk') {
     // sdk/{ga,rc,beta}.json are release lists; sdk/<version>/ is one compiled
     // version, shaped like a module version directory.
     if (parts.length === 2) return BuildListSchema;
     if (file === CONTENTS) return ContentsSchema;
     if (file === 'metadata.json') return SdkVersionSchema;
+    if (file === 'toolchain.json') return ToolchainSchema;
   }
 
   if (parts[0] === 'modules') {

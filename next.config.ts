@@ -157,14 +157,36 @@ function registryApiHeaders() {
  * destination is a path the docs route does not define, and that route sets
  * `dynamicParams = false`, so it 404s.
  */
-const hideInternalReadme = {
-  beforeFiles: [{ source: '/docs/README.md', destination: '/docs/_internal-readme' }],
-};
+const hideInternalReadme = [{ source: '/docs/README.md', destination: '/docs/_internal-readme' }];
+
+/**
+ * `<path>.md` beside `<path>`, for the machine-readable corpus (TI-57).
+ *
+ * A `route.ts` may not share a segment with a `page.tsx`, and `/docs` is an
+ * optional catch-all page, so nothing can be filed at `/docs/setup/macos.md`.
+ * These map the suffix onto `app/md/[...path]`, which reads the original path
+ * back off the request and refuses anything that arrived at the destination
+ * directly, so each document keeps one address.
+ *
+ * `beforeFiles` rather than `afterFiles`: the docs route declares
+ * `dynamicParams = false`, and an `afterFiles` rewrite is consulted after
+ * static files but before dynamic routes, which is fine in principle. The
+ * earlier hook is used because it is where the README rule above already sits
+ * and because it does not depend on that ordering staying true.
+ *
+ * Two rules rather than one pattern with an optional tail: `/docs.md` has no
+ * separator to make optional, and a regex that tried to cover both would be
+ * the kind of thing nobody can safely edit later.
+ */
+const markdownSuffix = [
+  { source: '/:root(docs|modules).md', destination: '/md/:root' },
+  { source: '/:root(docs|modules)/:path*.md', destination: '/md/:root/:path*' },
+];
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
   headers: registryApiHeaders,
-  rewrites: async () => hideInternalReadme,
+  rewrites: async () => ({ beforeFiles: [...hideInternalReadme, ...markdownSuffix] }),
   redirects: async () => {
     const rules = [...latestRedirects(), ...docsVersionRedirects(), ...legacyApiRedirects()];
 

@@ -1,90 +1,61 @@
 ---
 title: Compatibility
-description: The toolchain versions a Titanium SDK release supports.
-since: 13.4.0
+description: Which toolchain versions each Titanium SDK release supports, and which APIs exist on which platform.
 ---
 
-Every Titanium SDK release supports a range of each thing it drives. These are
-the ranges for **SDK 13.4**, read from the release itself rather than from a
-changelog.
+Two things change between Titanium releases: what the SDK needs from your
+machine, and which APIs exist on which platform. Both tables below are generated
+from the SDK itself on every build of this site, so neither can describe a
+release that shipped something else.
 
-## Node.js
+The page this replaces was hand-maintained and, by the time it was retired, was
+wrong about Java, Xcode and the Android SDK at once. Nothing here is typed by
+hand.
 
-|           | Version         |
-| --------- | --------------- |
-| Minimum   | **22.19.0**     |
-| Supported | 22.19.0 or 24.x |
-
-The floor is the CLI's own `engines.node`. The ceiling is the SDK's: 13.4
-bundles `node-ios-device`, which publishes prebuilt binaries only up to Node
-24, so **Node 26 breaks iOS tooling on macOS** and `ti info` exits before
-printing anything. Node 26 needs SDK 14 or newer, where that dependency is
-gone.
-
-Name a version rather than tracking "LTS". The ceiling comes from the SDK, and
-LTS moves independently of it.
-
-## Java
-
-|           | Version       |
-| --------- | ------------- |
-| Minimum   | **17**        |
-| Supported | 17, 21, or 25 |
-
-From `android/package.json`, which declares `java: >=17.x`. JDK 26 needs SDK 14
-or newer. Any distribution works.
-
-## Android
-
-| Component               | Supported          |
-| ----------------------- | ------------------ |
-| Android SDK (API level) | **23 to 36**       |
-| Build tools             | **30.0.2 to 35.x** |
-| Platform tools          | **33.x**           |
-| Android tools           | up to **35.x**     |
-| NDK                     | **r21 to r22b**    |
-
-All from `android/package.json`. A component newer than its range produces a
-warning from `ti info` rather than an error, and the build usually works until
-it does not. Pin build tools with
-`ti config android.buildTools.selectedVersion` when a new one breaks.
-
-The NDK is only needed if you build native code. A missing NDK is a warning,
-not a problem.
-
-## iOS
-
-| Component                 | Supported        |
-| ------------------------- | ---------------- |
-| Xcode                     | **15.0 to 26.x** |
-| iOS SDK                   | **17.0 to 26.x** |
-| Minimum deployment target | **iOS 15.0**     |
-
-From `iphone/package.json`. A newer Xcode is reported as too new and builds
-anyway; when a build fails in a way that makes no sense, rule that out early.
-
-The deployment target is the floor your app can run on, so a simulator older
-than iOS 15.0 cannot run what 13.4 builds.
-
-## Operating systems
-
-iOS builds require macOS, because Xcode is macOS-only and Xcode compiles, signs
-and installs iOS apps. Android builds work on macOS, Windows and Linux. See
-[environment setup](/docs/setup).
-
-## Checking your machine
+## Check your machine first
 
 ```sh
 ti info
 ```
 
-It reports what it found and what is out of range, which is faster than
-comparing this page against your installation, and it is right about the SDK
-you actually have.
+`ti info` reports what it found and what is out of range, for the SDK you
+actually have installed. It reads the same declarations these tables do, so it
+is faster than comparing this page against your installation and it is right
+about your machine in a way that no page can be.
+
+## Toolchain
+
+:::include toolchain
+
+A component newer than its range is a warning rather than an error on Android,
+and the build usually works until it does not. Pin the build tools with
+`ti config android.buildTools.selectedVersion` when a new one breaks. On iOS a
+newer Xcode is reported as too new and builds anyway, so rule it out early when
+a build fails in a way that makes no sense.
+
+The NDK is only needed if you compile native code. A missing NDK is a warning.
+
+> [!IMPORTANT]
+> The Node.js range has no upper bound on any 13.x release, and there is still a
+> ceiling in practice. 13.4.1 bundles `ioslib` 5.3.0, which depends on
+> `node-ios-device` 1.13.0, and that publishes prebuilt binaries only through
+> Node 24. On Node 26 it has to build from source, and the iOS tooling fails to
+> load when it cannot. Node 22 or 24 is the pairing to use with 13.4.1.
+
+The Titanium CLI has a floor of its own, separate from the SDK's. `titanium`
+9.1.0 declares `engines.node` as `>=22.19.0`, higher than any released SDK asks
+for, so the CLI is what sets the floor you have to meet.
+
+## Operating systems
+
+iOS builds require macOS, because Xcode compiles, signs and installs iOS apps
+and Xcode is macOS-only. Android builds work on macOS, Windows and Linux. See
+[environment setup](/docs/setup).
 
 ## Platform API support
 
-Which Titanium APIs exist on which platform, and since which release, is
-recorded per type in the [Titanium API](/docs/sdk) - every property, method and
-event carries its platforms and its `since` version. That is generated from the
-SDK, so it is complete and current in a way a hand-written table could not be.
+Which Titanium APIs exist where, and since which release. Every type links to
+its own reference page, which carries the same information per property, method
+and event.
+
+:::include platform-support

@@ -41,6 +41,102 @@ export const SdkVersionSchema = z
   })
   .loose();
 
+/**
+ * What one SDK release declares it needs from the machine building with it.
+ *
+ * Transcribed from the release's own `package.json` files rather than
+ * interpreted: `node` from the root, and the two `vendorDependencies` maps
+ * verbatim from `android/package.json` and `iphone/package.json`. Those are the
+ * same declarations the tooling checks against - `node-titanium-sdk`'s
+ * `lib/android.js` reads `vendorDependencies` to decide whether an installed
+ * component is supported, and `titanium-cli`'s `src/cli.js` reads
+ * `vendorDependencies.node` to refuse an SDK on the wrong Node - so a page
+ * rendered from this says what `ti info` says.
+ *
+ * Ranges are kept as authored (`>=23.x <=36.x`), not parsed into a min and a
+ * max. Reformatting them would be this repository restating someone else's
+ * constraint, and the raw string is what the CLI prints beside "Supported:".
+ *
+ * `vendor` is loose because the key set is the SDK's to change: 12.5.0 and
+ * 13.4.1 already disagree on the ranges, and a release adding a component must
+ * appear on the page rather than fail validation.
+ */
+export const ToolchainSchema = z.strictObject({
+  schemaVersion: SchemaVersion,
+  version: VersionString,
+  /** The tree this was read from. Matches the sibling `metadata.json` source. */
+  source: z.object({ repo: z.string(), ref: z.string(), commit: z.string() }).loose(),
+  /** `vendorDependencies.node` from the release's root `package.json`. */
+  node: z.string().optional(),
+  /**
+   * The version the tree calls itself, from `version` in the root
+   * `package.json`.
+   *
+   * Redundant for a release, where the directory name is the version and this
+   * agrees with it. It exists for `main`, whose directory name says only that
+   * it is the development tree: the version it will become is knowable, and
+   * without it the compatibility page can neither name `main` nor tell whether
+   * it is ahead of the newest release. Optional because the releases captured
+   * before it was recorded do not carry it, and re-cloning twenty tags to
+   * backfill a field only `main` reads would be a poor trade.
+   */
+  declared: z.string().optional(),
+  /**
+   * The Titanium CLI range the release requires, as its bundled commands
+   * declare it.
+   *
+   * Read from the `cliVersion` each of `cli/commands/{build,clean,create,
+   * project}.js` exports, taking the highest where they disagree. That export
+   * is what the CLI enforces before running a command. The `titanium` entry in
+   * the SDK's own `package.json` is a development dependency of that
+   * repository, not a statement about what the release needs, and is not read.
+   */
+  cli: z.string().optional(),
+  android: z
+    .object({
+      minSdkVersion: z.string().optional(),
+      compileSdkVersion: z.string().optional(),
+      vendor: z.record(z.string(), z.string()),
+    })
+    .strict(),
+  ios: z
+    .object({
+      minIosVersion: z.string().optional(),
+      minWatchosVersion: z.string().optional(),
+      vendor: z.record(z.string(), z.string()),
+    })
+    .strict(),
+});
+
+export type Toolchain = z.infer<typeof ToolchainSchema>;
+
+/**
+ * Every published Titanium CLI release and the Node it runs on.
+ *
+ * Captured from the npm packument rather than read at build time, so the site
+ * keeps building when npm is unreachable and two builds of one commit produce
+ * one page. Refreshed with `pnpm docs:compat --refresh`.
+ *
+ * Only `version` and `engines.node` are kept. The packument is megabytes of
+ * dist tarball metadata this page has no use for, and storing it whole would
+ * put a moving upstream document under version control.
+ */
+export const CliReleasesSchema = z.strictObject({
+  schemaVersion: SchemaVersion,
+  /** When the packument was read. Shown on the page, since this one can rot. */
+  fetchedAt: z.string(),
+  source: z.strictObject({ registry: z.string(), package: z.string() }),
+  releases: z.array(
+    z.strictObject({
+      version: z.string(),
+      /** `engines.node`. Absent on early releases that declared none. */
+      node: z.string().optional(),
+    })
+  ),
+});
+
+export type CliReleases = z.infer<typeof CliReleasesSchema>;
+
 // ------------------------------------------------------------- modules
 
 /** Per-platform manifest. The two can disagree on minsdk, architectures, even apiversion. */
