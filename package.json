@@ -18,6 +18,8 @@
     "docs:map": "node scripts/map-legacy-docs.ts",
     "docs:pins": "node scripts/refresh-doc-pins.ts",
     "docs:pins:check": "node scripts/refresh-doc-pins.ts --check",
+    "docs:snapshot": "node scripts/snapshot-docs.ts",
+    "docs:snapshot:check": "node scripts/snapshot-docs.ts --check",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "fonts": "node scripts/fetch-fonts.ts",
