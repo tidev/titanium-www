@@ -223,7 +223,7 @@ describe('renderToolchain', () => {
       ''
     );
     assert.match(out, /### Titanium SDK 13\.4\.1/);
-    assert.match(out, /`main` \(unreleased\)/);
+    assert.match(out, /\[`main`\]\(\/docs\/sdk\/main\) \(unreleased\)/);
   });
 
   const withDeclared = (t: Toolchain, declared: string): Toolchain => ({ ...t, declared });
@@ -236,11 +236,11 @@ describe('renderToolchain', () => {
       ],
       ''
     );
-    assert.match(out, /`main` \(14\.0\.0, unreleased\)/);
+    assert.match(out, /\[`main`\]\(\/docs\/sdk\/main\) \(14\.0\.0, unreleased\)/);
     // The headline still describes the newest release, not the tree.
     assert.match(out, /### Titanium SDK 13\.4\.1/);
 
-    const rows = out.split('\n').filter((line) => /^\| (`main`|\*\*)/.test(line));
+    const rows = out.split('\n').filter((line) => /^\| (\[`main`\]|\*\*\[)/.test(line));
     assert.equal(rows.length, 4, 'two tables of two rows');
     for (const [i, line] of rows.entries()) {
       assert.equal(line.includes('`main`'), i % 2 === 0, `row ${i} should lead its table`);
@@ -258,7 +258,7 @@ describe('renderToolchain', () => {
       ''
     );
     assert.equal(out.includes('`main`'), false);
-    assert.match(out, /\*\*13\.4\.1\*\*/);
+    assert.match(out, /\*\*\[13\.4\.1\]\(\/docs\/sdk\/13\.4\.1\)\*\*/);
   });
 
   // Captured before `declared` was recorded. Hiding the development tree for
@@ -268,7 +268,7 @@ describe('renderToolchain', () => {
       [at('main', '>=22.19.0', '>=17.x'), at('13.4.1', '>=20.18.1', '>=17.x')],
       ''
     );
-    assert.match(out, /`main` \(unreleased\)/);
+    assert.match(out, /\[`main`\]\(\/docs\/sdk\/main\) \(unreleased\)/);
   });
 
   test('the newest release is marked latest, and main never is', () => {
@@ -280,8 +280,8 @@ describe('renderToolchain', () => {
       ],
       ''
     );
-    assert.match(out, /\*\*13\.4\.1\*\* \(latest\)/);
-    assert.equal(/\*\*13\.4\.0\*\* \(latest\)/.test(out), false);
+    assert.match(out, /\*\*\[13\.4\.1\]\(\/docs\/sdk\/13\.4\.1\)\*\* \(latest\)/);
+    assert.equal(/\*\*\[13\.4\.0\]\([^)]*\)\*\* \(latest\)/.test(out), false);
     assert.equal(/unreleased\) \(latest\)|`main`[^|]*latest/.test(out), false);
   });
 

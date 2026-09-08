@@ -1,7 +1,9 @@
 import { OlderVersionNotice, VersionSwitcher } from '@/components/docs/version-switcher';
+import { InstallRow } from '@/components/downloads/install-row';
 import { sdkIndex, MAIN } from '@/lib/docs/registry';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
+import { releaseForVersion } from '@/lib/downloads/registry';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -31,6 +33,7 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
 
   const base = linkBase;
   const newer = newerVersion(version);
+  const release = releaseForVersion(version);
   const byKind = new Map<string, typeof index.types>();
   for (const t of index.types) {
     byKind.set(t.kind, [...(byKind.get(t.kind) ?? []), t]);
@@ -72,6 +75,17 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
               </>
             )}
           </p>
+          {/* The same row the download lists carry. Someone reading the
+              reference for a version is one of the people most likely to want
+              that version on their machine, and until now the only way there
+              was to leave for /downloads and find it again by name. `main` has
+              no row: it is compiled from the branch, not published as a release
+              `ti sdk install` can resolve. */}
+          {release && (
+            <div className="mt-4">
+              <InstallRow build={release} />
+            </div>
+          )}
           {newer && <OlderVersionNotice current={version} newer={newer} />}
         </header>
 

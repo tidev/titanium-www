@@ -398,14 +398,17 @@ function toolchainRows(all: readonly Toolchain[], current: Toolchain): Toolchain
  * naming only the version would present an unreleased tree as installable.
  */
 const releaseLabel = (t: Toolchain, current?: Toolchain) => {
+  // Every row here came from `sdkVersions()`, which lists only versions with a
+  // compiled reference, so the link always resolves.
+  const href = `/docs/sdk/${t.version}`;
   if (t.version === MAIN) {
-    return `\`main\` (${t.declared ? `${t.declared}, ` : ''}unreleased)`;
+    return `[\`main\`](${href}) (${t.declared ? `${t.declared}, ` : ''}unreleased)`;
   }
   // `main` is never the latest: it is not released. Where it is the only entry
   // it stands in as `current` for the summary above, and marking it there would
   // contradict the word "unreleased" beside it.
   const latest = current && current.version !== MAIN && t.version === current.version;
-  return `**${t.version}**${latest ? ' (latest)' : ''}`;
+  return `**[${t.version}](${href})**${latest ? ' (latest)' : ''}`;
 };
 
 /** `android build tools` reads as a column heading; `ios sdk` and `ndk` do not. */
