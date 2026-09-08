@@ -60,11 +60,15 @@ to capture.
 ## The announcement and the note are not the same thing
 
 A release note is the record of what changed. A blog announcement says it
-shipped and picks out what is worth reading about. Where both exist they link to
-each other, and neither grows into the other:
+shipped and picks out what is worth reading about. Where both exist the note
+carries an "Announcement post" link to `/blog/<slug>`, and neither grows into
+the other.
 
-- the note carries an "Announcement post" link to `/blog/<slug>`
-- the post carries a "Release notes for `<version>`" link back
+The link runs one way only. Every announcement post already links to its own
+release note in its body, so a second link in the page furniture would repeat
+it on the same screen. Those in-body links point at the old wiki and are
+repointed at `/docs/sdk/<version>/release-notes` by TI-67. The note has no such
+link to inherit, so it is the end that carries one.
 
 Matched on the post slug in `src/lib/blog/announcements.ts`, never on the title.
 The landing page used to find a release by looking for its name inside a post
@@ -78,7 +82,7 @@ since `sdk-12-1-0-rc` announces a different release from `sdk-12-1-0-ga`.
 - `/downloads`, in the "Latest release" box
 - `/downloads/releases`, on every GA row that has one
 - `/docs/sdk/<version>`, beside the type counts
-- the announcement post, where one exists
+- the body of the announcement post, where one exists (repointed by TI-67)
 
 ## Redirect targets for TI-39
 

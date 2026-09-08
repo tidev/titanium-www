@@ -6,9 +6,17 @@ import { allPosts, type Post } from './posts.ts';
  * The release note says what changed; the announcement says it shipped, and
  * usually picks out the two or three things worth reading about. Both exist for
  * every GA since 11.0.0 and neither knew about the other, which is the third
- * competing surface TI-72 set out not to build. So they link across instead:
- * the note names its announcement, the announcement names its note, and neither
- * repeats the other.
+ * competing surface TI-72 set out not to build.
+ *
+ * ## The note names its announcement, and not the other way round
+ *
+ * One direction, deliberately. Every announcement post already links to its own
+ * release note in its body, so a second link in the page furniture would say
+ * the same thing twice on the same screen. Those in-body links were written
+ * against the old wiki and are repointed at `/docs/sdk/<version>/release-notes`
+ * by TI-67, which is where the reader is sent from either place.
+ *
+ * The note has no such link to inherit, so it carries one.
  *
  * ## Matched on the slug, never on the title
  *
