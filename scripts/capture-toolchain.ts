@@ -1,4 +1,5 @@
 import { SCHEMA_VERSION, ToolchainSchema, type Toolchain } from '../src/lib/registry/index.ts';
+import { CLI_COMMANDS, highestCliVersion } from './lib/cli-version.ts';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -153,6 +154,17 @@ function packageJson(dir: string, commit: string, path: string): Record<string, 
   }
 }
 
+/** One file's text at a commit, or null when the release does not carry it. */
+function fileAt(dir: string, commit: string, path: string): string | null {
+  try {
+    return run(['show', `${commit}:${path}`], dir);
+  } catch (err) {
+    const stderr = String((err as { stderr?: unknown }).stderr ?? '');
+    if (/does not exist|exists on disk, but not in/.test(stderr)) return null;
+    throw err;
+  }
+}
+
 const str = (v: unknown): string | undefined => (typeof v === 'string' ? v : undefined);
 
 /** `vendorDependencies`, keeping the ranges exactly as the release authored them. */
@@ -177,6 +189,9 @@ function capture(at: Compiled, dir: string): Toolchain {
 
   const node = vendor(root).node;
   const declared = str(root?.version);
+  const cli = highestCliVersion(
+    CLI_COMMANDS.map((command) => fileAt(dir, at.commit, `cli/commands/${command}.js`))
+  );
   const minSdk = str(android?.minSDKVersion);
   const compileSdk = str(android?.compileSDKVersion);
   const minIos = str(ios?.minIosVersion);
@@ -188,6 +203,7 @@ function capture(at: Compiled, dir: string): Toolchain {
     source: { repo: at.repo, ref: at.ref, commit: at.commit },
     ...(node ? { node } : {}),
     ...(declared ? { declared } : {}),
+    ...(cli ? { cli } : {}),
     android: {
       ...(minSdk ? { minSdkVersion: minSdk } : {}),
       ...(compileSdk ? { compileSdkVersion: compileSdk } : {}),

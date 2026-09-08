@@ -271,6 +271,27 @@ describe('renderToolchain', () => {
     assert.match(out, /`main` \(unreleased\)/);
   });
 
+  test('the newest release is marked latest, and main never is', () => {
+    const out = renderToolchain(
+      [
+        withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0'),
+        at('13.4.1', '>=20.18.1', '>=17.x'),
+        at('13.4.0', '>=20.18.1', '>=17.x'),
+      ],
+      ''
+    );
+    assert.match(out, /\*\*13\.4\.1\*\* \(latest\)/);
+    assert.equal(/\*\*13\.4\.0\*\* \(latest\)/.test(out), false);
+    assert.equal(/unreleased\) \(latest\)|`main`[^|]*latest/.test(out), false);
+  });
+
+  // `main` alone stands in as `current` for the summary. Marking it latest
+  // would contradict the word "unreleased" beside it in the same cell.
+  test('main alone is not marked latest', () => {
+    const out = renderToolchain([withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0')], '');
+    assert.equal(out.includes('(latest)'), false);
+  });
+
   test('a missing value reads as absent rather than as an empty cell', () => {
     const bare: Toolchain = {
       schemaVersion: 1,

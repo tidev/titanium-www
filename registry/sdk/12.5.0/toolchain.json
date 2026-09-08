@@ -7,6 +7,8 @@
     "commit": "2689c1e7b3aa990a164334c5af498278da4e5a08"
   },
   "node": "16.x || 18.x || 20.x",
+  "declared": "12.5.0",
+  "cli": ">=3.2.1",
   "android": {
     "minSdkVersion": "21",
     "compileSdkVersion": "33",

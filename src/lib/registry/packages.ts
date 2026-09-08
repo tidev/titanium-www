@@ -81,6 +81,17 @@ export const ToolchainSchema = z.strictObject({
    * backfill a field only `main` reads would be a poor trade.
    */
   declared: z.string().optional(),
+  /**
+   * The Titanium CLI range the release requires, as its bundled commands
+   * declare it.
+   *
+   * Read from the `cliVersion` each of `cli/commands/{build,clean,create,
+   * project}.js` exports, taking the highest where they disagree. That export
+   * is what the CLI enforces before running a command. The `titanium` entry in
+   * the SDK's own `package.json` is a development dependency of that
+   * repository, not a statement about what the release needs, and is not read.
+   */
+  cli: z.string().optional(),
   android: z
     .object({
       minSdkVersion: z.string().optional(),

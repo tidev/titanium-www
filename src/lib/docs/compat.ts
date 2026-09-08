@@ -319,6 +319,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
       ['Component', 'Supported'],
       [
         ['Node.js', code(current.node)],
+        ['Titanium CLI', code(current.cli)],
         ...Object.entries(current.android.vendor).map(([k, v]) => [label(k), code(v)]),
         ...Object.entries(current.ios.vendor).map(([k, v]) => [label(k), code(v)]),
       ]
@@ -327,10 +328,11 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
     '### What each release needs',
     '',
     ...table(
-      ['SDK', 'Node.js', ...COLUMNS.map((c) => c.label)],
+      ['SDK', 'Node.js', 'Titanium CLI', ...COLUMNS.map((c) => c.label)],
       rows.map((t) => [
-        releaseLabel(t),
+        releaseLabel(t, current),
         code(t.node),
+        code(t.cli),
         ...COLUMNS.map((c) => code(t[c.from].vendor[c.key])),
       ])
     ),
@@ -344,7 +346,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
     ...table(
       ['SDK', 'Min Android API', 'Compiles against API', 'Min iOS', 'Min watchOS'],
       rows.map((t) => [
-        releaseLabel(t),
+        releaseLabel(t, current),
         plain(t.android.minSdkVersion),
         plain(t.android.compileSdkVersion),
         plain(t.ios.minIosVersion),
@@ -395,10 +397,16 @@ function toolchainRows(all: readonly Toolchain[], current: Toolchain): Toolchain
  * leaves the reader unable to tell which release the row is a preview of;
  * naming only the version would present an unreleased tree as installable.
  */
-const releaseLabel = (t: Toolchain) =>
-  t.version === MAIN
-    ? `\`main\` (${t.declared ? `${t.declared}, ` : ''}unreleased)`
-    : `**${t.version}**`;
+const releaseLabel = (t: Toolchain, current?: Toolchain) => {
+  if (t.version === MAIN) {
+    return `\`main\` (${t.declared ? `${t.declared}, ` : ''}unreleased)`;
+  }
+  // `main` is never the latest: it is not released. Where it is the only entry
+  // it stands in as `current` for the summary above, and marking it there would
+  // contradict the word "unreleased" beside it.
+  const latest = current && current.version !== MAIN && t.version === current.version;
+  return `**${t.version}**${latest ? ' (latest)' : ''}`;
+};
 
 /** `android build tools` reads as a column heading; `ios sdk` and `ndk` do not. */
 function label(key: string): string {
