@@ -13,7 +13,12 @@
     "label": "Enquiries",
     "url": "https://example.com/enquiries"
   },
-  "links": [{ "label": "Website", "url": "https://example.com" }],
+  "links": [
+    { "label": "Website", "url": "https://example.com" },
+    { "label": "GitHub", "url": "https://example.com/github" },
+    { "label": "LinkedIn", "url": "https://example.com/linkedin" },
+    { "label": "X", "url": "https://example.com/x" }
+  ],
   "neverExpires": true,
   "placeholder": true
 }
