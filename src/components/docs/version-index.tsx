@@ -1,5 +1,6 @@
 import { OlderVersionNotice, VersionSwitcher } from '@/components/docs/version-switcher';
 import { InstallRow } from '@/components/downloads/install-row';
+import { OsIconDefs } from '@/components/downloads/os-icon';
 import { sdkIndex, MAIN } from '@/lib/docs/registry';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { newerVersion, versionOptions } from '@/lib/docs/versions';
@@ -40,29 +41,21 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
   }
 
   return (
-    // The same two-column grid a type page uses, with nothing in the second
-    // column but the version switcher. That is deliberate: it puts the switcher
-    // at the head of the same column, so it lands in exactly the position it
-    // occupies on a type page rather than at a hand-computed offset that would
-    // drift the moment the rail or the control changed width.
-    <div className="py-10 xl:grid xl:grid-cols-[minmax(0,1fr)_13rem] xl:gap-8">
-      <div className="min-w-0 max-w-4xl xl:col-start-1 xl:row-start-1">
+    // One column, unlike a type page. That page reserves a second for its "On
+    // this page" rail; this one has no headings to list, so the column stood
+    // empty at every width and cost the content a third of the row. The
+    // switcher moves into the heading instead, which is where it already sat
+    // below `xl`, and the width buys the install row a single line.
+    <div className="py-10">
+      <div className="min-w-0">
         <header>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h1 className="text-3xl font-semibold tracking-tight">Titanium API</h1>
-            {/* Below `xl` there is no second column, so this is the end of the
-              heading row - which is where a type page puts it at that width too. */}
-            <VersionSwitcher
-              current={version}
-              options={versionOptions()}
-              className="ml-auto xl:hidden"
-            />
+            <VersionSwitcher current={version} options={versionOptions()} className="ml-auto" />
           </div>
           <p className="mt-2 text-text-muted">
             <span className="font-mono">{version}</span>
             {version === MAIN && ' - compiled from the development branch, not a release'}
-            {' · '}
-            {index.counts.types} types, {index.counts.members.toLocaleString()} declared members
             {hasReleaseNote(version) && (
               <>
                 {' · '}
@@ -83,6 +76,11 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
               `ti sdk install` can resolve. */}
           {release && (
             <div className="mt-4">
+              {/* The chips draw their marks with `use href="#os-mark-..."`, so
+                  the sprite has to be on the page. The downloads layout carries
+                  it for its own routes; this one is outside that tree, and
+                  without this the chips rendered correct markup and no icon. */}
+              <OsIconDefs />
               <InstallRow build={release} />
             </div>
           )}
@@ -115,12 +113,6 @@ export function VersionIndex({ version, linkBase }: { version: string; linkBase:
             </ul>
           </section>
         ))}
-      </div>
-
-      {/* The switcher's own column, empty otherwise. Matches the head of the
-          rail on a type page. */}
-      <div className="hidden xl:col-start-2 xl:row-start-1 xl:block">
-        <VersionSwitcher current={version} options={versionOptions()} />
       </div>
     </div>
   );
