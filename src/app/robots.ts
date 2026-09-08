@@ -1,3 +1,4 @@
+import { DISALLOW } from '@/lib/seo';
 import { SITE_URL, isIndexableHost } from '@/lib/site';
 import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
@@ -12,7 +13,12 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
   }
 
   return {
-    rules: { userAgent: '*', allow: '/' },
+    // One rule for everybody. Per-agent blocks are how a robots.txt starts
+    // being wrong quietly: the rule a crawler obeys is the most specific block
+    // that names it, so an `Allow` added to the `*` block later would never
+    // reach an agent that had a block of its own. See DISALLOW in lib/seo for
+    // what the one exclusion is and what is deliberately not excluded.
+    rules: { userAgent: '*', allow: '/', disallow: DISALLOW },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

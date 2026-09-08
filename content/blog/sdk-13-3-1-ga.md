@@ -28,7 +28,7 @@ Here are the highlights of the release:
 
 Thanks to everyone in the community who contributed fixes and improvements to this release, especially Michael Gangolf!
 
-For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.3.1.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.3.1.GA_Release_Note.html).
+For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.3.1.GA Release Note](/docs/sdk/13.3.1/release-notes).
 
 ## Install
 

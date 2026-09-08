@@ -10,7 +10,7 @@ import type { ModuleManifest, Platform } from '../../src/lib/registry/index.ts';
  * should need the network to test.
  *
  * Tags are deliberately absent. They are opaque references and nothing here
- * reads one: 18 spellings are in use across the 16 repos, four of them in
+ * reads one: 17 spellings are in use across the 16 repos, seven of them in
  * ti.map alone, and every attempt to derive meaning from one is a bug waiting
  * for the next release manager's habits.
  */
@@ -147,11 +147,58 @@ export function toModuleManifest(
 }
 
 /**
+ * The spelling iOS used before `ios/`, and still uses at most of these tags.
+ *
+ * Kept as a named constant because two things read it and they want it for
+ * opposite reasons: `manifestPaths` so an old tag still resolves, and
+ * `isLegacyManifestPath` so a run can say how much of the corpus is still on it.
+ */
+export const LEGACY_IOS_MANIFEST = 'iphone/manifest';
+
+/**
  * Where a platform's manifest lives in a checkout, newest spelling first.
  *
  * iOS moved from `iphone/` to `ios/` partway through these repos' lives and
  * both are still reachable at their own tags, so which one exists is a property
  * of the release, not of the module.
+ *
+ * Both spellings are permanent (TI-24). 36 of the 218 iOS manifests a full run
+ * reads still resolve through the fallback, spread across 5 of the 16 repos.
+ * 35 of those 36 are at tags, which cannot be rewritten; the 36th is
+ * `appcelerator.https`'s default branch, the one read TI-80 will move.
+ * Dropping `iphone/manifest` would not tidy anything up: those reads would
+ * return null, and the registry would rebuild with the iOS platform quietly
+ * missing from those versions rather than fail. The fallback is load-bearing,
+ * not transitional.
  */
 export const manifestPaths = (platform: Platform): string[] =>
-  platform === 'android' ? ['android/manifest'] : ['ios/manifest', 'iphone/manifest'];
+  platform === 'android' ? ['android/manifest'] : ['ios/manifest', LEGACY_IOS_MANIFEST];
+
+/**
+ * Whether a manifest was read from the pre-rename path.
+ *
+ * The registry records what a manifest said but not where it was read from, so
+ * "which repos are still on `iphone/`" was a question TI-24 had to answer by
+ * hand against GitHub. Reporting it from the run that already does the reading
+ * means the next person does not have to.
+ */
+export const isLegacyManifestPath = (path: string): boolean => path === LEGACY_IOS_MANIFEST;
+
+/**
+ * The distinct guids in one version's manifests, when its platforms disagree.
+ *
+ * A guid identifies the module, not the build, so the two platforms of one
+ * release are meant to share one. Eleven years of separate per-platform release
+ * histories put four modules out of step across 24 released versions, and left
+ * `ti.identity` that way (TI-24): the other three agree on their default
+ * branches today, while its android and iOS manifests never have. Reported
+ * rather than corrected, like every other manifest cross-check here, because
+ * the manifest is evidence about the release and the shipped artifact is what a
+ * developer installs.
+ *
+ * Null when there is nothing to say: fewer than two guids present, or agreement.
+ */
+export function guidMismatch(manifests: ModuleManifest[]): string[] | null {
+  const guids = [...new Set(manifests.map((m) => m.guid).filter((g) => g !== undefined))];
+  return guids.length > 1 ? guids.sort() : null;
+}

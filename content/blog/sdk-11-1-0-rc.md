@@ -17,7 +17,7 @@ social: |-
 
 The first release candidate of the next Titanium SDK is available: <b>11.1.0.RC</b>. Titanium SDK 11.1.0 is a minor release of the SDK, addressing high-priority issues from previous releases.
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 11.1.0.RC Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.1.0.RC_Release_Note.html).
+For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 11.1.0.RC Release Note](/docs/sdk/11.1.0/release-notes).
 
 ## Install
 
@@ -37,4 +37,4 @@ As this is a Release Candidate Version, it's not meant to be used for production
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

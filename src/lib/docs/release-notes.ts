@@ -19,7 +19,26 @@ import { parse as parseYaml } from 'yaml';
  * existing - checked, not assumed.
  *
  * A release candidate shares its version with the GA that follows, so it sits
- * in the same directory under `release-notes.rc.md`. Nothing renders those yet.
+ * in the same directory under `release-notes.rc.md`.
+ *
+ * ## GA gets pages, prereleases do not
+ *
+ * Settled in TI-72, and the reason is the URL rather than the content. A page
+ * is `/docs/sdk/<version>/release-notes`, and 12.1.0.RC and 12.1.0.GA are both
+ * version 12.1.0: the RC has no segment of its own to live at, and inventing
+ * one would put two documents about two different releases at one address or
+ * add a channel to a path that has never carried one. The prerelease notes are
+ * captured anyway, 23 of them, so the decision can be revisited without going
+ * back to a repository that TI-52 is about to archive.
+ *
+ * Nothing is lost by it. An RC note describes a build nobody should still be
+ * running, and its content reappears in the GA note that follows within weeks.
+ *
+ * Beta is not a question: `registry/sdk/beta.json` is empty, the SDK has
+ * published no beta in the window this registry covers, and titanium-docs holds
+ * no beta note to capture.
+ *
+ * `docs/release-notes.md` records this alongside the redirect targets.
  *
  * ## The date is a field, not part of the title
  *

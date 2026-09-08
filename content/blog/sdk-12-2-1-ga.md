@@ -23,7 +23,7 @@ addressing Android and iOS issues found in 12.2.0.GA:
 - iOS: Fix crash when setting the `navTintColor` property on iOS 17+
 - iOS: Fix crash when using a `Ti.Media.VideoPlayer`, e.g. inside a modal window
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.2.1.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.2.1.GA_Release_Note.html).
+For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 12.2.1.GA Release Note](/docs/sdk/12.2.1/release-notes).
 
 ## Install
 
@@ -39,4 +39,4 @@ If you run into any issues that seem related to the update, please report them o
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

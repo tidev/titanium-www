@@ -1,5 +1,6 @@
 import { Prose } from '@/components/docs/prose';
 import { VersionSwitcher } from '@/components/docs/version-switcher';
+import { announcement } from '@/lib/blog/announcements';
 import { formatDate } from '@/lib/docs/format';
 import { releaseNote, versionsWithNotes } from '@/lib/docs/release-notes';
 import { SITE_URL } from '@/lib/site';
@@ -49,6 +50,11 @@ export default async function ReleaseNotes({
   const newer = at > 0 ? all[at - 1] : null;
   const older = at >= 0 && at < all.length - 1 ? all[at + 1] : null;
 
+  // The blog announcement for this same release, where one was written: 31 of
+  // these 56 pages have one. The two link to each other rather than competing,
+  // which is what keeps the announcement from being a second set of notes.
+  const post = announcement(version);
+
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -75,9 +81,19 @@ export default async function ReleaseNotes({
       </div>
 
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">{note.title}</h1>
-      {note.date && (
+      {(note.date || post) && (
         <p className="mt-1 text-sm text-text-subtle">
-          Released <time dateTime={note.date}>{formatDate(note.date)}</time>
+          {note.date && (
+            <>
+              Released <time dateTime={note.date}>{formatDate(note.date)}</time>
+            </>
+          )}
+          {note.date && post && ' · '}
+          {post && (
+            <Link href={`/blog/${post.slug}`} className="text-link hover:underline">
+              Announcement post
+            </Link>
+          )}
         </p>
       )}
 

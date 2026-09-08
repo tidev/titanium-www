@@ -39,6 +39,52 @@ export function canonicalPath(version: string, type?: string): string {
 }
 
 /**
+ * How many minor lines of the reference are offered to search engines (TI-48).
+ *
+ * Self-canonical is not the same as worth indexing. Twenty compiled versions of
+ * 284 types is 5,680 pages apiece, and a patch release changes a handful of
+ * them: `13.4.0` and `13.4.1` are the same document to a search engine, and
+ * asking it to rank both is asking it to pick between near-identical copies of
+ * the answer. Three lines back covers roughly a year of releases, which is as
+ * far as anyone lands from a search rather than from a link they were given.
+ *
+ * The cutoff is in lines rather than in releases so a line with four patches
+ * cannot push an older *minor* out of the index on its own.
+ */
+export const INDEXED_LINES = 3;
+
+/**
+ * The pinned versions search engines are asked to keep.
+ *
+ * The newest release of each of the most recent `INDEXED_LINES` minor lines.
+ * `main` is never one: it is recompiled whenever the branch moves, so anything
+ * indexed from it describes a tree that no longer exists.
+ *
+ * Takes the list so the rule can be tested without twenty directories on disk.
+ * It must be sorted newest first, which is what `sdkVersions` returns.
+ */
+export function indexedVersions(versions: readonly string[] = sdkVersions()): string[] {
+  const newestPerLine = new Map<string, string>();
+  for (const version of versions) {
+    if (version === MAIN) continue;
+    const line = version.split('.').slice(0, 2).join('.');
+    if (!newestPerLine.has(line)) newestPerLine.set(line, version);
+  }
+  return [...newestPerLine.values()].slice(0, INDEXED_LINES);
+}
+
+/**
+ * Whether a version's pages should be indexed, rather than only served.
+ *
+ * The latest is always in, even when it is `main` - which it is until the first
+ * release is compiled. Its pages canonicalise to the unversioned copy, and a
+ * page that is `noindex` *and* canonical somewhere else asks a crawler for two
+ * incompatible things.
+ */
+export const isIndexedVersion = (version: string): boolean =>
+  version === latestSdkVersion() || indexedVersions().includes(version);
+
+/**
  * Every compiled version, newest first, addressed for the page being read.
  *
  * @param type  the type on screen, if this is a type page rather than an index

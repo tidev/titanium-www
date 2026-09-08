@@ -1,3 +1,6 @@
+import { JsonLd } from '@/components/seo/json-ld';
+import { breadcrumbList } from '@/lib/seo';
+
 /**
  * The path to the current page.
  *
@@ -23,6 +26,12 @@ export type Crumb = {
 export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
   return (
     <nav aria-label="Breadcrumb" className="text-sm text-text-subtle">
+      {/* The structured data is emitted here rather than by the routes (TI-48).
+          `BreadcrumbList` is only correct if it describes the trail the page
+          actually shows, and built from the array this renders it cannot say
+          anything else. It also means the three trees that use this component
+          are marked up without any of them knowing about it. */}
+      <JsonLd data={breadcrumbList(crumbs)} />
       <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
         {crumbs.map((crumb, i) => {
           const last = i === crumbs.length - 1;

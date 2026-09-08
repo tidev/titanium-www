@@ -39,6 +39,27 @@ export type GuideNavProps = {
   /** Paths that have content. Everything else renders as pending. */
   written: ReadonlySet<string>;
   /**
+   * The major's URL prefix: `''` for current, `/v13` for an archived one (TI-59).
+   *
+   * The tree is drawn from `ia.ts` in every major, so this is the one thing
+   * that differs. Without it an archived page's sidebar would walk the reader
+   * into the current guides one click after the banner told them which major
+   * they were in.
+   *
+   * `section.links` is deliberately not prefixed. The API reference is
+   * versioned per release rather than per major and has no `/docs/v13`
+   * spelling, so that row points at the same place from every major.
+   */
+  prefix?: string;
+  /**
+   * What an unwritten row means here.
+   *
+   * "Not written yet" is true of the current tree, which is still being filled
+   * in. An archived tree is frozen: a page missing from it was never in that
+   * major and never will be, so promising it is coming would be a lie.
+   */
+  pendingTitle?: string;
+  /**
    * The API namespace tree, drawn under the section link whose href is `base`.
    *
    * Present only under `/docs/sdk`. TI-28 measured the tree at 78 KiB of markup
@@ -58,12 +79,14 @@ function Row({
   active,
   written,
   depth,
+  pendingTitle = 'Not written yet',
 }: {
   href: string;
   title: string;
   active: boolean;
   written: boolean;
   depth: 0 | 1;
+  pendingTitle?: string;
 }) {
   const indent = depth === 1 ? 'pl-3' : '';
 
@@ -74,7 +97,7 @@ function Row({
           className={`block py-1 text-sm text-text-subtle ${indent}`}
           // Says why it is not a link, for anyone who wonders whether the page
           // is missing or simply not yet written.
-          title="Not written yet"
+          title={pendingTitle}
         >
           {title}
         </span>
@@ -152,7 +175,14 @@ function ApiSubtree({ tree }: { tree: NonNullable<GuideNavProps['apiTree']> }) {
   );
 }
 
-export function GuideNav({ current, written, apiTree }: GuideNavProps) {
+export function GuideNav({
+  current,
+  written,
+  apiTree,
+  prefix = '',
+  pendingTitle = 'Not written yet',
+}: GuideNavProps) {
+  const root = `/docs${prefix}`;
   return (
     // The id is `RailScroll`'s handle on the box that actually scrolls: the
     // <aside> carries `overflow-y-auto`, not the <nav> inside it.
@@ -171,15 +201,16 @@ export function GuideNav({ current, written, apiTree }: GuideNavProps) {
             with the section labels rather than under one. */}
         <ul className="mb-5">
           <Row
-            href="/docs"
+            href={root}
             title={ROOT_TITLE}
-            active={current === '/docs'}
-            written={written.has('/docs')}
+            active={current === root}
+            written={written.has(root)}
             depth={0}
+            pendingTitle={pendingTitle}
           />
         </ul>
         {SECTIONS.map((section) => {
-          const base = `/docs/${section.slug}`;
+          const base = `${root}/${section.slug}`;
           const covered = new Set(section.index?.covers ?? []);
           const uncovered = section.pages.filter((page) => !covered.has(page.slug));
           return (
@@ -194,6 +225,7 @@ export function GuideNav({ current, written, apiTree }: GuideNavProps) {
                       active={current === base}
                       written={written.has(base)}
                       depth={0}
+                      pendingTitle={pendingTitle}
                     />
                     {/* The pages that row introduces, drawn under it. They are
                         its siblings by URL and its children editorially; see
@@ -210,6 +242,7 @@ export function GuideNav({ current, written, apiTree }: GuideNavProps) {
                             active={current === path}
                             written={written.has(path)}
                             depth={1}
+                            pendingTitle={pendingTitle}
                           />
                         );
                       })}
@@ -248,6 +281,7 @@ export function GuideNav({ current, written, apiTree }: GuideNavProps) {
                           active={current === path}
                           written={written.has(path)}
                           depth={0}
+                          pendingTitle={pendingTitle}
                         />
                       </ul>
                       {!!page.pages?.length && (
@@ -262,6 +296,7 @@ export function GuideNav({ current, written, apiTree }: GuideNavProps) {
                                 active={current === childPath}
                                 written={written.has(childPath)}
                                 depth={1}
+                                pendingTitle={pendingTitle}
                               />
                             );
                           })}

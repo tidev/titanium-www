@@ -49,7 +49,7 @@ Besides the Android API level 34 update we have some other highlights in this re
 - iOS: iOS 17 symbol effects ([demo video](https://github.com/tidev/titanium-sdk/pull/13982))
 - iOS: change the backgroundColor of a RefreshControl<br/><img src="/blog/12_4_x/12_4_0_2.png"/>
 - iOS: use overrideUserInterfaceStyle for a Picker
-  For a more detailed overview and all changes, see the release notes: [Titanium SDK 12.4.0.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.4.0.GA_Release_Note.html).
+  For a more detailed overview and all changes, see the release notes: [Titanium SDK 12.4.0.GA Release Note](/docs/sdk/12.4.0/release-notes).
 
 ## Install
 
@@ -65,4 +65,4 @@ If you run into any issues that seem related to the update, please report them o
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

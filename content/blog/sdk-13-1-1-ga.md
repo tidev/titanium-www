@@ -23,7 +23,7 @@ On iOS, it resolves Mac Catalyst build failures and App Store distribution issue
 out a problematic `tabBarItem` reuse change while restoring missing initial values. In short: fewer surprises,
 cleaner builds, and smoother deployment - exactly what you want from a patch release.
 
-For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.1.1.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.1.1.GA_Release_Note.html).
+For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.1.1.GA Release Note](/docs/sdk/13.1.1/release-notes).
 
 ## Install
 

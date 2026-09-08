@@ -1,7 +1,10 @@
+import { validatePosts } from '../src/lib/blog/links.ts';
+import { archivedMajors, contentRoot, validateDocVersions } from '../src/lib/docs/doc-versions.ts';
 import { validateGuides } from '../src/lib/docs/guides.ts';
 
 /**
- * Fails the build on anything wrong with guide content (TI-32).
+ * Fails the build on anything wrong with guide content (TI-32, TI-59) or with
+ * the links in a blog post (TI-67).
  *
  *   node scripts/check-docs.ts
  *
@@ -15,21 +18,42 @@ import { validateGuides } from '../src/lib/docs/guides.ts';
  *   - an internal link to a `/docs` path the structure does not define
  *   - a structural mistake in `ia.ts` itself: a bad slug, too much depth, or a
  *     page claiming a reserved segment
+ *   - a link in `content/blog` to a path this site does not serve, or one
+ *     written as `https://titaniumsdk.com/…` rather than as a path
+ *   - a version manifest that disagrees with the snapshots on disk, or a major
+ *     that has shipped without the guides being snapshotted for it
  *
- * The link check is the reason this is a script and not a lint rule: it needs
- * the rendered HTML, which needs the whole pipeline, which needs the IA. A
+ * The link checks are the reason this is a script and not a lint rule: they
+ * need the rendered HTML, which needs the whole pipeline, which needs the IA. A
  * broken link between two guides is otherwise invisible until someone clicks
- * it, and the legacy corpus has 21 pages whose links died exactly that way.
+ * it, and the legacy corpus has 21 pages whose links died exactly that way. The
+ * blog arrived in the same condition and worse: 87 of its 164 internal links
+ * pointed at a path this site does not serve, most of them into the old
+ * documentation wiki.
+ *
+ * Archived majors are checked with the same pipeline as current. A snapshot is
+ * a byte copy taken by `scripts/snapshot-docs.ts`, so it is valid on the day it
+ * is cut; what this catches is the drift afterwards, when a partial is renamed
+ * or an IA entry is deleted out from under it.
  */
 
-const problems = validateGuides();
+const problems = [
+  ...validateDocVersions(),
+  ...validateGuides(),
+  // `structure: false`: `ia.ts` is one tree behind every major, and it has
+  // already been checked once above.
+  ...archivedMajors().flatMap((major) =>
+    validateGuides(contentRoot(major), { base: `/${major}`, structure: false })
+  ),
+  ...validatePosts(),
+];
 
 if (!problems.length) {
-  console.log('Guide content is valid.');
+  console.log('Guide and blog content is valid.');
   process.exit(0);
 }
 
-console.error(`${problems.length} problem(s) in guide content:\n`);
+console.error(`${problems.length} problem(s) in content:\n`);
 for (const { where, message } of problems) {
   console.error(`  ${where}\n    ${message}`);
 }

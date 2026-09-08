@@ -29,7 +29,7 @@ Update the android:minSdkVersion in the tiapp.xml or custom AndroidManifest to a
 
 To fix that issue either remove your custom value or set it to `<uses-sdk android:minSdkVersion="24" />` or higher.
 
-For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.1.0.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.1.0.GA_Release_Note.html).
+For a more detailed overview and all changes, see the release notes: [Titanium SDK 13.1.0.GA Release Note](/docs/sdk/13.1.0/release-notes).
 
 ## Install
 

@@ -1,6 +1,7 @@
 import {
   contentFiles,
   guide,
+  indexableGuidePaths,
   internalLinks,
   unhighlightedLangs,
   validateGuides,
@@ -20,6 +21,9 @@ import { describe, test } from 'node:test';
  */
 
 const FIXTURES = join(import.meta.dirname, '__fixtures__/docs');
+
+/** A tree whose only file is a drafted section index, for the sitemap rule. */
+const DRAFTED_SECTION = join(import.meta.dirname, '__fixtures__/drafted-section');
 
 /** Rendered text with the markup taken out, for assertions about content. */
 const text = (html: string) => html.replace(/<[^>]*>/g, '');
@@ -142,6 +146,20 @@ describe('drafts', () => {
     const written = writtenPaths(FIXTURES);
     assert.ok(written.has('/docs/setup/macos'));
     assert.ok(!written.has('/docs/setup/ide-integration'), 'a draft was linked');
+  });
+
+  test('are absent from the sitemap even at a path with children', () => {
+    // A draft leaf is absent because it is not in `writtenPaths`. A drafted
+    // *section index* is the case that needs its own answer: `/docs/setup` has
+    // pages below it, so the "no file but children" rule would readmit it and
+    // list a URL the page itself serves as `noindex, nofollow`.
+    assert.ok(
+      !indexableGuidePaths(DRAFTED_SECTION).includes('/docs/setup'),
+      'a drafted section index was offered to search engines'
+    );
+    // The rule it must not take down with it: a section index nobody has
+    // written is still a real destination and stays listed.
+    assert.ok(indexableGuidePaths(FIXTURES).includes('/docs/setup'));
   });
 });
 

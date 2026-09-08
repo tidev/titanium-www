@@ -7,9 +7,9 @@ import { Manifests } from '@/components/modules/manifests';
 import { referenceToc, TypeSection } from '@/components/modules/reference';
 import { formatDate } from '@/lib/docs/format';
 import type { InstallRelease } from '@/lib/docs/install';
-import { latestPerPlatform } from '@/lib/docs/module-summary';
+import { latestPerPlatform, PLATFORM_LABELS } from '@/lib/docs/module-summary';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
-import { moduleHasDocs, moduleIndex, moduleRelease } from '@/lib/docs/modules';
+import { moduleBlurb, moduleHasDocs, moduleIndex, moduleRelease } from '@/lib/docs/modules';
 import { blobUrl, type CompiledSource } from '@/lib/docs/registry';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -55,9 +55,16 @@ export async function generateMetadata({
   const release = moduleRelease(moduleId, version);
   if (!index || !release) return {};
 
+  const platforms = release.platforms.map((platform) => PLATFORM_LABELS[platform]);
+
   return {
     title: `${index.moduleId} ${version} - Titanium modules`,
-    description: index.description,
+    description: [
+      moduleBlurb(index),
+      `Release ${version}${platforms.length ? ` for ${platforms.join(' and ')}` : ''}, with its manifest and archives.`,
+    ]
+      .filter((part) => !!part)
+      .join(' '),
     alternates: { canonical: `${SITE_URL}/modules/${moduleId}/v/${version}` },
   };
 }

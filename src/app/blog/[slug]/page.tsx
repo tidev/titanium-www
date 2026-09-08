@@ -1,7 +1,9 @@
 import { Share } from '@/components/blog/share';
 import { Prose } from '@/components/docs/prose';
+import { JsonLd } from '@/components/seo/json-ld';
 import { allPosts, postBySlug } from '@/lib/blog/posts';
 import { formatDate } from '@/lib/docs/format';
+import { blogPosting, OPEN_GRAPH } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -31,6 +33,10 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
     // Excluded from search results while it is a draft, wherever it leaks from.
     ...(post.draft ? { robots: { index: false, follow: false } } : {}),
     openGraph: {
+      // Spread rather than relied on: setting `openGraph` at all replaces the
+      // root layout's whole object, so `siteName` would go missing from exactly
+      // the pages most likely to be shared.
+      ...OPEN_GRAPH,
       type: 'article',
       title: post.title,
       description: post.description,
@@ -50,6 +56,11 @@ export default async function BlogPost({ params }: PageProps<'/blog/[slug]'>) {
     // `mx-auto` centres the column inside the layout's 7xl gutters; without it
     // a 3xl article hugs the left edge on a wide screen.
     <article className="mx-auto max-w-3xl py-10">
+      {/* A post is the one thing on this site that is an article: dated,
+          bylined, and written once. A draft still gets the markup - it is
+          `noindex`, which is what actually keeps it out of results. */}
+      <JsonLd data={blogPosting(post)} />
+
       <p className="text-sm">
         <a href="/blog" className="text-link hover:underline">
           Blog

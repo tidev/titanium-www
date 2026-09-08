@@ -18,7 +18,7 @@ social: |-
 The next stable version of the Titanium SDK is now available: <b>11.1.1.GA</b>. Titanium SDK 11.1.1 is a partch release of the SDK, addressing high-priority issues from the 11.1.0.GA release.
 In detail, it fixes a crash on iOS related to a deprecated API log, a crash on Android related to modules built with SDK 11.1.0 and an issue related to testing apps on Apple Silicon devices.
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 11.1.1.GA Release Note](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.1.1.GA_Release_Note.html).
+For a more detailed overview, known issues and closed tickets, see the release notes: [Titanium SDK 11.1.1.GA Release Note](/docs/sdk/11.1.1/release-notes).
 
 ## Install
 
@@ -39,4 +39,4 @@ Therefore please test it on your apps and provide feedback. If you run into any 
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.

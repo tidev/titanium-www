@@ -2,6 +2,7 @@ import { CodeCopy } from '@/components/docs/code-copy';
 import { TabSync } from '@/components/docs/tab-sync';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
+import { OPEN_GRAPH } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import { THEME_INIT } from '@/lib/theme-init';
 import type { Metadata } from 'next';
@@ -49,6 +50,24 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'Titanium SDK',
   description: 'Build native iOS and Android apps with JavaScript and TypeScript.',
+  /*
+   * The card fields every page shares (TI-48).
+   *
+   * No `openGraph.url` here, deliberately. It is not resolved against the
+   * current path - it is taken literally or left out - so a value set once at
+   * the root would have every page on the site announce itself as the home
+   * page. The canonical link says where a page lives; og:url would only be a
+   * second, wronger copy of it.
+   *
+   * `title` and `description` are absent for the opposite reason: Next fills
+   * both from whatever the page finally resolved, so writing them here would
+   * pin the site's own to every card.
+   */
+  openGraph: { ...OPEN_GRAPH, type: 'website' },
+  // Images come from the opengraph-image files without being named: Twitter
+  // inherits og:image wherever it has none of its own, so the per-section cards
+  // reach both networks from one file each.
+  twitter: { card: 'summary_large_image', site: '@TitaniumSDK', creator: '@TitaniumSDK' },
 };
 
 /**

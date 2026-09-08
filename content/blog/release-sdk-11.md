@@ -19,7 +19,7 @@ After months of hard work, we are proud to announce that today we can introduce 
 
 The new RC version includes a massive amount of features and bug fixes.
 
-For a more detailed overview, known issues and closed tickets, see the release notes: [https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/](https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Release_Notes/)
+For a more detailed overview, known issues and closed tickets, see the [release notes](/docs/sdk/11.0.0/release-notes).
 
 There is also a new version of the [Titanium CLI](https://github.com/tidev/titanium) (6.0.2) and [Alloy](https://github.com/tidev/alloy) (2.0.1).
 
@@ -38,7 +38,7 @@ Execute `titanium sdk select 10.1.1.GA` to rollback
 
 ## New integration
 
-We're also proud to announce the Alloy integration of [PurgeTSS](https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Guide/Alloy_PurgeTSS.html), created by [macCesar](https://github.com/macCesar). [PurgeTSS](https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Guide/Alloy_PurgeTSS.html) is an Alloy addon with predefined classes to use in the XML views. It can be used by all Titanium developers, who want to create beautiful designed mobile apps easily.
+We're also proud to announce the Alloy integration of [PurgeTSS](/docs/alloy), created by [macCesar](https://github.com/macCesar). [PurgeTSS](/docs/alloy) is an Alloy addon with predefined classes to use in the XML views. It can be used by all Titanium developers, who want to create beautiful designed mobile apps easily.
 
 ## Report Bugs
 
@@ -46,4 +46,4 @@ As this is a Release Candidate Version, it's not meant to be used for production
 
 ## How can I support?
 
-If you like our work and want to support, think about a [donation](/donate) or to [contribute](/contribute) with your time and code.
+If you like our work and want to support, think about a [donation](https://tidev.io/donate) or to [contribute](/contribute) with your time and code.
