@@ -13,6 +13,7 @@ import {
   ApiTypeSchema,
   BranchesSchema,
   BuildListSchema,
+  CliReleasesSchema,
   PrunedListSchema,
   BlockedListSchema,
   CommunityIndexSchema,
@@ -47,6 +48,10 @@ function schemaFor(rel: string): ZodType | null {
   // docgen rebuilds from scratch when it cannot read its own manifest, so a
   // corrupt one costs time rather than correctness. Nothing to enforce.
   if (file === 'docgen-manifest.json') return null;
+
+  // One document, not a directory: the CLI is a single package with one
+  // release history, unrelated to any SDK version's directory.
+  if (parts[0] === 'cli' && file === 'releases.json') return CliReleasesSchema;
 
   if (parts[0] === 'sdk') {
     // sdk/{ga,rc,beta}.json are release lists; sdk/<version>/ is one compiled

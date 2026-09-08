@@ -1,4 +1,5 @@
-import type { ApiPlatform, ApiType, Toolchain } from '../registry/index.ts';
+import type { ApiPlatform, ApiType, CliReleases, Toolchain } from '../registry/index.ts';
+import { minimumCli } from './cli-support.ts';
 import { PLATFORM_LABELS, PLATFORM_ORDER } from './format.ts';
 import {
   apiTypeAt,
@@ -258,7 +259,9 @@ export function renderMatrix(matrix: Matrix, generatedFrom: string): string {
 const COLUMNS: { key: string; label: string; from: 'android' | 'ios' }[] = [
   { key: 'java', label: 'Java', from: 'android' },
   { key: 'android sdk', label: 'Android SDK', from: 'android' },
-  { key: 'android build tools', label: 'Build tools', from: 'android' },
+  // Spelled out despite the width it costs the row: "Build tools" beside an
+  // Xcode column reads as ambiguous about which platform it belongs to.
+  { key: 'android build tools', label: 'Android build tools', from: 'android' },
   { key: 'xcode', label: 'Xcode', from: 'ios' },
   { key: 'ios sdk', label: 'iOS SDK', from: 'ios' },
 ];
@@ -297,7 +300,11 @@ export function readToolchains(): Toolchain[] {
  * to 36" would be this page paraphrasing a constraint it does not own, and the
  * paraphrase is what a reader would then compare against their machine.
  */
-export function renderToolchain(all: readonly Toolchain[], generatedFrom: string): string {
+export function renderToolchain(
+  all: readonly Toolchain[],
+  cliReleases: CliReleases['releases'],
+  generatedFrom: string
+): string {
   if (!all.length) return `${generatedFrom}\n\nNo release has been captured yet.\n`;
 
   const current = all.find((t) => t.version !== MAIN) ?? all[0];
@@ -319,7 +326,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
       ['Component', 'Supported'],
       [
         ['Node.js', code(current.node)],
-        ['Titanium CLI', code(current.cli)],
+        ['Titanium CLI', code(minimumCli(current, cliReleases))],
         ...Object.entries(current.android.vendor).map(([k, v]) => [label(k), code(v)]),
         ...Object.entries(current.ios.vendor).map(([k, v]) => [label(k), code(v)]),
       ]
@@ -332,7 +339,7 @@ export function renderToolchain(all: readonly Toolchain[], generatedFrom: string
       rows.map((t) => [
         releaseLabel(t, current),
         code(t.node),
-        code(t.cli),
+        code(minimumCli(t, cliReleases)),
         ...COLUMNS.map((c) => code(t[c.from].vendor[c.key])),
       ])
     ),

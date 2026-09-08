@@ -176,6 +176,11 @@ describe('renderMatrix', () => {
 });
 
 describe('renderToolchain', () => {
+  const CLI = [
+    { version: '8.0.0', node: '>=20.18.1' },
+    { version: '9.0.0', node: '>=22.19.0' },
+  ];
+
   const at = (version: string, node: string, java: string): Toolchain => ({
     schemaVersion: 1,
     version,
@@ -189,7 +194,7 @@ describe('renderToolchain', () => {
     // `16.x || 18.x || 20.x` is a real value. Unescaped, its pipes end the cell
     // and every row after it is off by two columns.
     const html = renderMarkdown(
-      renderToolchain([at('12.8.0', '16.x || 18.x || 20.x', '>=11.x')], '<!-- x -->'),
+      renderToolchain([at('12.8.0', '16.x || 18.x || 20.x', '>=11.x')], CLI, '<!-- x -->'),
       {}
     );
     assert.match(html, /<code>16\.x \|\| 18\.x \|\| 20\.x<\/code>/);
@@ -201,7 +206,7 @@ describe('renderToolchain', () => {
     // it verbatim, so a wrapped value is the SDK's to introduce. A pipe can be
     // escaped; a newline cannot, so it has to be folded before it is written.
     const wrapped = at('13.4.1', '>=20.18.1', '>=17.x\n  || >=21.x');
-    const out = renderToolchain([wrapped], '');
+    const out = renderToolchain([wrapped], CLI, '');
     assert.doesNotMatch(out.split('### What each release needs')[1], /\n\s*\|\| >=21/);
     assert.match(renderMarkdown(out, {}), /<code>&gt;=17\.x \|\| &gt;=21\.x<\/code>/);
   });
@@ -214,12 +219,13 @@ describe('renderToolchain', () => {
       android: { vendor: { 'build|tools': '35.x' } },
       ios: { vendor: {} },
     };
-    assert.match(renderToolchain([odd], ''), /\| Build\\\|tools /);
+    assert.match(renderToolchain([odd], CLI, ''), /\| Build\\\|tools /);
   });
 
   test('the current release is the newest that is not main', () => {
     const out = renderToolchain(
       [at('main', '>=22.19.0', '>=17.x'), at('13.4.1', '>=20.18.1', '>=17.x')],
+      CLI,
       ''
     );
     assert.match(out, /### Titanium SDK 13\.4\.1/);
@@ -234,6 +240,7 @@ describe('renderToolchain', () => {
         withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0'),
         at('13.4.1', '>=20.18.1', '>=17.x'),
       ],
+      CLI,
       ''
     );
     assert.match(out, /\[`main`\]\(\/docs\/sdk\/main\) \(14\.0\.0, unreleased\)/);
@@ -255,6 +262,7 @@ describe('renderToolchain', () => {
         withDeclared(at('main', '>=20.18.1', '>=17.x'), '13.4.1'),
         at('13.4.1', '>=20.18.1', '>=17.x'),
       ],
+      CLI,
       ''
     );
     assert.equal(out.includes('`main`'), false);
@@ -266,6 +274,7 @@ describe('renderToolchain', () => {
   test('main with no declared version is kept, and says only that it is unreleased', () => {
     const out = renderToolchain(
       [at('main', '>=22.19.0', '>=17.x'), at('13.4.1', '>=20.18.1', '>=17.x')],
+      CLI,
       ''
     );
     assert.match(out, /\[`main`\]\(\/docs\/sdk\/main\) \(unreleased\)/);
@@ -278,6 +287,7 @@ describe('renderToolchain', () => {
         at('13.4.1', '>=20.18.1', '>=17.x'),
         at('13.4.0', '>=20.18.1', '>=17.x'),
       ],
+      CLI,
       ''
     );
     assert.match(out, /\*\*\[13\.4\.1\]\(\/docs\/sdk\/13\.4\.1\)\*\* \(latest\)/);
@@ -288,7 +298,11 @@ describe('renderToolchain', () => {
   // `main` alone stands in as `current` for the summary. Marking it latest
   // would contradict the word "unreleased" beside it in the same cell.
   test('main alone is not marked latest', () => {
-    const out = renderToolchain([withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0')], '');
+    const out = renderToolchain(
+      [withDeclared(at('main', '>=22.19.0', '>=17.x'), '14.0.0')],
+      CLI,
+      ''
+    );
     assert.equal(out.includes('(latest)'), false);
   });
 
@@ -300,7 +314,7 @@ describe('renderToolchain', () => {
       android: { vendor: {} },
       ios: { vendor: {} },
     };
-    const out = renderToolchain([bare], '');
+    const out = renderToolchain([bare], CLI, '');
     assert.match(out, /\| Node\.js +\| - +\|/);
   });
 });

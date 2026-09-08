@@ -110,6 +110,33 @@ export const ToolchainSchema = z.strictObject({
 
 export type Toolchain = z.infer<typeof ToolchainSchema>;
 
+/**
+ * Every published Titanium CLI release and the Node it runs on.
+ *
+ * Captured from the npm packument rather than read at build time, so the site
+ * keeps building when npm is unreachable and two builds of one commit produce
+ * one page. Refreshed with `pnpm docs:compat --refresh`.
+ *
+ * Only `version` and `engines.node` are kept. The packument is megabytes of
+ * dist tarball metadata this page has no use for, and storing it whole would
+ * put a moving upstream document under version control.
+ */
+export const CliReleasesSchema = z.strictObject({
+  schemaVersion: SchemaVersion,
+  /** When the packument was read. Shown on the page, since this one can rot. */
+  fetchedAt: z.string(),
+  source: z.strictObject({ registry: z.string(), package: z.string() }),
+  releases: z.array(
+    z.strictObject({
+      version: z.string(),
+      /** `engines.node`. Absent on early releases that declared none. */
+      node: z.string().optional(),
+    })
+  ),
+});
+
+export type CliReleases = z.infer<typeof CliReleasesSchema>;
+
 // ------------------------------------------------------------- modules
 
 /** Per-platform manifest. The two can disagree on minsdk, architectures, even apiversion. */
