@@ -5,7 +5,7 @@ import { referenceToc, TypeSection } from '@/components/modules/reference';
 import { ModuleLayout } from '@/components/modules/shell';
 import { platformsAtVersion } from '@/lib/docs/module-summary';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
-import { moduleIds, moduleIndex, referenceVersions } from '@/lib/docs/modules';
+import { moduleBlurb, moduleIds, moduleIndex, referenceVersions } from '@/lib/docs/modules';
 import { MAIN } from '@/lib/docs/registry';
 import type { ModuleIndex } from '@/lib/registry';
 import { SITE_URL } from '@/lib/site';
@@ -35,9 +35,21 @@ export async function generateMetadata({
   const index = moduleIndex(moduleId);
   if (!index) return {};
 
+  // The same reference the page renders, and the reads behind it are cached, so
+  // counting the types here costs nothing the page was not already paying.
+  const reference = buildModuleReference(moduleId, referenceVersions(moduleId, index));
+  const types = reference?.types.length ?? 0;
+
   return {
     title: `${index.moduleId} API - Titanium modules`,
-    description: `The compiled API reference for the ${index.moduleId} Titanium module.`,
+    description: [
+      moduleBlurb(index),
+      types
+        ? `API reference for all ${types} compiled ${types === 1 ? 'type' : 'types'}, with every method, property, and event.`
+        : 'No compiled API reference yet: its releases carry manifests and a README.',
+    ]
+      .filter((part) => !!part)
+      .join(' '),
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/api` },
   };
 }

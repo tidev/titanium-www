@@ -1,6 +1,7 @@
 import { BlockError, renderBlocks, unresolvedMarkers } from './blocks.ts';
 import { withHeadingAnchors, type Heading } from './headings.ts';
 import {
+  allPaths,
   findPage,
   isValidSlug,
   MAX_DEPTH,
@@ -297,6 +298,48 @@ export function writtenPaths(root = CONTENT): Set<string> {
     if (page && !page.draft) out.add(page.path);
   }
   return out;
+}
+
+/**
+ * Every `/docs` page worth putting in front of a search engine (TI-48).
+ *
+ * Three kinds of address answer under `/docs`, and only two of them are pages.
+ * A path with a file is a written guide. A path with no file but with children
+ * below it renders the index of those children, which is a real destination and
+ * how a reader gets into a section. A path with neither renders "this page has
+ * not been written yet", and no version of that is worth a search result: it is
+ * thin by construction, and listing it teaches a search engine that the site
+ * answers a question it does not.
+ *
+ * Drafts are absent, which is the third of the three places TI-53 requires, the
+ * index and the feed being the others. `writtenPaths` dropping them is not on
+ * its own enough: a draft that sits at a path with children below it would fall
+ * through to the children rule and be listed, while the page itself is served
+ * `noindex, nofollow`. So a file that exists is asked about directly, and only
+ * a path with no file at all reaches the children rule.
+ *
+ * `/docs` itself is always here: it lists the six sections whether or not
+ * anyone has written an introduction above them.
+ */
+export function indexableGuidePaths(root = CONTENT): string[] {
+  const written = writtenPaths(root);
+  return allPaths().filter((path) => {
+    if (written.has(path)) return true;
+    const segments = path.split('/').slice(2);
+    if (!segments.length) return true;
+
+    // Absent from `written` and yet a file: a draft, or a page that does not
+    // parse - which `validateGuides` fails the build over. Neither is offered.
+    try {
+      if (guide(segments, root)) return false;
+    } catch {
+      return false;
+    }
+
+    const found = findPage(segments);
+    const children = found && (found.page ? found.page.pages : found.section.pages);
+    return !!children?.length;
+  });
 }
 
 export type Problem = { where: string; message: string };

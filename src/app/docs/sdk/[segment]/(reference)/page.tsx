@@ -3,7 +3,8 @@ import { TypeReference } from '@/components/docs/type-reference';
 import { VersionIndex } from '@/components/docs/version-index';
 import { latestSdkVersion, resolveVersion, sdkType, sdkVersions } from '@/lib/docs/registry';
 import { buildTypeView } from '@/lib/docs/type-view';
-import { canonicalPath } from '@/lib/docs/versions';
+import { canonicalPath, isIndexedVersion } from '@/lib/docs/versions';
+import { NOINDEX } from '@/lib/seo';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -45,6 +46,10 @@ export async function generateMetadata({
       title: `Titanium API ${version} - Titanium SDK`,
       description: `Every Titanium SDK type, method, property, and event in ${version}.`,
       alternates: { canonical: `${SITE_URL}${canonicalPath(version)}` },
+      // Served either way. Past the cutoff it is asked not to compete with the
+      // releases people are actually on, and the notice on the page says the
+      // same thing to the reader. See `isIndexedVersion`.
+      ...(isIndexedVersion(version) ? {} : { robots: NOINDEX }),
     };
   }
 

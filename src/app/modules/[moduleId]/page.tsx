@@ -4,6 +4,7 @@ import { ModuleLayout } from '@/components/modules/shell';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
 import {
   moduleAliases,
+  moduleBlurb,
   moduleIds,
   moduleIndex,
   moduleReadme,
@@ -44,7 +45,7 @@ export async function generateMetadata({
 
   return {
     title: `${index.moduleId} - Titanium modules`,
-    description: index.description,
+    description: moduleBlurb(index),
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}` },
   };
 }

@@ -1,8 +1,8 @@
 import { Install } from '@/components/modules/install';
 import { ModuleLayout } from '@/components/modules/shell';
 import type { InstallRelease } from '@/lib/docs/install';
-import { latestPerPlatform } from '@/lib/docs/module-summary';
-import { moduleIds, moduleIndex, moduleRelease } from '@/lib/docs/modules';
+import { latestPerPlatform, PLATFORM_LABELS } from '@/lib/docs/module-summary';
+import { moduleBlurb, moduleIds, moduleIndex, moduleRelease } from '@/lib/docs/modules';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -28,9 +28,20 @@ export async function generateMetadata({
   const index = moduleIndex(moduleId);
   if (!index) return {};
 
+  // Named from the releases rather than from the module's platform list, so the
+  // description cannot promise a platform nothing was ever published for.
+  const platforms = latestPerPlatform(index).map((entry) => PLATFORM_LABELS[entry.platform]);
+
   return {
     title: `Install ${index.moduleId} - Titanium modules`,
-    description: `How to install the ${index.moduleId} Titanium module into a project.`,
+    description: [
+      moduleBlurb(index),
+      platforms.length
+        ? `How to add it to a Titanium project on ${platforms.join(' and ')}.`
+        : 'How to add it to a Titanium project.',
+    ]
+      .filter((part) => !!part)
+      .join(' '),
     alternates: { canonical: `${SITE_URL}/modules/${index.moduleId}/install` },
   };
 }
