@@ -65,7 +65,7 @@ export default async function ProfilePage({ params }: PageProps<'/directory/[pro
         </a>
       </p>
 
-      <div className="mt-3 flex items-start gap-4">
+      <div className="mt-6 flex items-start gap-4">
         <Picture profile={profile} size={64} />
 
         <div className="min-w-0 flex-1">
