@@ -2,11 +2,6 @@
   "$comment": "Official modules TiDev no longer supports. EDITED BY HAND - see docs/module-curation.md. An entry removes the module from the site: browse, its four pages, the sitemap and llms.txt. /registry/v1 keeps serving it, so an app that already depends on it still resolves. Six of these still ship a current Android release and are delisted anyway; each entry records what that costs.",
   "modules": [
     {
-      "moduleId": "appcelerator.encrypteddatabase",
-      "reason": "iOS last shipped 2.2.0 on 2020-09-16 and 4.0.x has sat unreleased on master since (TI-88). Android 6.0.0 shipped 2025-10-25 and is delisted with it.",
-      "at": "2026-09-08"
-    },
-    {
       "moduleId": "appcelerator.https",
       "reason": "iOS last shipped 2.3.1 on 2020-05-01, the oldest iOS release in the org. Android 5.0.0 shipped 2025-10-25 and is delisted with it.",
       "at": "2026-09-08"
@@ -22,11 +17,6 @@
       "at": "2026-09-08"
     },
     {
-      "moduleId": "ti.barcode",
-      "reason": "iOS last shipped 6.0.0 on 2020-09-22, the widest platform gap in the org, with an unreviewed Xcode 26 build fix still open (TI-91). Android 7.0.0 shipped 2025-10-25 and requires SDK 13.0.0; it is delisted with it.",
-      "at": "2026-09-08"
-    },
-    {
       "moduleId": "ti.coremotion",
       "reason": "iOS-only, and nothing has shipped since 2021-02-17. master has carried an unreleased 4.0.1 since 2021-07-23 (TI-89).",
       "at": "2026-09-08"
@@ -39,11 +29,6 @@
     {
       "moduleId": "ti.geofence",
       "reason": "iOS last shipped 4.0.0 on 2020-06-24. Android 6.0.0 shipped 2025-10-25 and is delisted with it.",
-      "at": "2026-09-08"
-    },
-    {
-      "moduleId": "ti.identity",
-      "reason": "iOS last shipped 5.0.0 on 2022-06-15. Android 3.2.0 shipped 2025-09-10 and is delisted with it.",
       "at": "2026-09-08"
     }
   ]
