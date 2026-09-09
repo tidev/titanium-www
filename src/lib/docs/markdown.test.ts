@@ -210,11 +210,21 @@ describe('renderMarkdown, retired hosts', () => {
     }
   });
 
-  test('leaves tislack.org alone, which is still serving', () => {
-    // Cited in the same sentence as the dead hosts and easy to sweep up with
-    // them, but it resolves and answers 200.
+  test('sends tislack.org to the workspace it moved to (TI-93)', () => {
+    // The domain lapsed and now answers 200 with a parked placeholder, so a
+    // status check alone called it healthy. The community still exists, so the
+    // link is repointed rather than dropped - the text still reads correctly.
+    // The join page, not the workspace root, which 403s for non-members.
     const html = renderMarkdown('ask our [TiSlack community](http://tislack.org)', { link });
-    assert.match(html, /href="http:\/\/tislack\.org"/);
+    assert.match(html, /href="https:\/\/slack\.tidev\.io\/"/);
+    assert.doesNotMatch(html, /tislack\.org/);
+    assert.match(html, /ask our <a[^>]*>TiSlack community<\/a>/);
+  });
+
+  test('repoints both spellings of the old Slack address', () => {
+    for (const href of ['http://tislack.org', 'https://tislack.org', 'https://tislack.org/']) {
+      assert.match(renderMarkdown(`[x](${href})`, { link }), /slack\.tidev\.io/, href);
+    }
   });
 
   test('does not mistake a relative reference for a retired one', () => {
