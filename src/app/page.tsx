@@ -25,8 +25,8 @@ export const metadata: Metadata = {
  * what made those sites interchangeable, far more than the palette was.
  *
  * No images anywhere on this page, which is also why it has no layout shift to
- * manage: the only things that could reflow are the two code samples, and both
- * are text at a fixed size.
+ * manage: the only things that could reflow are the code samples, and all of
+ * them are text at a fixed size.
  */
 
 /**
@@ -59,9 +59,14 @@ function facts() {
   };
 }
 
+/**
+ * `h-full` and the flex column: in the Alloy row the two boxes share a grid row
+ * and would otherwise end at different heights, the shorter one leaving a
+ * ragged gap under it. Elsewhere the parent is auto-height, so it is inert.
+ */
 function Chrome({ name, children }: { name: string; children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-surface">
+    <div className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-surface">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
         <span className="size-2 rounded-full bg-border-strong" />
         <span className="font-mono text-xs text-text-subtle">{name}</span>
@@ -77,7 +82,7 @@ function Chrome({ name, children }: { name: string; children: React.ReactNode })
           visible indicator at all, which is WCAG 2.4.7. */}
       <pre
         tabIndex={0}
-        className="overflow-x-auto p-4 font-mono text-sm leading-relaxed focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
+        className="flex-1 overflow-x-auto p-4 font-mono text-sm leading-relaxed focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
       >
         <code>{children}</code>
       </pre>
@@ -136,35 +141,67 @@ function HeroSample() {
   );
 }
 
-/** Alloy, shown as what it actually is: markup, style and controller split up. */
+/**
+ * Alloy, shown as what it actually is: markup, style and controller split up,
+ * one file per box so the split is visible rather than described. The view
+ * sits on top at full width; the controller and stylesheet share a row under
+ * it, since both are narrow and neither is more than a few lines.
+ *
+ * The row folds back into the column below `sm` and again at `lg` only. At
+ * `lg` this section first goes two-column, which leaves the sample track at
+ * about 437px and each half-box with room for roughly 21 characters, fewer
+ * than the 28 the `backgroundColor` line needs. From `xl` the track is wide
+ * enough again. Measured from screenshots at 1024 and 1280, not estimated.
+ */
 function AlloySample() {
   return (
-    <Chrome name="index.xml">
-      <C>{'<!-- views/index.xml -->\n'}</C>
-      {'<'}
-      <K>Alloy</K>
-      {'>\n  <'}
-      <K>Window</K>
-      {'>\n    <'}
-      <K>Button</K>
-      {' onClick='}
-      <S>{'"greet"'}</S>
-      {'>Say hello</'}
-      <K>Button</K>
-      {'>\n  </'}
-      <K>Window</K>
-      {'>\n</'}
-      <K>Alloy</K>
-      {'>\n\n'}
-      <C>{'// controllers/index.js\n'}</C>
-      <K>function</K>
-      {' greet() {\n  '}
-      <K>alert</K>
-      {'('}
-      <S>{"'Hello from a native button'"}</S>
-      {');\n}\n\n'}
-      {'$.index.open();'}
-    </Chrome>
+    <div className="flex flex-col gap-4">
+      <Chrome name="index.xml">
+        {'<'}
+        <K>Alloy</K>
+        {'>\n  <'}
+        <K>Window</K>
+        {'>\n    <'}
+        <K>Button</K>
+        {' onClick='}
+        <S>{'"greet"'}</S>
+        {'>Say hello</'}
+        <K>Button</K>
+        {'>\n  </'}
+        <K>Window</K>
+        {'>\n</'}
+        <K>Alloy</K>
+        {'>'}
+      </Chrome>
+      {/* `min-w-0` on both cells for the same reason as the grid items in
+          `Home`: a `<pre>` that cannot shrink widens its track instead of
+          scrolling inside it. */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <div className="min-w-0">
+          <Chrome name="index.js">
+            <K>function</K>
+            {' greet() {\n  '}
+            <K>alert</K>
+            {'('}
+            <S>{"'Hello from Alloy'"}</S>
+            {');\n}\n\n'}
+            {'$.index.open();'}
+          </Chrome>
+        </div>
+        <div className="min-w-0">
+          <Chrome name="index.tss">
+            <S>{'"Window"'}</S>
+            {': {\n  backgroundColor: '}
+            <S>{"'#15191c'"}</S>
+            {'\n},\n'}
+            <S>{'"Button"'}</S>
+            {': {\n  color: '}
+            <S>{"'#ffffff'"}</S>
+            {'\n}'}
+          </Chrome>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -309,7 +346,7 @@ export default function Home() {
       >
         <div className="min-w-0 lg:order-2">
           <h2 id="alloy" className="text-2xl font-semibold tracking-tight text-balance">
-            Alloy, when an app outgrows one file
+            Alloy gives your app a structure
           </h2>
           <p className="mt-4 text-base leading-relaxed text-text-muted">
             Alloy is Titanium&rsquo;s MVC framework. Views are XML, styles are a stylesheet, and
