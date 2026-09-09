@@ -52,6 +52,7 @@ export function MobileNav() {
 
       <dialog
         ref={ref}
+        aria-label="Main menu"
         // Clicking the backdrop resolves to the dialog element itself.
         onClick={(e) => {
           if (e.target === ref.current) close();
@@ -59,7 +60,7 @@ export function MobileNav() {
         className="m-0 ml-auto h-dvh max-h-dvh w-[min(20rem,85vw)] max-w-none bg-surface p-0 text-text backdrop:bg-black/50 open:flex open:flex-col"
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <span className="text-sm font-medium text-text-muted">Menu</span>
+          <span className="text-sm font-medium text-text-muted">Main menu</span>
           <button
             type="button"
             onClick={close}

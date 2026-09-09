@@ -110,7 +110,7 @@ export function DocsNavDrawer({ children }: { children: React.ReactNode }) {
       <dialog
         id="docs-nav-drawer"
         ref={ref}
-        aria-label="Documentation"
+        aria-label="Titanium Docs"
         // Clicking the backdrop resolves to the dialog element itself.
         onClick={(e) => {
           if (e.target === ref.current) close();
@@ -119,7 +119,7 @@ export function DocsNavDrawer({ children }: { children: React.ReactNode }) {
       >
         <div className="flex h-full flex-col lg:contents">
           <div className="flex items-center justify-between border-b border-border px-5 py-4 lg:hidden">
-            <span className="text-sm font-medium text-text-muted">Menu</span>
+            <span className="text-sm font-medium text-text-muted">Titanium Docs</span>
             <button
               type="button"
               onClick={close}
