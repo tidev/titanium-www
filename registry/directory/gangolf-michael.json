@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "gangolf-michael",
+  "name": "Michael Gangolf",
+  "kind": "individual",
+  "summary": "Experienced freelance Titanium SDK developer with 10+ years of experience building mobile applications, developing Android native modules, and contributing to the Titanium SDK.",
+  "location": "Remote, Germany",
+  "timezone": "Europe/Berlin",
+  "availability": ["part-time", "contract"],
+  "specialisms": ["alloy", "sdk-upgrades", "native-modules-android", "sdk-patches"],
+  "skills": ["JavaScript", "Java"],
+  "contact": {
+    "label": "Contact",
+    "url": "https://migaweb.de/?hl=en"
+  },
+  "links": [
+    { "label": "Website", "url": "https://migaweb.de/?hl=en" },
+    { "label": "GitHub", "url": "https://github.com/m1ga" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/michael-g-a3b60b109/" },
+    { "label": "Bluesky", "url": "https://bsky.app/profile/miga.bsky.social" }
+  ],
+  "neverExpires": true,
+  "placeholder": false
+}
