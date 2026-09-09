@@ -133,6 +133,14 @@ describe('renderMarkdown, third-party README', () => {
     assert.match(html, /rel="noopener noreferrer"/);
   });
 
+  test('leaves a mailto alone rather than resolving it at the repository', () => {
+    // `com.appcelerator.urlSession` offers a support address. Read as relative,
+    // it shipped a link to `.../blob/HEAD/mailto:info@...`, which goes nowhere.
+    const html = renderMarkdown('[email us](mailto:info@example.com)', { link, relative });
+    assert.match(html, /href="mailto:info@example\.com"/);
+    assert.doesNotMatch(html, /blob\/HEAD\/mailto/);
+  });
+
   test('leaves absolute references and in-page anchors alone', () => {
     const html = renderMarkdown('[a](https://example.com) [b](#usage)', { link, relative });
     assert.match(html, /href="https:\/\/example\.com"/);
@@ -142,6 +150,81 @@ describe('renderMarkdown, third-party README', () => {
   test('strips script from markdown nobody on this team wrote', () => {
     const html = renderMarkdown('Hi <script>alert(1)</script> there', { link });
     assert.doesNotMatch(html, /script|alert/);
+  });
+});
+
+/**
+ * The Appcelerator-era addresses the source still carries (TI-92).
+ *
+ * Eleven of seventeen module READMEs and part of the SDK prose cite hosts that
+ * were decommissioned with the brand. The renderer is the only place that can
+ * deal with them: the registry stores each README exactly as its repository
+ * committed it, and rewriting upstream would mean a PR against eleven repos
+ * that would still leave the copies already captured.
+ */
+describe('renderMarkdown, retired hosts', () => {
+  const badge =
+    '[![Build Status](https://jenkins.appcelerator.org/buildStatus/icon?job=modules%2Fti.map)]' +
+    '(https://jenkins.appcelerator.org/job/modules/job/ti.map/)';
+
+  test('removes a build badge for a CI system that no longer exists', () => {
+    // The regression: six READMEs open with this, rendering a broken image on
+    // the first line of the page - `facebook` and `ti.map` among them.
+    const html = renderMarkdown(badge, { link });
+    assert.doesNotMatch(html, /<img/);
+    assert.doesNotMatch(html, /jenkins\.appcelerator\.org/);
+  });
+
+  test('leaves the live badge sitting next to it alone', () => {
+    // The npm version badge is real and still resolves; only the dead one goes.
+    const shields =
+      '[![npm](https://img.shields.io/npm/v/@titanium-sdk/ti.map.png)]' +
+      '(https://www.npmjs.com/package/@titanium-sdk/ti.map)';
+    const html = renderMarkdown(`${badge} ${shields}`, { link });
+    assert.match(html, /img\.shields\.io/);
+    assert.match(html, /href="https:\/\/www\.npmjs\.com/);
+    assert.doesNotMatch(html, /jenkins/);
+  });
+
+  test('drops the link and keeps the sentence for retired documentation', () => {
+    // "Please use JIRA to report issues" still reads; a certificate warning
+    // followed by a 404 does not. Same trade as the ExtJS-era guide links.
+    const html = renderMarkdown(
+      'Please use [JIRA](https://jira.appcelerator.org) to report issues.',
+      { link }
+    );
+    assert.doesNotMatch(html, /<a/);
+    // The anchor becomes a span, so the sentence survives intact once tags go.
+    assert.equal(html.replace(/<[^>]+>/g, '').trim(), 'Please use JIRA to report issues.');
+  });
+
+  test('covers both retired domains, apex and subdomain alike', () => {
+    for (const href of [
+      'https://wiki.appcelerator.org/display/community/Home',
+      'https://ti.appcelerator.org/x',
+      'https://docs.appcelerator.com/platform/latest/',
+      'https://appcelerator.com',
+      'https://www.appcelerator.com/',
+    ]) {
+      assert.doesNotMatch(renderMarkdown(`[text](${href})`, { link }), /<a/, href);
+    }
+  });
+
+  test('leaves tislack.org alone, which is still serving', () => {
+    // Cited in the same sentence as the dead hosts and easy to sweep up with
+    // them, but it resolves and answers 200.
+    const html = renderMarkdown('ask our [TiSlack community](http://tislack.org)', { link });
+    assert.match(html, /href="http:\/\/tislack\.org"/);
+  });
+
+  test('does not mistake a relative reference for a retired one', () => {
+    const relative = {
+      images: 'https://raw.githubusercontent.com/tidev/ti.map/HEAD',
+      links: 'https://github.com/tidev/ti.map/blob/HEAD',
+    };
+    const html = renderMarkdown('[the license](LICENSE) ![shot](./shot.png)', { link, relative });
+    assert.match(html, /href="https:\/\/github\.com\/tidev\/ti\.map\/blob\/HEAD\/LICENSE"/);
+    assert.match(html, /<img/);
   });
 });
 
