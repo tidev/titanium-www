@@ -92,27 +92,51 @@ export type RenderOptions = {
  * defunct, so a host under them that this corpus does not cite today would be
  * no more alive than the nine it does.
  *
- * `tislack.org` is deliberately not here. It reads like the same vintage and it
- * is cited in the same breath, but it is still up and still serving, so its
- * links are left exactly as written.
+ * `tislack.org` is not here because it is handled by `MOVED_HOSTS` instead: it
+ * is just as dead, but the community it pointed at still exists somewhere else.
  */
 const RETIRED_DOMAINS = ['appcelerator.com', 'appcelerator.org'];
 
 /**
- * Whether a reference points into one of those domains.
+ * Hosts that died but whose destination still exists somewhere else (TI-93).
  *
- * Relative references throw out of `URL` and are not retired - they resolve
+ * `tislack.org` was the community's own address for the Slack workspace. The
+ * domain lapsed and now answers 200 with a parked "Page cannot be displayed"
+ * placeholder - a soft 404, which is why a status check alone reported it
+ * healthy and TI-92 left it in place. The community itself is still there.
+ *
+ * `slack.tidev.io` rather than the `tidev.slack.com` workspace root: it is the
+ * join page, and a reader following this link from the documentation is more
+ * likely to be looking for a way in than to be a signed-in member already - the
+ * workspace root answers 403 to everyone else. It is also the replacement the
+ * SDK chose for itself, in `titanium-sdk` commit 81d3f4a.
+ *
+ * Mapped to that page rather than carrying any path across: all six links in
+ * the corpus are bare root URLs, and a path that meant something on the old
+ * domain would mean nothing here.
+ */
+const MOVED_HOSTS = new Map([['tislack.org', 'https://slack.tidev.io/']]);
+
+/**
+ * The host a reference addresses, or null if it addresses none.
+ *
+ * Relative references throw out of `URL` and have no host - they resolve
  * against a repository or this site. Protocol-relative ones have no scheme for
  * `URL` to parse, so they get one first; the registry has none today, but the
  * check is cheaper than the surprise.
  */
-function isRetired(ref: string): boolean {
+function hostOf(ref: string): string | null {
   try {
-    const { hostname } = new URL(ref.startsWith('//') ? `https:${ref}` : ref);
-    return RETIRED_DOMAINS.some((d) => hostname === d || hostname.endsWith(`.${d}`));
+    return new URL(ref.startsWith('//') ? `https:${ref}` : ref).hostname;
   } catch {
-    return false;
+    return null;
   }
+}
+
+/** Whether a reference points into one of the retired domains. */
+function isRetired(ref: string): boolean {
+  const host = hostOf(ref);
+  return host !== null && RETIRED_DOMAINS.some((d) => host === d || host.endsWith(`.${d}`));
 }
 
 /**
@@ -203,6 +227,14 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
           const resolved = legacy && link(legacy[1]);
           if (!resolved) return { tagName: 'span', attribs: {} };
           return { tagName, attribs: { ...attribs, href: resolved } };
+        }
+
+        // A host that moved keeps its link, pointed at where it moved to. The
+        // link text still reads correctly - "ask our TiSlack community" - so
+        // only the destination needs replacing.
+        const moved = MOVED_HOSTS.get(hostOf(href) ?? '');
+        if (moved) {
+          return { tagName, attribs: { ...attribs, href: moved, rel: 'noopener noreferrer' } };
         }
 
         // A dead address is worse than no address: the prose still reads, and
