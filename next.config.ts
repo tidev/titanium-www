@@ -1,5 +1,6 @@
 import docVersions from './content/doc-versions.json';
 import legacyApi from './src/lib/docs/legacy-api-redirects.json';
+import legacyGuide from './src/lib/docs/legacy-guide-redirects.json';
 import { MAIN, latestSdkVersion } from './src/lib/docs/registry.ts';
 import type { NextConfig } from 'next';
 
@@ -112,6 +113,52 @@ function legacyApiRedirects() {
 }
 
 /**
+ * The legacy titanium-docs `/guide/*` wiki, which the M3 rewrite replaced (TI-39).
+ *
+ * The counterpart to `legacyApiRedirects`, and deliberately not built the same
+ * way. The `/api` map is generated because docgen keeps moving its input; this
+ * corpus is frozen and `tidev/titanium-docs` is being archived (TI-52), so the
+ * map is hand-maintained and `legacy-guide-redirects.test.ts` is what catches a
+ * destination that stops resolving.
+ *
+ * Unlike `/api` there is no shadowing hazard here: nothing in `app/` routes
+ * `/guide`, so these claim a prefix the site does not otherwise serve.
+ *
+ * 35 release-note URLs are absent on purpose - the RC, Alloy and section-index
+ * notes never earned a page and are not getting one, so they 404 rather than
+ * landing somewhere that implies the content moved. The map carries them in
+ * `notFound` so the decision is visible in the data rather than in a commit
+ * message.
+ *
+ * The 71 URLs the old wiki served at a directory address cost two hops, not
+ * one: Next answers the trailing slash with a 308 of its own before redirects
+ * or middleware are consulted, and on 16.3.4 there is no way to opt out -
+ * `skipTrailingSlashRedirect` is still in the config schema but nothing in the
+ * server reads it. Sources are therefore stored bare. See the test.
+ */
+function legacyGuideRedirects() {
+  /**
+   * `( ) { } : * + ?` are path-to-regexp syntax, so a literal one in a source
+   * has to be escaped.
+   *
+   * Five wiki filenames need it, and they fail in two different ways. The two
+   * `C++` coding-standards pages fail the build loudly. The three Alloy
+   * reference pages - `Build_Configuration_File_(alloy.jmk)` and friends - do
+   * not: `(alloy.jmk)` parses cleanly as a capture group and the rule then
+   * matches something nobody asked for. Escaping here rather than in the map
+   * keeps that file holding the URLs the old site actually served, which is
+   * what its test compares against the audit.
+   */
+  const escaped = (source: string) => source.replace(/[(){}:*+?]/g, String.raw`\$&`);
+
+  return legacyGuide.rules.map((rule) => ({
+    source: escaped(rule.source),
+    destination: rule.destination,
+    permanent: true,
+  }));
+}
+
+/**
  * The public registry API (TI-55).
  *
  * Open CORS because reads are the entire surface and the CLI is not the only
@@ -188,7 +235,12 @@ const nextConfig: NextConfig = {
   headers: registryApiHeaders,
   rewrites: async () => ({ beforeFiles: [...hideInternalReadme, ...markdownSuffix] }),
   redirects: async () => {
-    const rules = [...latestRedirects(), ...docsVersionRedirects(), ...legacyApiRedirects()];
+    const rules = [
+      ...latestRedirects(),
+      ...docsVersionRedirects(),
+      ...legacyApiRedirects(),
+      ...legacyGuideRedirects(),
+    ];
 
     // A surviving `latest` in a legacy destination is the two-hop chain the
     // substitution above exists to prevent, and it would only show up as slow

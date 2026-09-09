@@ -1,8 +1,5 @@
-import { allPaths } from '../../src/lib/docs/ia.ts';
+import legacyGuide from '../../src/lib/docs/legacy-guide-redirects.json' with { type: 'json' };
 import { versionsWithNotes } from '../../src/lib/docs/release-notes.ts';
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 /**
  * Repoints the links the 50 migrated posts brought with them (TI-67).
@@ -30,18 +27,6 @@ import { fileURLToPath } from 'node:url';
  * them. That is not silent: `pnpm check:docs` fails the build on a dead
  * internal link in a post body, so a re-import that regresses one says so.
  */
-
-const root = join(dirname(fileURLToPath(import.meta.url)), '../..');
-const MAPPING = join(root, 'docs/legacy-docs-mapping.json');
-
-type Mapping = {
-  status: string;
-  redirects: { from: string; to: string; verdict: string; wrong: boolean }[];
-};
-
-let mapping: Mapping | undefined;
-const legacyMapping = (): Mapping =>
-  (mapping ??= JSON.parse(readFileSync(MAPPING, 'utf8')) as Mapping);
 
 /** This site, however the old post spelled it. */
 const SITE = /^https?:\/\/(?:www\.)?titaniumsdk\.com(?=\/|$)/;
@@ -94,43 +79,26 @@ function releaseNotesPath(version: string): string | null {
 }
 
 /**
- * The nearest ancestor of a mapping destination that the IA actually defines.
+ * A retired guide's address here, from the `/guide/*` redirect map (TI-39).
  *
- * `docs/legacy-docs-mapping.json` is `status: "provisional"` and says so at the
- * top: its destinations were predicted before any docs content existed, and the
- * rewrite renamed and merged pages afterwards. `Alloy_PurgeTSS` maps to
- * `/docs/alloy/guide`, which is not a page in the approved IA - `/docs/alloy`
- * is. Truncating to the nearest real ancestor uses the mapping for what it is
- * good for, which is naming the section a legacy page belongs to, without
- * trusting a leaf it predicted.
+ * The same answer the redirect serves, which is the point: a link in a post and
+ * a link from a search result should not land in different places. It replaces
+ * a truncation step this file used to need, back when the only mapping
+ * available was TI-31's provisional one and its predicted leaves - `/docs/alloy/
+ * guide` for PurgeTSS - had to be trimmed to an ancestor that existed.
  *
- * Truncation stops above `/docs`, which is where every unrecognised
- * destination would otherwise end up. The index names no section, and because
- * it is a page the result would pass `check:docs` - leaving a reader dropped
- * on the docs front door indistinguishable, afterwards, from a link that
- * resolved. Null instead, so the legacy address survives to be reported. A
- * mapping that names `/docs` outright is a decision rather than a guess, and
- * is honoured.
+ * The map keys on the URL the old site served, so a post that wrote the address
+ * with `.html`, with a trailing slash, or with neither all resolve.
+ *
+ * `/docs` is a real answer here rather than a failure. 36 legacy trees have no
+ * successor in the approved IA - Contributing, Angular, the Welcome pages - and
+ * the map says so deliberately.
  */
-function nearestKnown(destination: string): string | null {
-  const known = new Set(allPaths());
-  if (known.has(destination)) return destination;
+const rules = new Map(legacyGuide.rules.map((rule) => [rule.source, rule.destination]));
 
-  for (
-    let path = destination.slice(0, destination.lastIndexOf('/'));
-    path.startsWith('/docs/');
-    path = path.slice(0, path.lastIndexOf('/'))
-  ) {
-    if (known.has(path)) return path;
-  }
-  return null;
-}
-
-/** A surviving guide's address here, via the legacy mapping. */
 function guidePath(path: string): string | null {
-  const key = path.replace(/\.html$/, '').replace(/\/$/, '');
-  const rule = legacyMapping().redirects.find((r) => r.from === key);
-  return rule ? nearestKnown(rule.to) : null;
+  const bare = path.replace(/\/$/, '');
+  return rules.get(path) ?? rules.get(`${bare}.html`) ?? rules.get(bare) ?? null;
 }
 
 /**
