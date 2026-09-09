@@ -78,8 +78,54 @@ export type RenderOptions = {
   relative?: { images: string; links?: string };
 };
 
-/** Absolute, protocol-relative, or root-relative - nothing to resolve. */
-const isAbsolute = (ref: string) => /^(?:[a-z][\w+.-]*:)?\/\//i.test(ref) || ref.startsWith('/');
+/**
+ * The Appcelerator-era domains, which no longer serve anything.
+ *
+ * Both brands are retired and every host under them that the registry actually
+ * cites is gone: `jenkins`, `jira`, `wiki` and `ti` on the `.org` resolve to
+ * nothing at all (NXDOMAIN), and `docs`, `dashboard`, `preview` and the apex on
+ * the `.com` answer on one parked address with an expired certificate and a 404
+ * behind it. A reader following one gets a browser security interstitial and
+ * then an error page, so there is nothing to preserve by keeping the link.
+ *
+ * Matched by domain rather than by an enumerated host list: the brands are
+ * defunct, so a host under them that this corpus does not cite today would be
+ * no more alive than the nine it does.
+ *
+ * `tislack.org` is deliberately not here. It reads like the same vintage and it
+ * is cited in the same breath, but it is still up and still serving, so its
+ * links are left exactly as written.
+ */
+const RETIRED_DOMAINS = ['appcelerator.com', 'appcelerator.org'];
+
+/**
+ * Whether a reference points into one of those domains.
+ *
+ * Relative references throw out of `URL` and are not retired - they resolve
+ * against a repository or this site. Protocol-relative ones have no scheme for
+ * `URL` to parse, so they get one first; the registry has none today, but the
+ * check is cheaper than the surprise.
+ */
+function isRetired(ref: string): boolean {
+  try {
+    const { hostname } = new URL(ref.startsWith('//') ? `https:${ref}` : ref);
+    return RETIRED_DOMAINS.some((d) => hostname === d || hostname.endsWith(`.${d}`));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Absolute, protocol-relative, or root-relative - nothing to resolve.
+ *
+ * Any scheme counts, not only the ones written with slashes after the colon.
+ * `mailto:` is the one this corpus actually carries: `com.appcelerator.urlSession`
+ * offers a support address, and while this check demanded `//` that href was read
+ * as a relative path and resolved against the repository, shipping a link to
+ * `github.com/tidev/.../blob/HEAD/mailto:info@...`. `tel:` would have gone the
+ * same way. The sanitizer's `allowedSchemes` still decides which survive.
+ */
+const isAbsolute = (ref: string) => /^(?:[a-z][\w+.-]*:|\/\/)/i.test(ref) || ref.startsWith('/');
 
 const resolveRelative = (base: string, ref: string) => `${base}/${ref.replace(/^\.\//, '')}`;
 
@@ -98,6 +144,19 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
 
   const clean = sanitizeHtml(html, {
     ...SANITIZE,
+    /**
+     * Build badges for a CI system that no longer exists.
+     *
+     * Six module READMEs open with `![Build Status](jenkins.appcelerator.org/...)`,
+     * which renders as a broken image on the first line of the page. There is no
+     * build to point at and no icon to fetch, so the image goes rather than being
+     * rewritten. The live badges beside it - npm version, from shields.io - are
+     * untouched.
+     *
+     * Here rather than in `transformTags` because an `<img>` has no text to keep,
+     * and a transform can only replace a tag, not remove one.
+     */
+    exclusiveFilter: (frame) => frame.tag === 'img' && isRetired(frame.attribs.src ?? ''),
     transformTags: {
       img: (tagName, attribs) => {
         /**
@@ -145,6 +204,11 @@ export function renderMarkdown(source: string | undefined, options: RenderOption
           if (!resolved) return { tagName: 'span', attribs: {} };
           return { tagName, attribs: { ...attribs, href: resolved } };
         }
+
+        // A dead address is worse than no address: the prose still reads, and
+        // the reader is not sent to a certificate warning. Same treatment the
+        // ExtJS-era guide links get above, for the same reason.
+        if (isRetired(href)) return { tagName: 'span', attribs: {} };
 
         const target = apiTarget(href);
         if (target) {
