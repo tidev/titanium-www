@@ -188,7 +188,7 @@ export function GuideNav({
     // <aside> carries `overflow-y-auto`, not the <nav> inside it.
     <aside
       id="guide-rail"
-      className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto"
+      className="lg:sticky lg:top-20 lg:overflow-y-auto"
     >
       {/* Remembers where the rail was left. Rendered for every docs page, not
           just the ones carrying the tree: a guides rail long enough to scroll

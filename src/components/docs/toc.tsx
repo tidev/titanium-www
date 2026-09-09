@@ -47,7 +47,7 @@ export function OnThisPage({
       {/* Sticks a rem below the 4rem site header and scrolls on its own; the
           grid stretches this to the article's height, which is what sticky
           needs to have anything to travel along. */}
-      <nav className="sticky top-20 max-h-[calc(100dvh-6rem)] overflow-y-auto text-sm">
+      <nav className="sticky top-20 overflow-y-auto text-sm">
         <p className="font-medium text-text">On this page</p>
 
         <SectionJump links={[...links, ...groupLinks(shown)]} className="mt-2" />

@@ -22,7 +22,7 @@ export function GuideToc({ headings }: { headings: Heading[] }) {
 
   return (
     <aside className="hidden xl:block" aria-label="On this page">
-      <nav className="sticky top-20 max-h-[calc(100dvh-6rem)] overflow-y-auto text-sm">
+      <nav className="sticky top-20 overflow-y-auto text-sm">
         <p className="font-medium text-text">On this page</p>
         <ul className="mt-2 border-l border-border">
           {headings.map((heading) => (
