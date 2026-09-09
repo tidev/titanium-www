@@ -2,6 +2,7 @@ import {
   CommunityIndexSchema,
   ModuleIndexSchema,
   ModuleVersionSchema,
+  UnsupportedListSchema,
   VerifiedListSchema,
   type ApiIndex,
   type ApiType,
@@ -63,6 +64,53 @@ export function moduleIds(): string[] {
   return ids;
 }
 
+let unsupported: Set<string> | null = null;
+
+/**
+ * Official modules TiDev has stopped supporting, which the site does not show.
+ *
+ * Hand-maintained in `registry/modules/unsupported.json` and joined on here
+ * rather than written into the registry, for the reason the verified list is:
+ * `generate-modules.ts` rewrites those directories from what GitHub said, and a
+ * judgement stored in its output would be erased by the next run.
+ *
+ * Absence is not an error. A checkout without the file lists everything, which
+ * is the same failure mode as a checkout that has never run the community
+ * scrape - and the safe direction, since the alternative is a parse error
+ * taking down a build over a curation file.
+ */
+function unsupportedIds(): Set<string> {
+  if (unsupported) return unsupported;
+  const path = join(MODULES_DIR, 'unsupported.json');
+  if (!existsSync(path)) return (unsupported = new Set());
+
+  const parsed = UnsupportedListSchema.parse(JSON.parse(readFileSync(path, 'utf8')));
+  return (unsupported = new Set(parsed.modules.map((m) => m.moduleId)));
+}
+
+export const isUnsupported = (id: string): boolean => unsupportedIds().has(id);
+
+/**
+ * The modules this site has pages for: every one on disk, minus the unsupported.
+ *
+ * The split is deliberate and runs the other way from what you might expect.
+ * `moduleIds()` stays the complete on-disk truth because it is what every
+ * lookup below guards against - `moduleIndex`, `moduleVersions` and the release
+ * readers all check membership before touching a path, and narrowing it would
+ * make an unsupported module unreadable rather than unlisted. `/registry/v1`
+ * needs exactly that readability: the Titanium CLI resolves installs against it
+ * and an app with `ti.barcode` in its `tiapp.xml` has to keep building.
+ *
+ * So the site calls this and the API calls `moduleIds()`. Everything that
+ * renders a page, a sitemap entry or an llms.txt line uses this one, and
+ * `unsupported.test.ts` asserts that none of them let one of these through -
+ * because the failure is silent, and a delisted module quietly reappearing
+ * looks exactly like nothing having happened.
+ */
+export function listedModuleIds(): string[] {
+  return moduleIds().filter((id) => !isUnsupported(id));
+}
+
 export function moduleIndex(id: string): ModuleIndex | null {
   if (!moduleIds().includes(id)) return null;
   return readJson(join(MODULES_DIR, id, 'index.json'), (v) => ModuleIndexSchema.parse(v));
@@ -112,7 +160,7 @@ export function moduleReadme(id: string): string | undefined {
 export function moduleAliases(): { alias: string; moduleId: string }[] {
   const out: { alias: string; moduleId: string }[] = [];
   const canonical = new Set(moduleIds());
-  for (const id of moduleIds()) {
+  for (const id of listedModuleIds()) {
     for (const alias of moduleIndex(id)?.aliases ?? []) {
       if (alias !== id && !canonical.has(alias)) out.push({ alias, moduleId: id });
     }
@@ -204,7 +252,7 @@ export function latestReleases(index: ModuleIndex): PlatformLatest[] {
 
 /** Everything the browse page shows, and nothing it does not. */
 export function moduleSummaries(): ModuleSummary[] {
-  return moduleIds().flatMap((id) => {
+  return listedModuleIds().flatMap((id) => {
     const index = moduleIndex(id);
     if (!index) return [];
 

@@ -3,7 +3,7 @@ import { listedProfiles } from './directory/read.ts';
 import { guide, indexableGuidePaths } from './docs/guides.ts';
 import { lastUpdated } from './docs/last-updated.ts';
 import { latestPerPlatform } from './docs/module-summary.ts';
-import { moduleIds, moduleIndex } from './docs/modules.ts';
+import { listedModuleIds, moduleIndex } from './docs/modules.ts';
 import { latestSdkVersion, sdkIndex } from './docs/registry.ts';
 import { versionsWithNotes } from './docs/release-notes.ts';
 import { canonicalPath, indexedVersions } from './docs/versions.ts';
@@ -174,7 +174,7 @@ function reference(): MetadataRoute.Sitemap {
 function modules(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/modules`, changeFrequency: 'weekly', priority: 0.8 },
-    ...moduleIds().flatMap((moduleId) => {
+    ...listedModuleIds().flatMap((moduleId) => {
       const index = moduleIndex(moduleId);
       if (!index) return [];
 

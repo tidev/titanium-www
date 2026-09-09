@@ -9,7 +9,13 @@ import { formatDate } from '@/lib/docs/format';
 import type { InstallRelease } from '@/lib/docs/install';
 import { latestPerPlatform, PLATFORM_LABELS } from '@/lib/docs/module-summary';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
-import { moduleBlurb, moduleHasDocs, moduleIndex, moduleRelease } from '@/lib/docs/modules';
+import {
+  isUnsupported,
+  moduleBlurb,
+  moduleHasDocs,
+  moduleIndex,
+  moduleRelease,
+} from '@/lib/docs/modules';
 import { blobUrl, type CompiledSource } from '@/lib/docs/registry';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -53,7 +59,7 @@ export async function generateMetadata({
   const { moduleId, version } = await params;
   const index = moduleIndex(moduleId);
   const release = moduleRelease(moduleId, version);
-  if (!index || !release) return {};
+  if (!index || !release || isUnsupported(moduleId)) return {};
 
   const platforms = release.platforms.map((platform) => PLATFORM_LABELS[platform]);
 
@@ -76,7 +82,10 @@ export default async function ModuleVersionPage({
 
   const index = moduleIndex(moduleId);
   const release = moduleRelease(moduleId, version);
-  if (!index || !release) notFound();
+  // The other four module views are prerendered, so `dynamicParams = false`
+  // 404s an unsupported module for them. This one renders on request and would
+  // happily build a page for one, so the same exclusion is applied by hand.
+  if (!index || !release || isUnsupported(moduleId)) notFound();
 
   const reference = moduleHasDocs(moduleId, version)
     ? buildModuleReference(moduleId, [version])

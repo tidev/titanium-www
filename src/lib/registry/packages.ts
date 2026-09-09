@@ -340,6 +340,36 @@ export const BlockedListSchema = z.object({
   ),
 });
 
+/**
+ * Official modules TiDev has stopped supporting (TI-24).
+ *
+ * A third hand-maintained list, and the only one that removes something. The
+ * other two sort the community scrape into tiers; this one takes a module the
+ * registry still holds every byte of and keeps it off the site.
+ *
+ * Keyed on `moduleId` rather than the `owner/name` slug the other two use, for
+ * the reason they use a slug: a curated module has a published id that
+ * `tiapp.xml` references and the install directory is named after, and a
+ * community repository has nothing of the kind. Keying this on a repo name
+ * would mean the five modules whose repo and id differ get delisted by a name
+ * no developer has ever typed.
+ *
+ * The removal is the site's, not the registry's. `/registry/v1` keeps serving
+ * these because the Titanium CLI resolves against it and an app that already
+ * depends on one of these must keep building - see `listedModuleIds()`.
+ */
+export const UnsupportedListSchema = z.object({
+  $comment: z.string(),
+  modules: z.array(
+    z.object({
+      moduleId: z.string().min(1),
+      /** Required, as on the blocklist: an entry nobody can explain cannot be revisited. */
+      reason: z.string().min(1),
+      at: z.string().min(1),
+    })
+  ),
+});
+
 export type SdkVersion = z.infer<typeof SdkVersionSchema>;
 export type ModuleManifest = z.infer<typeof ModuleManifestSchema>;
 export type ModuleVersion = z.infer<typeof ModuleVersionSchema>;
@@ -349,3 +379,4 @@ export type CommunityModule = z.infer<typeof CommunityModuleSchema>;
 export type CommunityIndex = z.infer<typeof CommunityIndexSchema>;
 export type VerifiedList = z.infer<typeof VerifiedListSchema>;
 export type BlockedList = z.infer<typeof BlockedListSchema>;
+export type UnsupportedList = z.infer<typeof UnsupportedListSchema>;

@@ -1,4 +1,5 @@
 import { anchorAllocator } from '../src/lib/docs/links.ts';
+import { isUnsupported } from '../src/lib/docs/modules.ts';
 import { apiIndexAt, apiTypeAt, latestSdkVersion } from '../src/lib/docs/registry.ts';
 import { viewOf } from '../src/lib/docs/type-view.ts';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
@@ -79,6 +80,8 @@ for (const id of readdirSync(MODULES)) {
   if (!statSync(dir).isDirectory()) continue;
   const descriptor = join(dir, 'index.json');
   if (!existsSync(descriptor)) continue;
+  // Retired: the id would resolve to a 404. See `registry/modules/unsupported.json`.
+  if (isUnsupported(id)) continue;
 
   const meta = JSON.parse(readFileSync(descriptor, 'utf8')) as { latest?: Record<string, string> };
   const names = new Set<string>();

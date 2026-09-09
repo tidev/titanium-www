@@ -1,6 +1,6 @@
 import { Releases } from '@/components/modules/releases';
 import { ModuleLayout } from '@/components/modules/shell';
-import { moduleBlurb, moduleIds, moduleIndex } from '@/lib/docs/modules';
+import { listedModuleIds, moduleBlurb, moduleIndex } from '@/lib/docs/modules';
 import { compareVersions } from '@/lib/docs/registry';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -11,7 +11,7 @@ import { notFound } from 'next/navigation';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return moduleIds().map((moduleId) => ({ moduleId }));
+  return listedModuleIds().map((moduleId) => ({ moduleId }));
 }
 
 export async function generateMetadata({

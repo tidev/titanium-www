@@ -5,7 +5,7 @@ import { referenceToc, TypeSection } from '@/components/modules/reference';
 import { ModuleLayout } from '@/components/modules/shell';
 import { platformsAtVersion } from '@/lib/docs/module-summary';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
-import { moduleBlurb, moduleIds, moduleIndex, referenceVersions } from '@/lib/docs/modules';
+import { listedModuleIds, moduleBlurb, moduleIndex, referenceVersions } from '@/lib/docs/modules';
 import { MAIN } from '@/lib/docs/registry';
 import type { ModuleIndex } from '@/lib/registry';
 import { SITE_URL } from '@/lib/site';
@@ -25,7 +25,7 @@ import { notFound } from 'next/navigation';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return moduleIds().map((moduleId) => ({ moduleId }));
+  return listedModuleIds().map((moduleId) => ({ moduleId }));
 }
 
 export async function generateMetadata({

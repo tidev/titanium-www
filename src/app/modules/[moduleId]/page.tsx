@@ -3,9 +3,9 @@ import { Prose } from '@/components/docs/prose';
 import { ModuleLayout } from '@/components/modules/shell';
 import { buildModuleReference, moduleLinker } from '@/lib/docs/module-view';
 import {
+  listedModuleIds,
   moduleAliases,
   moduleBlurb,
-  moduleIds,
   moduleIndex,
   moduleReadme,
   readmeRelativeBase,
@@ -29,7 +29,7 @@ export const dynamicParams = false;
 
 export function generateStaticParams() {
   return [
-    ...moduleIds().map((moduleId) => ({ moduleId })),
+    ...listedModuleIds().map((moduleId) => ({ moduleId })),
     // The repository names that differ from the published id, so
     // /modules/titanium-identity answers instead of 404ing. They redirect.
     ...moduleAliases().map(({ alias }) => ({ moduleId: alias })),

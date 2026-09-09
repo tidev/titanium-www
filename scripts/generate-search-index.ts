@@ -2,6 +2,7 @@ import { publishedPosts } from '../src/lib/blog/posts.ts';
 import { SPECIALISM_LABELS } from '../src/lib/directory/profile.ts';
 import { listedProfiles } from '../src/lib/directory/read.ts';
 import { anchorAllocator } from '../src/lib/docs/links.ts';
+import { isUnsupported } from '../src/lib/docs/modules.ts';
 import { apiIndexAt, apiTypeAt, latestSdkVersion } from '../src/lib/docs/registry.ts';
 import { viewOf } from '../src/lib/docs/type-view.ts';
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
@@ -142,6 +143,9 @@ for (const id of readdirSync(MODULES)) {
   if (!statSync(dir).isDirectory()) continue;
   const indexPath = join(dir, 'index.json');
   if (!existsSync(indexPath)) continue;
+  // A retired module has no pages, so indexing it would return a result that
+  // 404s - worse than not finding it at all. See `registry/modules/unsupported.json`.
+  if (isUnsupported(id)) continue;
 
   const index = JSON.parse(readFileSync(indexPath, 'utf8')) as {
     description?: string;

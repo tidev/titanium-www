@@ -26,9 +26,9 @@ The test when you are unsure which tier: _has a person looked at this
 repository and would we tell someone to use it?_ If not, it is Unverified. The
 default is Unverified, and it takes an edit to change.
 
-## Four lists
+## Five lists
 
-Two are written by hand, one is generated, one is the existing allowlist.
+Three are written by hand, one is generated, one is the existing allowlist.
 
 `scripts/docgen/sources.json` is **unchanged by this policy** and stays what it
 was: the repos the regen workflow may fetch and run docgen against. It is a
@@ -44,6 +44,14 @@ answers who added a name and when.
 `registry/modules/blocked.json` is the exclusion list. An entry records why,
 for the same reason. Forks and archived repositories do **not** belong here:
 the generator drops those mechanically.
+
+`registry/modules/unsupported.json` is the retirement list, and the only one
+that removes something. The other lists sort the community scrape into tiers;
+this one takes an Official module the registry holds every byte of and keeps it
+off the site. It is keyed on `moduleId` rather than a repo slug, because a
+curated module has a published id and a community repository does not - keying
+it on the repository would delist the five modules whose repo and id differ by
+a name no developer has ever typed.
 
 `registry/modules/community.json` is regenerated daily by
 `.github/workflows/refresh-community-modules.yml` and holds only what GitHub
@@ -107,6 +115,27 @@ without anyone doing anything.
 **A verified module that stops meeting the bar is demoted, not blocked.**
 Remove it from `verified.json` and it falls back to Unverified with its listing
 intact. Blocking is a stronger statement and is not the tool for staleness.
+
+**An Official module TiDev stops supporting is retired.** Add it to
+`unsupported.json` with a reason and a date. This is the one delisting that has
+to be written by hand, because nothing about an official module expires on its
+own: the repository stays unarchived, the releases stay downloadable, and the
+registry keeps building it every night whatever anyone has decided about it.
+
+Retirement is site-only, and the split is the point. The module leaves the
+browse page, its four views, the sitemap and `llms.txt`, through
+`listedModuleIds()`. It stays in `/registry/v1`, which `moduleIds()` still
+feeds, because that endpoint is what the Titanium CLI resolves installs
+against - an app with the module in its `tiapp.xml` has to keep building after
+the docs for it stop being published. `src/lib/docs/unsupported.test.ts`
+asserts both halves, since either one failing is silent.
+
+Nine modules were retired on 2026-09-08, off the TI-24 audit's staleness data.
+Six of them still ship a current Android release and were retired anyway:
+`ti.barcode`'s Android 7.0.0 requires SDK 13.0.0, the current line. That was a
+deliberate call - the iOS side of each had been dead for four to six years and
+maintaining half a module was judged not worth it - and each entry records what
+it cost so the decision can be revisited rather than rediscovered.
 
 **48 of the 106 are verified**, by two usernames in `owners`. The other 58 are
 Unverified: nobody has looked at them, one at a time, and the badge says so.

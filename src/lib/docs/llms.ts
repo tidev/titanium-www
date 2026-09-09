@@ -9,7 +9,13 @@ import {
 } from './format.ts';
 import { guide, writtenPaths, type Problem } from './guides.ts';
 import { platformLabel, SECTIONS } from './ia.ts';
-import { latestReleases, moduleApiIndex, moduleIds, moduleIndex } from './modules.ts';
+import {
+  isUnsupported,
+  latestReleases,
+  listedModuleIds,
+  moduleApiIndex,
+  moduleIndex,
+} from './modules.ts';
 import { latestSdkVersion, MAIN, resolveVersion, sdkIndex, sdkType } from './registry.ts';
 import { viewOf } from './type-view.ts';
 
@@ -535,7 +541,7 @@ export function modulesIndexMarkdown(): string {
     '',
   ];
 
-  for (const id of moduleIds()) {
+  for (const id of listedModuleIds()) {
     const index = moduleIndex(id);
     const summary = index?.description ? ` ${index.description.replace(/\s+/g, ' ').trim()}` : '';
     out.push(`- [${id}](${mdUrl(`/modules/${id}`)}):${summary}`);
@@ -571,7 +577,8 @@ export function markdownFor(path: string): string | undefined {
   if (clean === '/modules') return modulesIndexMarkdown();
   if (clean.startsWith('/modules/')) {
     const rest = clean.slice('/modules/'.length);
-    return rest.includes('/') ? undefined : moduleMarkdown(rest);
+    if (rest.includes('/') || isUnsupported(rest)) return undefined;
+    return moduleMarkdown(rest);
   }
 
   if (clean !== '/docs' && !clean.startsWith('/docs/')) return undefined;
@@ -702,7 +709,7 @@ export function llmsGroups(): LlmsGroup[] {
         path: '/modules',
         blurb: 'Native modules TiDev hosts, with the id used in `tiapp.xml`.',
       },
-      ...moduleIds().map((id) => ({
+      ...listedModuleIds().map((id) => ({
         title: id,
         path: `/modules/${id}`,
         blurb: moduleIndex(id)?.description?.replace(/\s+/g, ' ').trim(),

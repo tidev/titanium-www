@@ -2,7 +2,7 @@ import { Install } from '@/components/modules/install';
 import { ModuleLayout } from '@/components/modules/shell';
 import type { InstallRelease } from '@/lib/docs/install';
 import { latestPerPlatform, PLATFORM_LABELS } from '@/lib/docs/module-summary';
-import { moduleBlurb, moduleIds, moduleIndex, moduleRelease } from '@/lib/docs/modules';
+import { listedModuleIds, moduleBlurb, moduleIndex, moduleRelease } from '@/lib/docs/modules';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -18,7 +18,7 @@ import { notFound } from 'next/navigation';
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return moduleIds().map((moduleId) => ({ moduleId }));
+  return listedModuleIds().map((moduleId) => ({ moduleId }));
 }
 
 export async function generateMetadata({

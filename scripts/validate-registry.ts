@@ -25,6 +25,7 @@ import {
   ModuleVersionSchema,
   SdkVersionSchema,
   ToolchainSchema,
+  UnsupportedListSchema,
 } from '../src/lib/registry/index.ts';
 import { POOL_DIR } from './lib/pool.ts';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -82,6 +83,7 @@ function schemaFor(rel: string): ZodType | null {
     // unlisted file passes CI silently however malformed it is.
     if (parts.length === 2 && file === 'verified.json') return VerifiedListSchema;
     if (parts.length === 2 && file === 'blocked.json') return BlockedListSchema;
+    if (parts.length === 2 && file === 'unsupported.json') return UnsupportedListSchema;
 
     // modules/<id>/index.json describes the package: versions, platforms, repo.
     // The compiled API reference for a version no longer collides with it -
