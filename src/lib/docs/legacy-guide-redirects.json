@@ -1,0 +1,1260 @@
+{
+  "$comment": [
+    "The legacy titanium-docs /guide/* URLs (TI-39).",
+    "Hand-maintained. The old corpus is frozen and titanium-docs is being archived",
+    "(TI-52), so there is no generator: edit this file and let the test catch",
+    "anything that stops resolving. See src/lib/docs/legacy-guide-redirects.test.ts.",
+    "",
+    "Sources carry no trailing slash. The old wiki served section indexes at a",
+    "directory URL, but Next normalises that away before redirects are matched,",
+    "so the bare form is the one that can match - and its compiled regex ends",
+    "(?:/)?$, which covers both spellings anyway."
+  ],
+  "source": {
+    "repo": "tidev/titanium-docs",
+    "pages": 336
+  },
+  "notFound": [
+    "/guide/Alloy_Framework/Alloy_Framework_Release_Notes",
+    "/guide/Alloy_Framework/Alloy_Framework_Release_Notes/Alloy_1.11.0_Release_Note.html",
+    "/guide/Alloy_Framework/Alloy_Framework_Release_Notes/Alloy_1.12.0_Release_Note.html",
+    "/guide/Alloy_Framework/Alloy_Framework_Release_Notes/Alloy_1.13.0_Release_Note.html",
+    "/guide/Alloy_Framework/Alloy_Framework_Release_Notes/Alloy_1.13.1_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.1.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.1.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.1.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.2.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.0.RC2_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.1.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.4.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.5.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.0.1.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.1.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.2.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.3.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.0.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.1.0.RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.2.0_RC_Release_Note.html",
+    "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.3.0_RC_Release_Note.html"
+  ],
+  "rules": [
+    {
+      "source": "/guide/Alloy_Framework",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_FAQ.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Getting_Started.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Concepts.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Controllers.html",
+      "destination": "/docs/alloy/controllers"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models/Alloy_Backbone_Migration.html",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models/Alloy_Collection_and_Model_Objects.html",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models/Alloy_Data_Binding.html",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models/Alloy_Sync_Adapters_and_Migrations.html",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Models/Backbone_Objects_without_Alloy.html",
+      "destination": "/docs/alloy/models"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_PurgeTSS.html",
+      "destination": "/docs/alloy/styles"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Tasks_with_the_CLI.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Views",
+      "destination": "/docs/alloy/views"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Views/Alloy_Styles_and_Themes.html",
+      "destination": "/docs/alloy/styles"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Views/Alloy_XML_Markup.html",
+      "destination": "/docs/alloy/views"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Views/Dynamic_Styles.html",
+      "destination": "/docs/alloy/styles"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Views/Views_without_Controllers.html",
+      "destination": "/docs/alloy/views"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_Guide/Alloy_Widgets.html",
+      "destination": "/docs/alloy/widgets"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Best_Practices_and_Recommendations.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Debugging_and_Troubleshooting.html",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Reference_Guides",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Reference_Guides/Alloy_Command-Line_Interface_Reference.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Reference_Guides/Build_Configuration_File_(alloy.jmk).html",
+      "destination": "/docs/alloy/config"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Reference_Guides/Project_Configuration_File_(config.json).html",
+      "destination": "/docs/alloy/config"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Reference_Guides/Widget_Configuration_File_(widget.json).html",
+      "destination": "/docs/alloy/widgets"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Alloy_Samples.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Creating_Custom_Tags_in_Titanium_with_Alloy.html",
+      "destination": "/docs/alloy/views"
+    },
+    {
+      "source": "/guide/Alloy_Framework/Alloy_How-tos/Titanium_SDK_Tutorials.html",
+      "destination": "/docs/alloy"
+    },
+    {
+      "source": "/guide/Editor_IDE",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/Atom_Package",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension/Hello_World_Tutorial_for_VS_Code_Extension_For_Titanium.html",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension/Setting_Up_Emulators_and_Simulators_For_Titanium.html",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension/Visual_Studio_Code_-_Titanium_Extension_Features.html",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension/Visual_Studio_Code_-_Titanium_Extension_Installation_and_Configuration_Settings.html",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Editor_IDE/VSCode_Extension/Visual_Studio_Code_Extension_Tips_and_Tricks.html",
+      "destination": "/docs/setup/ide-integration"
+    },
+    {
+      "source": "/guide/Titanium_SDK",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_FAQ.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Creating_Your_First_Titanium_App.html",
+      "destination": "/docs/build/first-app"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/GDPR.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Hello_Titanium_App_Tutorial.html",
+      "destination": "/docs/build/first-app"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installation_Troubleshooting",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installation_Troubleshooting/Install_Diagnostics_Script_Output.html",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Platform_SDKs",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Platform_SDKs/Installing_the_Android_SDK.html",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Platform_SDKs/Installing_the_iOS_SDK.html",
+      "destination": "/docs/setup/macos"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Titanium_Advanced_Tools",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Titanium_Advanced_Tools/Installing_the_Android_NDK.html",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Installing_Titanium_SDK_Continuous_Builds.html",
+      "destination": "/downloads"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Node.js_Support.html",
+      "destination": "/docs/reference/compatibility"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Software_Locations_and_Environment_Variables.html",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Installation_and_Configuration/Titanium_Compatibility_Matrix",
+      "destination": "/docs/reference/compatibility"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Prerequisites",
+      "destination": "/docs/setup"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Titanium_Platform_Overview.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Getting_Started/Titanium_SDK_Overview.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Appendices",
+      "destination": "/docs/reference"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Appendices/Maintaining_a_Custom_AndroidManifest.xml.html",
+      "destination": "/docs/reference/tiapp-xml"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Appendices/tiapp.xml_and_timodule.xml_Reference.html",
+      "destination": "/docs/reference/tiapp-xml"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Application_Frameworks.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Coding_Best_Practices.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/CommonJS_Modules_in_Titanium.html",
+      "destination": "/docs/build/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Database_Best_Practices.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Image_Best_Practices.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Reserved_Words.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Best_Practices_and_Recommendations/Style_and_Conventions.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Contributing_to_Open_Source_Titanium_Modules.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Documentation",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Documentation/Contributing_API_Documentation.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Documentation/Titanium_API_Doc_Style_Guide.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/How_to_Report_a_Bug_or_Make_a_Feature_Request",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/How_to_Report_a_Bug_or_Make_a_Feature_Request/How_to_Submit_a_Bug_Report.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/How_to_Report_a_Bug_or_Make_a_Feature_Request/JIRA_Ticket_Template.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Android_Titanium_SDK_Development_Setup.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Building_the_Titanium_SDK_From_Source.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Coding_Standards",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Coding_Standards/C_and_C++_Coding_Standards.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Coding_Standards/Java_Coding_Standards.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Coding_Standards/JavaScript_Coding_Standards.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Coding_Standards/Objective-C_and_Objective-C++_Coding_Standards.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Pull_Request_Guide.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Specs",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Specs/Layout_Limitations_Spec.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Specs/TDoc_Specification.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Platform_Development/Specs/UI_Composite_Layout_Behavior_Spec.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Contributing_to_Titanium/Reviewing_pull_requests.html",
+      "destination": "/contribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Example_Applications.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Enabling_Hyperloop.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_FAQ.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Android_Hyperloop_Programming_Guide",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Android_Hyperloop_Programming_Guide/Hyperloop_and_Android_-_Using_Third_Party_Android_Libraries.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Android_Hyperloop_Programming_Guide/Using_native_Android_XML_layouts_in_Hyperloop.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Hyperloop_Requirements.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/iOS_Hyperloop_Programming_Guide",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/iOS_Hyperloop_Programming_Guide/iOS_Modules_-_Use_Native_UI_Application_Delegates_in_Hyperloop_and_Native_Modules.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Using_the_TiApp_Utility_Class_in_Hyperloop_iOS",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Guides/Using_the_TiApp_Utility_Class_in_Hyperloop_iOS/Using_Swift_to_Build_Native_Modules_in_Titanium.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Hyperloop/Hyperloop_Sample_Apps.html",
+      "destination": "/docs/extend/hyperloop"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution",
+      "destination": "/docs/distribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution/Deploying_to_Android_Devices.html",
+      "destination": "/docs/build/first-app"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution/Deploying_to_iOS_devices.html",
+      "destination": "/docs/build/first-app"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution/Distributing_Android_apps.html",
+      "destination": "/docs/distribute/android"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution/Distributing_iOS_apps",
+      "destination": "/docs/distribute/ios"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Preparing_for_Distribution/Distributing_iOS_apps/App_Thinning.html",
+      "destination": "/docs/distribute/ios"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_-_FAQ.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_-_Helpers_and_Services.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_-_Limitations_and_Workarounds.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_Basics.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_Getting_Started_Guide.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_and_Angular/Titanium_Angular_Routing.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_Command-Line_Interface_Reference",
+      "destination": "/docs/reference/cli"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_Command-Line_Interface_Reference/Titanium_CLI_Options.html",
+      "destination": "/docs/reference/cli"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_Command-Line_Interface_Reference/Titanium_CLI_Plugins.html",
+      "destination": "/docs/extend/cli-plugins"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Titanium_Command-Line_Interface_Reference/Titanium_CLI_Tasks.html",
+      "destination": "/docs/reference/cli"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Welcome_To_Titanium",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Welcome_To_Titanium/Hello_World.html",
+      "destination": "/docs/build/first-app"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Welcome_To_Titanium/JavaScript_Development_Primer.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Guide/Welcome_To_Titanium/Titanium_Resources.html",
+      "destination": "/docs"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Adhere_to_the_iOS17_Privacy_Requirements.html",
+      "destination": "/docs/distribute/ios"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium/Android_Platform_Overview.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium/Coding_Strategies.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium/Internationalization.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium/iOS_Platform_Overview.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Cross-Platform_Mobile_Development_In_Titanium/Supporting_Multiple_Platforms_in_a_Single_Codebase.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling/Build_Test_and_Deploy_a_Titanium_Cross-Platform_App_with_Fastlane.html",
+      "destination": "/docs/distribute"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling/Debugging_Overview.html",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling/Managing_Memory_and_Finding_Leaks.html",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling/Native_Android_Debugging_and_Testing_Tools.html",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Debugging_and_Profiling/Native_iOS_Debugging_and_Testing_Tools.html",
+      "destination": "/docs/build/debugging"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile",
+      "destination": "/docs/extend"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Android_Module_Development_Guide",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Android_Module_Development_Guide/Android_Module_Architecture.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Android_Module_Development_Guide/Android_Module_Project.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Android_Module_Development_Guide/Android_Module_Quick_Start.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Android_Module_Development_Guide/Android_Module_Upgrade_Guide.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_64-bit_Support.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_Architecture.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_Debugging.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_Project.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_Quick_Start.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/iOS_Module_Development_Guide/iOS_Module_Swift_Package_Manager.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Extending_Titanium_Mobile/Titanium_Module_Concepts.html",
+      "destination": "/docs/extend/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Integrating_Web_Content",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Integrating_Web_Content/Communication_Between_WebViews_and_Titanium.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Integrating_Web_Content/The_WebView_Component.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Integrating_Web_Content/WebView_Use_Cases.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Location_Services",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Location_Services/Google_Maps_v2_for_Android.html",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Location_Services/iOS_Map_Kit.html",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Location_Services/Native_Maps_and_Annotations.html",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Location_Services/Tracking_Position_and_Heading.html",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/Android_Notifications.html",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/iOS_Interactive_Notifications.html",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/iOS_Local_Notifications.html",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/Push_Notifications",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/Push_Notifications/Configuring_Push_Services",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/Push_Notifications/Configuring_Push_Services/Creating_a_Google_API_Console_project_and_client_ID.html",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Notification_Services/Push_Notifications/Subscribing_to_push_notifications.html",
+      "destination": "/docs/build/notifications"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/Android_API_Deep_Dives",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/Android_API_Deep_Dives/Android_Broadcast_Intents_and_Receivers.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/Android_API_Deep_Dives/Android_Intent_Filters.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/Android_API_Deep_Dives/Android_Intents.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/Android_API_Deep_Dives/Android_Services.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/Core_Motion_Module.html",
+      "destination": "/docs/build/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/Creating_iOS_Extensions_-_Siri_Intents.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/Handoff_User_Activities.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/iCloud_Services.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/Integrate_a_WatchKit_App_Built_in_Xcode.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/iOS_Background_Services.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Platform_API_Deep_Dives/iOS_API_Deep_Dives/Spotlight_Search.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_Boilerplates",
+      "destination": "/docs/build/project-structure"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_Boilerplates/Titanium_Boilerplates_for_TypeScript.html",
+      "destination": "/docs/build/project-structure"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials/Camera_App_Tutorial.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials/Geolocation_with_Titanium_Tutorial.html",
+      "destination": "/docs/build/location"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials/How_to_Chain_Controller_Methods_in_Titanium_by_Using_Alloy.html",
+      "destination": "/docs/alloy/controllers"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials/RESTe.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Titanium_SDK_Tutorials/Six_Steps_to_Extensive_Titanium_App_Build_Automation.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Transfer_your_app_from_appc_CLI_to_ti_CLI",
+      "destination": "/docs/reference/cli"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Accessibility.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Android_UI_Components_and_Conventions",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Android_UI_Components_and_Conventions/Android_Action_Bar.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Android_UI_Components_and_Conventions/Android_Themes.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Android_UI_Components_and_Conventions/Using_density-specific_resources_on_Android.html",
+      "destination": "/docs/build/ui/icons-and-launch-screens"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Animation.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Attributed_Strings.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Custom_Fonts.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/iOS_UI_Components_and_Conventions",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/iOS_UI_Components_and_Conventions/iOS_3D_Touch.html",
+      "destination": "/docs/build/ui/platform-conventions"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/ListViews",
+      "destination": "/docs/build/ui/lists"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/ListViews/Alloy_ListView_Guide.html",
+      "destination": "/docs/build/ui/lists"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Orientation.html",
+      "destination": "/docs/build/ui/layout"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Scrolling_Views.html",
+      "destination": "/docs/build/ui/layout"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/Supporting_Gestures.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Deep_Dives/TableViews.html",
+      "destination": "/docs/build/ui/lists"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals/Application_Structures_and_Core_Building_Blocks.html",
+      "destination": "/docs/build/project-structure"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals/Event_Handling.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals/Icons_and_Splash_Screens",
+      "destination": "/docs/build/ui/icons-and-launch-screens"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals/Icons_and_Splash_Screens/iOS_Launch_Files.html",
+      "destination": "/docs/build/ui/icons-and-launch-screens"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/User_Interface_Fundamentals/Layouts_Positioning_and_the_View_Hierarchy.html",
+      "destination": "/docs/build/ui/layout"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Using_Modules",
+      "destination": "/docs/build/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Using_Modules/Obtaining_Modules.html",
+      "destination": "/docs/build/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Using_Modules/Using_a_Module.html",
+      "destination": "/docs/build/modules"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Webpack_Guide.html",
+      "destination": "/docs/build"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/WKWebView.html",
+      "destination": "/docs/build/ui"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Buffer_and_Codec.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Choosing_a_Persistence_Strategy_for_Your_Application.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Filesystem_Access_and_Storage.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Lightweight_Persistence_with_the_Properties_API.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Streams.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Local_Data_Sources/Working_with_a_SQLite_Database.html",
+      "destination": "/docs/build/data"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Media_APIs",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Media_APIs/Audio_APIs.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Media_APIs/Camera_and_Photo_Gallery_APIs.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Media_APIs/Images_and_ImageView_APIs.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Media_APIs/Video_APIs.html",
+      "destination": "/docs/build/media"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/Dealing_with_SOAP_Web_Services.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/File_Uploads_and_Downloads.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/HTTPClient_and_the_Request_Lifecycle.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/Sockets.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/SSL_Certificate_Store_Support_for_HTTP_Clients.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/Working_with_JSON_Data.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_How-tos/Working_with_Remote_Data_Sources/Working_with_XML_Data.html",
+      "destination": "/docs/build/data/networking"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/10.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.0.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/10.0.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.0.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/10.0.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/10.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_10.x/Titanium_SDK_10.1.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/10.1.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/11.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/11.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_11.x/Titanium_SDK_11.1.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/11.1.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.1.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.1.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.1.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.1.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.2.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.2.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.2.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.2.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.3.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.3.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.3.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.4.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.4.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.5.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.5.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.5.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.5.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.6.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.6.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.6.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.3.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.6.3/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.6.4.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.6.4/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.7.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.7.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.7.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.7.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_12.x/Titanium_SDK_12.8.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/12.8.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.0.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.0.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.1.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.1.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.2.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.2.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.3.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.3.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.3.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.3.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.4.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.4.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_13.x/Titanium_SDK_13.4.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/13.4.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.0.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.0.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.0.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.0.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.1.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.1.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.2.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.2.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.2.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.2.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.3.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.3.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_8.x/Titanium_SDK_8.3.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/8.3.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.0.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.0.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.0.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.0.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.0.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.0.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.0.3.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.0.3/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.1.0.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.1.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.2.0_GA_Release_Note.html",
+      "destination": "/docs/sdk/9.2.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.2.1.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.2.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.2.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.2.2/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.3.0_GA_Release_Note.html",
+      "destination": "/docs/sdk/9.3.0/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.3.1_GA_Release_Note.html",
+      "destination": "/docs/sdk/9.3.1/release-notes"
+    },
+    {
+      "source": "/guide/Titanium_SDK/Titanium_SDK_Release_Notes/Titanium_SDK_Release_Notes_9.x/Titanium_SDK_9.3.2.GA_Release_Note.html",
+      "destination": "/docs/sdk/9.3.2/release-notes"
+    }
+  ]
+}

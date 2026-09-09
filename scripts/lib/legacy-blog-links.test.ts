@@ -43,21 +43,36 @@ describe('rewriteLink', () => {
     );
   });
 
-  test('routes a surviving guide through the legacy mapping', () => {
+  test('routes a retired guide to the same page its redirect serves', () => {
     assert.equal(
       rewriteLink(
         'https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_How-tos/' +
           'Adhere_to_the_iOS17_Privacy_Requirements.html'
       ),
-      '/docs/build'
+      '/docs/distribute/ios'
+    );
+    assert.equal(
+      rewriteLink('https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Guide/Alloy_PurgeTSS.html'),
+      '/docs/alloy/styles'
     );
   });
 
-  test('truncates a mapping destination the IA does not define', () => {
-    // The mapping is provisional and predicted `/docs/alloy/guide`.
+  // The old site served a section index at its directory URL, and posts spell
+  // that address all three ways.
+  test('resolves a guide URL however the post spelled it', () => {
+    const alloy = '/guide/Alloy_Framework/Alloy_Guide/Alloy_Views';
+    assert.equal(rewriteLink(`https://titaniumsdk.com${alloy}/`), '/docs/alloy/views');
+    assert.equal(rewriteLink(`https://titaniumsdk.com${alloy}`), '/docs/alloy/views');
+  });
+
+  // No successor in the approved IA, and the map says so rather than guessing.
+  test('sends a guide tree with no successor to the docs index', () => {
     assert.equal(
-      rewriteLink('https://titaniumsdk.com/guide/Alloy_Framework/Alloy_Guide/Alloy_PurgeTSS.html'),
-      '/docs/alloy'
+      rewriteLink(
+        'https://titaniumsdk.com/guide/Titanium_SDK/Titanium_SDK_Guide/' +
+          'Titanium_and_Angular/Titanium_Angular_Basics.html'
+      ),
+      '/docs'
     );
   });
 
