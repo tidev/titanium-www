@@ -7,7 +7,7 @@
   "location": "Remote, Germany",
   "timezone": "Europe/Berlin",
   "availability": ["part-time", "contract"],
-  "specialisms": ["alloy", "sdk-upgrades", "native-modules-android", "sdk-patches"],
+  "specialisms": ["alloy", "sdk-upgrades", "native-modules-android"],
   "skills": ["JavaScript", "Java"],
   "contact": {
     "label": "Contact",
