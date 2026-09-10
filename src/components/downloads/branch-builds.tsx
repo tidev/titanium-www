@@ -55,10 +55,7 @@ export function BranchBuilds({
         <BranchNav branches={branches} current={branch} />
 
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold tracking-tight">
-            <span className="font-mono break-all">{branch}</span>{' '}
-            <span className="font-mono text-sm font-normal text-text-subtle">{builds.length}</span>
-          </h2>
+          <h2 className="font-mono text-xl font-semibold tracking-tight break-all">{branch}</h2>
           <p className="mt-1 text-sm text-text-muted">
             Built by GitHub Actions. The archives are proxied from the workflow run and GitHub
             deletes them 90 days later, so this list only holds what is still downloadable.
