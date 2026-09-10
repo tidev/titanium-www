@@ -111,26 +111,57 @@ export const ToolchainSchema = z.strictObject({
 export type Toolchain = z.infer<typeof ToolchainSchema>;
 
 /**
- * Every published Titanium CLI release and the Node it runs on.
+ * Every published Titanium CLI release: when it shipped, where its notes are,
+ * and the Node it runs on.
  *
- * Captured from the npm packument rather than read at build time, so the site
- * keeps building when npm is unreachable and two builds of one commit produce
- * one page. Refreshed with `pnpm docs:compat --refresh`.
+ * Captured rather than read at build time, so the site keeps building when the
+ * upstreams are unreachable and two builds of one commit produce one page.
+ * Refreshed with `pnpm registry:cli`.
  *
- * Only `version` and `engines.node` are kept. The packument is megabytes of
- * dist tarball metadata this page has no use for, and storing it whole would
- * put a moving upstream document under version control.
+ * ## Two upstreams, and which one owns what
+ *
+ * **GitHub owns the releases.** `tidev/titanium-cli` publishes one release per
+ * version with a written body, which is the opposite of the SDK - all 71 SDK
+ * release bodies are empty or a link back to this site, which is why those
+ * notes are captured into pages here (see `docs/release-notes.md`). The CLI's
+ * are worth reading where they are, so `date` and `url` come from GitHub and
+ * the site links out to them.
+ *
+ * **npm owns `engines.node`.** That is a fact about a published package rather
+ * than about a release, it is the input to `minimumCli`, and npm carries it for
+ * all 191 versions where GitHub has releases for only the most recent 46 -
+ * including the 3.x and 5.x the compatibility table still reasons about.
+ *
+ * So an entry is keyed by version and carries what each upstream knows about
+ * it. `date` and `url` are absent on the versions that predate the repository's
+ * releases, which is what marks a version as published to npm and nowhere else.
+ *
+ * Nothing else is kept from either. The packument is megabytes of dist tarball
+ * metadata and a GitHub release is mostly actor and asset records; storing
+ * either whole would put a moving upstream document under version control.
  */
 export const CliReleasesSchema = z.strictObject({
   schemaVersion: SchemaVersion,
-  /** When the packument was read. Shown on the page, since this one can rot. */
+  /** When the upstreams were read. Shown on the page, since this one can rot. */
   fetchedAt: z.string(),
-  source: z.strictObject({ registry: z.string(), package: z.string() }),
+  source: z.strictObject({ registry: z.string(), package: z.string(), repo: z.string() }),
   releases: z.array(
     z.strictObject({
       version: z.string(),
-      /** `engines.node`. Absent on early releases that declared none. */
+      /** `engines.node`, from npm. Absent on early releases that declared none. */
       node: z.string().optional(),
+      /**
+       * When GitHub published the release. Absent on a version with no GitHub
+       * release, which is every version before 3.2.3.
+       */
+      date: z.string().optional(),
+      /**
+       * The GitHub release page, which is where the CLI's notes are written.
+       * Stored rather than built from the version: the tags are inconsistent -
+       * `v9.1.0` on recent releases, a bare `3.4.0` on older ones - so a
+       * synthesised URL would 404 on the ones nobody checks.
+       */
+      url: z.url().optional(),
     })
   ),
 });

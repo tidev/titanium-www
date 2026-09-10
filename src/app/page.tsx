@@ -2,6 +2,7 @@ import { Terminal } from '@/components/ui/terminal';
 import { formatDate } from '@/lib/docs/format';
 import { communityListings, moduleSummaries } from '@/lib/docs/modules';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
+import { latestCli } from '@/lib/downloads/cli';
 import { latestRelease } from '@/lib/downloads/registry';
 import { communityNav } from '@/lib/nav';
 import { SITE_URL } from '@/lib/site';
@@ -47,16 +48,74 @@ function releaseNotesHref(version: string | undefined): string {
   return '/downloads/releases';
 }
 
-/** Every number on this page comes from the registry on disk, never a literal. */
+/**
+ * Every number on this page comes from the registry on disk, never a literal.
+ *
+ * Two products ship under the Titanium name and both are versioned, so both are
+ * named. They are on different numbers - SDK 13.4.1 and CLI 9.1.0 - and the
+ * install commands above ask for each separately, so a bare "Latest release:
+ * 13.4.1" left the reader to guess which of the two it was talking about.
+ *
+ * The CLI's notes are its GitHub release, which is where they are written. The
+ * SDK's are a page on this site, because its GitHub release bodies are empty -
+ * see `docs/release-notes.md`.
+ */
 function facts() {
   const release = latestRelease();
   return {
     version: release?.version,
     released: release?.date,
     notes: releaseNotesHref(release?.version),
+    cli: latestCli(),
     registryModules: moduleSummaries().length,
     communityModules: communityListings().length,
   };
+}
+
+/**
+ * One "Titanium X 1.2.3, released <date>" line.
+ *
+ * The date is a `<time>` inside the sentence rather than a second line under
+ * it: with two releases listed, four stacked lines read as a table that is not
+ * one, and the released-on date is a footnote to the version rather than a
+ * fact of its own.
+ */
+function LatestLine({
+  product,
+  version,
+  date,
+  href,
+  external,
+}: {
+  product: string;
+  version: string;
+  date?: string;
+  href: string;
+  external?: boolean;
+}) {
+  const link =
+    'font-medium text-link hover:text-link-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+  const label = `${product} ${version}`;
+
+  return (
+    <p className="text-sm text-text-muted">
+      {external ? (
+        <a href={href} target="_blank" rel="noreferrer" className={link}>
+          {label}
+        </a>
+      ) : (
+        <Link href={href} className={link}>
+          {label}
+        </Link>
+      )}
+      {date && (
+        <>
+          {', released '}
+          <time dateTime={date.slice(0, 10)}>{formatDate(date.slice(0, 10))}</time>
+        </>
+      )}
+    </p>
+  );
 }
 
 /**
@@ -231,7 +290,7 @@ function Pillar({
 }
 
 export default function Home() {
-  const { version, released, notes, registryModules, communityModules } = facts();
+  const { version, released, notes, cli, registryModules, communityModules } = facts();
 
   return (
     <div className="w-full">
@@ -272,21 +331,19 @@ export default function Home() {
 
           {/* Under the buttons rather than above the headline: it is a footnote
               to "install this", not the first thing to read. */}
-          {version && (
-            <div className="mt-8">
-              <p className="text-sm text-text-muted">
-                Latest Release:{' '}
-                <Link
-                  href={notes}
-                  className="font-medium text-link hover:text-link-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-                >
-                  {version}
-                </Link>
-              </p>
-              {released && (
-                <p className="mt-1 text-2xs text-text-subtle">
-                  <time dateTime={released.slice(0, 10)}>{formatDate(released.slice(0, 10))}</time>
-                </p>
+          {(version || cli) && (
+            <div className="mt-8 flex flex-col gap-1">
+              {version && (
+                <LatestLine product="Titanium SDK" version={version} date={released} href={notes} />
+              )}
+              {cli && (
+                <LatestLine
+                  product="Titanium CLI"
+                  version={cli.version}
+                  date={cli.date}
+                  href={cli.url}
+                  external
+                />
               )}
             </div>
           )}

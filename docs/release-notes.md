@@ -39,6 +39,14 @@ Pointing at the GitHub releases instead was never an option. All 71 GA release
 bodies were read: 51 are empty and the other 20 hold nothing but a link back to
 the old site.
 
+**The Titanium CLI is the other way round**, which is why it is not here.
+`tidev/titanium-cli` writes a real body for every release, so GitHub is the
+source of truth for those and the site links out to them - from the landing page
+and from `/downloads`, beside the command that installs it. `registry/cli/releases.json`
+carries the version, date and URL, captured by `pnpm registry:cli`; nothing about
+the CLI is rendered as a page here. The two products are labelled by name
+wherever a version appears, since they are on different numbers.
+
 ## Where the content comes from
 
 `registry/sdk/<version>/release-notes.md`, captured from `tidev/titanium-docs`
