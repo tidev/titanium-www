@@ -10,3 +10,10 @@
 #
 # See docs/developer-directory.md for what is being approved.
 /registry/directory/ me@chrisbarber.dev
+
+# App showcase entries (TI-54). Here for the same reason as the directory above:
+# an entry publishes somebody's name, icon and app description, and who approves
+# that should be stated rather than inherited from a rule about `/registry/`.
+#
+# See docs/app-showcase.md for what is being approved.
+/registry/showcase/ me@chrisbarber.dev

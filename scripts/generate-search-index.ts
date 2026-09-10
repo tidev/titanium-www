@@ -1,10 +1,12 @@
 import { publishedPosts } from '../src/lib/blog/posts.ts';
-import { SPECIALISM_LABELS } from '../src/lib/directory/profile.ts';
+import { SPECIALTY_LABELS } from '../src/lib/directory/profile.ts';
 import { listedProfiles } from '../src/lib/directory/read.ts';
 import { anchorAllocator } from '../src/lib/docs/links.ts';
 import { isUnsupported } from '../src/lib/docs/modules.ts';
 import { apiIndexAt, apiTypeAt, latestSdkVersion } from '../src/lib/docs/registry.ts';
 import { viewOf } from '../src/lib/docs/type-view.ts';
+import { PLATFORM_LABELS } from '../src/lib/showcase/app.ts';
+import { listedApps } from '../src/lib/showcase/read.ts';
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import * as pagefind from 'pagefind';
@@ -38,7 +40,7 @@ import * as pagefind from 'pagefind';
 const OUT = join(import.meta.dirname, '../public/_pagefind');
 
 /** What the results list groups by. Guides join this when TI-32 lands. */
-type Kind = 'api' | 'module' | 'blog' | 'directory';
+type Kind = 'api' | 'module' | 'blog' | 'directory' | 'showcase';
 
 type Entry = {
   url: string;
@@ -187,7 +189,7 @@ for (const id of readdirSync(MODULES)) {
  * is filtered at build everywhere else: a record written now is served until
  * the next rebuild, and the nightly rebuild is what keeps that window to a day.
  *
- * The specialism labels are indexed as well as the raw values, so "iOS modules"
+ * The specialty labels are indexed as well as the raw values, so "iOS modules"
  * finds someone whose listing says `native-modules-ios`.
  */
 for (const profile of listedProfiles()) {
@@ -200,11 +202,39 @@ for (const profile of listedProfiles()) {
       profile.summary,
       profile.location,
       ...profile.skills,
-      ...profile.specialisms,
-      ...profile.specialisms.map((s) => SPECIALISM_LABELS[s]),
+      ...profile.specialties,
+      ...profile.specialties.map((s) => SPECIALTY_LABELS[s]),
       ...profile.availability,
     ].join(' '),
     summary: profile.summary,
+  });
+}
+
+// ---- App showcase -----------------------------------------------------------
+/**
+ * Shipped apps (TI-54).
+ *
+ * Indexed off the same `listedApps()` the pages and the sitemap use, so search
+ * cannot offer a result for a worked example that a real entry has since
+ * hidden. The platform labels go in alongside the raw values, so "Android
+ * tablet" finds an entry whose JSON says `android-tablet`.
+ */
+for (const app of listedApps()) {
+  records.push({
+    url: `/showcase/${app.id}`,
+    title: app.name,
+    kind: 'showcase',
+    body: [
+      app.name,
+      app.subtitle,
+      app.description,
+      app.sdkVersion,
+      ...app.platforms,
+      ...app.platforms.map((p) => PLATFORM_LABELS[p]),
+    ]
+      .filter((part) => !!part)
+      .join(' '),
+    summary: app.subtitle ?? app.description,
   });
 }
 

@@ -1,4 +1,6 @@
+import { CommunityMenu } from './community-menu';
 import { MobileNav } from './mobile-nav';
+import { NAV_ITEM_CLASS } from './site-nav-item';
 import { ThemeToggle } from './theme-toggle';
 import { TitaniumLogo } from './titanium-logo';
 import { SiteSearch } from '@/components/search/site-search';
@@ -20,14 +22,17 @@ export function SiteHeader() {
           <ul className="flex items-center gap-1">
             {primaryNav.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="rounded-md px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-                >
+                <Link href={item.href} className={NAV_ITEM_CLASS}>
                   {item.label}
                 </Link>
               </li>
             ))}
+            {/* Last, and the only grouped item. What is under it is the site's
+                people rather than its software, so it reads as a coda to the
+                four sections rather than as a fifth one. */}
+            <li>
+              <CommunityMenu />
+            </li>
           </ul>
         </nav>
 

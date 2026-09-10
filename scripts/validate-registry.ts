@@ -15,6 +15,7 @@ import {
   BranchesSchema,
   DeveloperProfileSchema,
   expiryProblem,
+  type DeveloperProfile,
   BuildListSchema,
   CliReleasesSchema,
   PrunedListSchema,
@@ -24,9 +25,11 @@ import {
   VerifiedListSchema,
   ModuleVersionSchema,
   SdkVersionSchema,
+  ShowcaseAppSchema,
   ToolchainSchema,
   UnsupportedListSchema,
 } from '../src/lib/registry/index.ts';
+import { readIcons } from '../src/lib/showcase/icon.ts';
 import { POOL_DIR } from './lib/pool.ts';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, join, relative } from 'node:path';
@@ -54,6 +57,11 @@ function schemaFor(rel: string): ZodType | null {
   // a mailto: fails the same gate as a malformed module manifest, and so that
   // adding one is a pull request against a directory CI already walks.
   if (parts[0] === 'directory' && parts.length === 2) return DeveloperProfileSchema;
+
+  // App showcase entries (TI-54), one file per shipped app. Here for the same
+  // reason as the directory above: a submitted entry should fail the same gate
+  // as a malformed module manifest, on the same command.
+  if (parts[0] === 'showcase' && parts.length === 2) return ShowcaseAppSchema;
 
   // docgen rebuilds from scratch when it cannot read its own manifest, so a
   // corrupt one costs time rather than correctness. Nothing to enforce.
@@ -188,72 +196,92 @@ for (const dir of versionDirs(root)) {
 }
 
 /**
- * The two directory rules a schema cannot see (TI-58).
+ * The rules a schema cannot see, for the two registries people submit to.
  *
- * A listing's `id` is its URL, so it has to equal the filename: nothing in a
- * Zod schema knows what file it is parsing, and a mismatch would render a page
- * at one address while every link pointed at another.
+ * An entry's `id` is its URL, so it has to equal the filename: nothing in a Zod
+ * schema knows what file it is parsing, and a mismatch would render a page at
+ * one address while every link pointed at another. And pictures are the one
+ * thing under `registry/` that is not JSON, so they are invisible to the walk
+ * above and have to be checked here.
  *
- * The expiry cap is checked here for a subtler reason. It is written as "no
- * further ahead than three months from today", which only ever becomes more
- * true as time passes, so a commit that passes now still passes when CI re-runs
- * it next year. A check that also failed on a date in the *past* would turn
- * every expired listing into a red build on pull requests that never touched
- * the directory, and expiry is the mechanism working rather than a defect.
- * Expired listings simply stop being rendered; see
- * `src/lib/directory/profile.ts`.
+ * Checked at this gate as well as at build time because this is the gate a
+ * submitter meets first, and because the build only reports the first thing
+ * wrong. All of them at once means one round trip rather than one per mistake.
+ *
+ * @param extra per-entry checks the schema cannot express
  */
-const directoryDir = join(root, 'directory');
-if (existsSync(directoryDir)) {
-  const now = new Date();
-  const listingIds: string[] = [];
-  for (const name of readdirSync(directoryDir).sort()) {
-    if (!name.endsWith('.json')) continue;
+function checkSubmitted(
+  name: string,
+  schema: ZodType,
+  pictures: (dir: string, ids: string[]) => { problems: string[] },
+  extra: (entry: { id: string } & Record<string, unknown>) => string[] = () => []
+) {
+  const dir = join(root, name);
+  if (!existsSync(dir)) return;
+
+  const ids: string[] = [];
+
+  for (const file of readdirSync(dir).sort()) {
+    if (!file.endsWith('.json')) continue;
 
     // Both failures below are already reported by the walk above, so this pass
     // skips them rather than reporting them twice. Broken JSON has to be caught
     // rather than left to throw: the walk prints a usable `FAIL ... not valid
     // JSON` line, and an uncaught SyntaxError here would then kill the script
-    // before the summary, taking every other listing's id and expiry check with
-    // it.
+    // before the summary, taking every other entry's checks with it.
     let data: unknown;
     try {
-      data = JSON.parse(readFileSync(join(directoryDir, name), 'utf8'));
+      data = JSON.parse(readFileSync(join(dir, file), 'utf8'));
     } catch {
       continue;
     }
 
-    const parsed = DeveloperProfileSchema.safeParse(data);
+    const parsed = schema.safeParse(data);
     if (!parsed.success) continue;
-    listingIds.push(parsed.data.id);
+    const entry = parsed.data as { id: string } & Record<string, unknown>;
+    ids.push(entry.id);
 
-    const problems: string[] = [];
-    if (parsed.data.id !== basename(name, '.json')) {
-      problems.push(`id is "${parsed.data.id}"; it must match the filename`);
+    const problems = extra(entry);
+    if (entry.id !== basename(file, '.json')) {
+      problems.unshift(`id is "${entry.id}"; it must match the filename`);
     }
-    const expiry = expiryProblem(parsed.data, now);
-    if (expiry) problems.push(expiry);
 
     if (problems.length) {
       failed++;
-      console.log(`  FAIL  directory/${name}`);
+      console.log(`  FAIL  ${name}/${file}`);
       for (const problem of problems) console.log(`          ${problem}`);
     }
   }
 
-  /**
-   * Listing pictures, which are the one thing under `registry/` that is not
-   * JSON and so is invisible to the walk above.
-   *
-   * Checked here as well as at build time because this is the gate a submitter
-   * meets first, and because the build only reports the first thing wrong. All
-   * of them at once means one round trip rather than one per mistake.
-   */
-  for (const problem of readAvatars(directoryDir, listingIds).problems) {
+  for (const problem of pictures(dir, ids).problems) {
     failed++;
-    console.log(`  FAIL  directory/${problem}`);
+    console.log(`  FAIL  ${name}/${problem}`);
   }
 }
+
+/**
+ * The directory's expiry cap (TI-58), which is checked here for a subtle
+ * reason.
+ *
+ * It is written as "no further ahead than three months from today", which only
+ * ever becomes more true as time passes, so a commit that passes now still
+ * passes when CI re-runs it next year. A check that also failed on a date in
+ * the *past* would turn every expired listing into a red build on pull requests
+ * that never touched the directory, and expiry is the mechanism working rather
+ * than a defect. Expired listings simply stop being rendered; see
+ * `src/lib/directory/profile.ts`.
+ */
+const now = new Date();
+
+checkSubmitted('directory', DeveloperProfileSchema, readAvatars, (entry) => {
+  const problem = expiryProblem(entry as unknown as DeveloperProfile, now);
+  return problem ? [problem] : [];
+});
+
+// The showcase has no expiry - an app that shipped shipped - so its only extra
+// rule is the one every entry shares. Its icons are not optional, though, and
+// `readIcons` reports a missing one as a problem of its own.
+checkSubmitted('showcase', ShowcaseAppSchema, readIcons);
 
 console.log(`\n${ok} valid, ${failed} invalid, ${skipped} skipped`);
 process.exit(failed === 0 ? 0 : 1);

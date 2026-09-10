@@ -136,11 +136,15 @@ An opt-out exists. It is reviewed rather than self-served, and it should stay
 rare.
 
 A listing that never has to be renewed is a listing nobody has recently
-confirmed, which is the one thing this directory offers over a web search. The
-listing page says so in plain words rather than hiding it. Use it for a
-long-standing entry where the maintainer is confident it will not go stale, and
-remember that a `neverExpires` listing still gets removed on the grounds below,
-just not automatically.
+confirmed, which is the one thing this directory offers over a web search. Use
+it for a long-standing entry where the maintainer is confident it will not go
+stale, and remember that a `neverExpires` listing still gets removed on the
+grounds below, just not automatically.
+
+The exemption is recorded in the listing file and in the pull request that
+granted it, and nowhere else. Listing pages do not draw expiry at all - see the
+note under Grounds for removal - so the only guard against this being handed out
+freely is review.
 
 The two worked examples in `registry/directory/` carry it, because they are
 maintained by this repository rather than by a person.
@@ -226,5 +230,12 @@ the listee, a fortnight out. Deferred rather than refused: with two example
 listings it would be a workflow with nothing to do, and it needs a GitHub
 username on every listing, which the schema does not currently ask for. Revisit
 when the directory has enough real listings that renewals are actually being
-missed. The listing page already shows a countdown inside the last fortnight,
-which costs nothing and covers the listee who thinks to look.
+missed.
+
+This is now the _only_ warning a listee would ever get. The listing page used to
+show a countdown inside the last fortnight, and no longer shows expiry at all:
+the page carries who somebody is and how to reach them, and a paragraph of
+housekeeping about renewal dates was reading as clutter to the visitor it is not
+addressed to. Nothing has replaced it. Until the nudge exists, a listing lapses
+silently and its owner finds out by looking, so the case for building it is
+stronger than it was when this was written, not weaker.

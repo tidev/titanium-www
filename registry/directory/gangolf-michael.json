@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "gangolf-michael",
   "name": "Michael Gangolf",
   "kind": "individual",
@@ -7,7 +7,7 @@
   "location": "Remote, Germany",
   "timezone": "Europe/Berlin",
   "availability": ["part-time", "contract"],
-  "specialisms": ["alloy", "sdk-upgrades", "native-modules-android"],
+  "specialties": ["alloy", "sdk-upgrades", "native-modules-android"],
   "skills": ["JavaScript", "Java"],
   "contact": {
     "label": "Contact",

@@ -1,6 +1,7 @@
+import { fairOrder } from '../fair-order.ts';
 import { DeveloperProfileSchema } from '../registry/directory.ts';
 import { avatarsByProfile, avatarUrl } from './avatar.ts';
-import { fairOrder, liveProfiles, type Profile } from './profile.ts';
+import { liveProfiles, type Profile } from './profile.ts';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
@@ -25,6 +26,9 @@ import { basename, join } from 'node:path';
  * should not inherit that trace for the sake of one `join`.
  */
 const DIRECTORY_DIR = join(process.cwd(), 'registry', 'directory');
+
+/** This registry's permutation seed. Any constant does; this one is `TI-58` as digits. */
+const DIRECTORY_SEED = 5820;
 
 let all: Profile[] | null = null;
 
@@ -90,7 +94,7 @@ export const listedProfiles = (on: Date = buildDate()): Profile[] =>
 
 /** The listing page's order. Fair, deterministic, and turned by the daily rebuild. */
 export const orderedProfiles = (on: Date = buildDate()): Profile[] =>
-  fairOrder(listedProfiles(on), on);
+  fairOrder(listedProfiles(on), on, DIRECTORY_SEED);
 
 /** One listing, or nothing. Used by the profile page, which does not trust its URL segment. */
 export function profileById(id: string, on: Date = buildDate()): Profile | null {

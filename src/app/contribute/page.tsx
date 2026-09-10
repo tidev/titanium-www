@@ -70,6 +70,36 @@ const WAYS: { title: string; body: React.ReactNode }[] = [
     title: 'Tutorials, blog posts, videos',
     body: 'Share your knowledge with the world, write about a Titanium feature, and compare Titanium to other platforms.',
   },
+  /**
+   * The two non-code ways in, and the second home for the pitches that used to
+   * sit on every directory listing and every showcase entry. Here rather than
+   * there because this is the page somebody opens already asking how to take
+   * part, where a listing page's reader is usually asking something else.
+   */
+  {
+    title: 'Show what you built',
+    body: (
+      <>
+        Shipped an app with Titanium? Add it to the{' '}
+        <a href="/showcase/submit" className="text-link hover:underline">
+          app showcase
+        </a>
+        . Proof that real apps ship is the most persuasive thing this site carries.
+      </>
+    ),
+  },
+  {
+    title: 'Take on Titanium work',
+    body: (
+      <>
+        Available for hire? Add yourself to the{' '}
+        <a href="/directory/submit" className="text-link hover:underline">
+          developer directory
+        </a>
+        , so a company weighing up a rewrite can see that people who maintain Titanium exist.
+      </>
+    ),
+  },
   {
     title: 'Donations',
     body: 'Tax deductible donations pay engineers to fix issues and keep up with the latest Android and iOS releases.',

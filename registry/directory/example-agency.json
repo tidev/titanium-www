@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "example-agency",
   "name": "Example Agency",
   "kind": "agency",
@@ -7,7 +7,7 @@
   "location": "Toronto, Canada",
   "timezone": "America/Toronto",
   "availability": ["full-time", "contract"],
-  "specialisms": ["cross-platform-ui", "ci-cd", "app-store-release", "training"],
+  "specialties": ["cross-platform-ui", "ci-cd", "app-store-release", "training"],
   "skills": ["Maintenance retainers", "Legacy app rescue", "Team of six"],
   "contact": {
     "label": "Enquiries",

@@ -1,4 +1,9 @@
-import { DeveloperProfileSchema, expiryProblem, LISTING_DAYS } from './directory.ts';
+import {
+  DeveloperProfileSchema,
+  expiryProblem,
+  listingTemplate,
+  LISTING_DAYS,
+} from './directory.ts';
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
@@ -20,7 +25,7 @@ const valid = {
   location: 'Remote',
   timezone: 'Europe/Berlin',
   availability: ['contract'],
-  specialisms: ['alloy'],
+  specialties: ['alloy'],
   contact: { label: 'Contact', url: 'https://example.com/contact' },
   expiresAt: '2026-06-30',
 };
@@ -29,6 +34,22 @@ const reject = (over: Record<string, unknown>, why: string) => {
   const result = DeveloperProfileSchema.safeParse({ ...valid, ...over });
   assert.equal(result.success, false, why);
 };
+
+describe('an id cannot shadow a page', () => {
+  test('"submit" is refused, because /directory/submit is a page on this site', () => {
+    // Next resolves a static segment before a dynamic one, so a listing called
+    // "submit" would not 404 or warn - it would be silently unreachable while
+    // still appearing in the index, the sitemap and search.
+    reject({ id: 'submit' }, 'the reserved segment');
+  });
+
+  test('ids that merely contain it are fine', () => {
+    for (const id of ['submit-co', 'newly-submitted']) {
+      const result = DeveloperProfileSchema.safeParse({ ...valid, id });
+      assert.equal(result.success, true, id);
+    }
+  });
+});
 
 describe('no published email addresses', () => {
   test('a mailto: contact is rejected', () => {
@@ -154,9 +175,42 @@ describe('the rest of the shape', () => {
     }
   });
 
-  test('availability and specialisms come from the closed vocabularies', () => {
+  test('availability and specialties come from the closed vocabularies', () => {
     reject({ availability: [] }, 'no availability');
     reject({ availability: ['weekends'] }, 'invented availability');
-    reject({ specialisms: ['titanium titanium titanium'] }, 'invented specialism');
+    reject({ specialties: ['titanium titanium titanium'] }, 'invented specialty');
+  });
+});
+
+describe('the template shown to submitters', () => {
+  /**
+   * The page at `/directory/submit` prints this verbatim for people to copy, so
+   * "it parses" is the whole contract. A field renamed in the schema without
+   * updating the template would otherwise ship a copy-paste that CI rejects.
+   */
+  const on = new Date('2026-06-01T00:00:00Z');
+
+  test('is a valid listing', () => {
+    const result = DeveloperProfileSchema.safeParse(listingTemplate(on));
+    assert.equal(result.success, true, `the template is not a valid listing: ${result.error?.issues[0]?.message}`);
+  });
+
+  test('is inside the expiry cap, with room to spare for the days before it is sent', () => {
+    const problem = expiryProblem(listingTemplate(on), on);
+    assert.equal(problem, null);
+
+    // Copied today and opened as a pull request a fortnight later, it still has
+    // to pass. That is the margin between the 90 days written and the cap.
+    assert.equal(expiryProblem(listingTemplate(on), new Date('2026-06-15T00:00:00Z')), null);
+  });
+
+  test('does not teach anyone to publish themselves as an example', () => {
+    // The obvious source for this would have been the worked example on disk,
+    // which carries both of these and would quietly opt a real person out of
+    // the renewal the directory runs on.
+    const template = listingTemplate(on);
+    assert.equal(template.placeholder, false);
+    assert.equal(template.neverExpires, false);
+    assert.ok(template.expiresAt, 'a real listing states an end date');
   });
 });

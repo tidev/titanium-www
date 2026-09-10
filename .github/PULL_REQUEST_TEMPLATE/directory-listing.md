@@ -34,7 +34,7 @@ publish before you write it.
 | `location`     | Free text: a city, a country, or something like "Remote, EU only"           |
 | `timezone`     | An IANA zone, such as `Europe/Berlin`. Checked against the real list        |
 | `availability` | One or more of `full-time`, `part-time`, `contract`                         |
-| `specialisms`  | One to eight values from the list in `src/lib/registry/directory.ts`        |
+| `specialties`  | One to eight values from the list in `src/lib/registry/directory.ts`        |
 | `contact`      | `{ "label": "...", "url": "https://..." }`. A page you control              |
 | `expiresAt`    | `YYYY-MM-DD`, no more than three months out. Or set `neverExpires` instead  |
 
@@ -75,6 +75,6 @@ good listing.
   For a renewal, "still available, date moved" is a complete description.
 
   For a new listing, say briefly who you are: a repository, a shipped app, a
-  Slack or Discussions handle. Nothing formal, just enough that the reviewer is
+  Slack handle. Nothing formal, just enough that the reviewer is
   not approving a name with no history behind it.
 -->
