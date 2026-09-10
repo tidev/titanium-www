@@ -2,6 +2,7 @@ import docVersions from './content/doc-versions.json';
 import legacyApi from './src/lib/docs/legacy-api-redirects.json';
 import legacyGuide from './src/lib/docs/legacy-guide-redirects.json';
 import { MAIN, latestSdkVersion } from './src/lib/docs/registry.ts';
+import { versionsWithNotes } from './src/lib/docs/release-notes.ts';
 import type { NextConfig } from 'next';
 
 /**
@@ -20,8 +21,42 @@ import type { NextConfig } from 'next';
  */
 function latestRedirects() {
   return [
+    ...releaseNotesRedirects(),
     { source: '/docs/sdk/latest', destination: '/docs/sdk', permanent: false },
     { source: '/docs/sdk/latest/:path*', destination: '/docs/sdk/:path*', permanent: false },
+  ];
+}
+
+/**
+ * The two unpinned spellings of "the current release notes".
+ *
+ * Release notes are the one thing under `/docs/sdk` that has no unversioned
+ * copy. A note is written about a specific release and never revised, so
+ * `/docs/sdk/release-notes` cannot be a page the way `/docs/sdk/Titanium.UI.Window`
+ * is - there is nothing for it to render that is not already at a version. The
+ * fold above would therefore send `/docs/sdk/latest/release-notes` to
+ * `/docs/sdk/release-notes`, which resolves as a type named `release-notes` and
+ * 404s. These two rules come first so it lands on the newest note instead.
+ *
+ * The target is the newest version that *has* a note rather than the newest
+ * release. They are the same version today, and they are not in the window
+ * between a release shipping and its notes being captured - that is a
+ * deliberate step, `scripts/capture-release-notes.ts`. Reading the notes on
+ * disk means that window lands on the last real note rather than on a 404.
+ *
+ * Both spellings, because the unversioned one is what anybody gets by trimming
+ * the version out of a URL, and the site's own rule is that unversioned means
+ * latest. Temporary for the same reason as the fold: the destination moves with
+ * every release.
+ */
+function releaseNotesRedirects() {
+  const [newest] = versionsWithNotes();
+  if (!newest) return [];
+
+  const destination = `/docs/sdk/${newest}/release-notes`;
+  return [
+    { source: '/docs/sdk/latest/release-notes', destination, permanent: false },
+    { source: '/docs/sdk/release-notes', destination, permanent: false },
   ];
 }
 
