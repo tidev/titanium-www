@@ -144,17 +144,26 @@ describe('the shape', () => {
 });
 
 describe('the template shown to submitters', () => {
+  // Any version does: the schema only cares that it looks like one, and
+  // `appTemplate` takes it as a parameter rather than reading it itself - see
+  // the doc comment on `appTemplate` for why.
+  const template = appTemplate('13.4.1');
+
   test('is a valid entry', () => {
-    const result = ShowcaseAppSchema.safeParse(appTemplate);
+    const result = ShowcaseAppSchema.safeParse(template);
     assert.equal(result.success, true, `the template is not a valid entry: ${result.error?.issues[0]?.message}`);
   });
 
+  test('carries whatever version it is given', () => {
+    assert.equal(template.sdkVersion, '13.4.1');
+  });
+
   test('its store links are on the stores, which is the rule it is teaching', () => {
-    assert.match(appTemplate.appStore ?? '', /^https:\/\/apps\.apple\.com\//);
-    assert.match(appTemplate.playStore ?? '', /^https:\/\/play\.google\.com\//);
+    assert.match(template.appStore ?? '', /^https:\/\/apps\.apple\.com\//);
+    assert.match(template.playStore ?? '', /^https:\/\/play\.google\.com\//);
   });
 
   test('is not marked as a worked example', () => {
-    assert.equal(appTemplate.placeholder, false);
+    assert.equal(template.placeholder, false);
   });
 });

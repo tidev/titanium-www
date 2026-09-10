@@ -1,4 +1,5 @@
 import { ExternalLink } from '@/components/ui/external-link';
+import { latestSdkVersion } from '@/lib/docs/registry';
 import { newFileUrl } from '@/lib/github';
 import { prettyJson } from '@/lib/pretty-json';
 import { IMAGE_EXTENSIONS } from '@/lib/registry-images';
@@ -23,6 +24,10 @@ import type { Metadata } from 'next';
  * expires, the worked examples. What a submitter needs - the bar for
  * inclusion, and what gets an entry removed - is inlined below instead of
  * linked, the same choice `/directory/submit` makes about its own policy doc.
+ *
+ * `sdkVersion` defaults to whatever this build's docs consider latest, read
+ * through `@/lib/docs/registry` - the one place that answer lives, so a
+ * hardcoded example here could not quietly fall behind it.
  */
 
 /** The filename a submitter is meant to change. Named to be obviously a placeholder. */
@@ -39,7 +44,13 @@ const LINK =
   'text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
 
 export default function SubmitAppPage() {
-  const json = prettyJson(appTemplate);
+  const latest = latestSdkVersion();
+  // Every release ships with its docs compiled, so this is not a state a
+  // deployed build should ever be in - failing loudly beats teaching a
+  // submitter to write "main" into a field the schema will reject.
+  if (!latest) throw new Error('no compiled SDK version to default sdkVersion to');
+
+  const json = prettyJson(appTemplate(latest));
 
   return (
     <div className="max-w-3xl py-10">

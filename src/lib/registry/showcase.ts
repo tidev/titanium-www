@@ -160,18 +160,28 @@ export type ShowcaseApp = z.infer<typeof ShowcaseAppSchema>;
  * It carries all three links, because which of them an entry needs is the one
  * thing about this shape a submitter gets wrong - and it shows a store URL on
  * the store's own hostname, which the schema checks.
+ *
+ * `sdkVersion` is a parameter rather than a hardcoded example, for the same
+ * reason `listingTemplate` takes the day rather than reading the clock: this
+ * file has no filesystem and no pool in it, and pulling `latestSdkVersion()`
+ * in from `../docs/registry.ts` would drag the whole compiled-docs reader
+ * behind it for the sake of one string - the exact trade `../directory/read.ts`
+ * declines for the same reason. The caller already has to touch that module
+ * for its own page, so it passes the version in instead.
  */
-export const appTemplate: ShowcaseApp = {
-  schemaVersion: SHOWCASE_SCHEMA_VERSION,
-  id: 'harbour-transit',
-  name: 'Harbour Transit',
-  subtitle: 'Live departures and offline timetables',
-  platforms: ['iphone', 'ipad', 'android-phone', 'android-tablet'],
-  sdkVersion: '13.3.1.GA',
-  description:
-    'What the app is and who it is for, in your own words. Up to 1000 characters.\n\nBlank lines become paragraphs. Plain text only: it is not rendered as markdown, so a link written here stays a link nobody can click.',
-  website: 'https://example.com/harbour-transit',
-  appStore: 'https://apps.apple.com/gb/app/harbour-transit/id123456789',
-  playStore: 'https://play.google.com/store/apps/details?id=com.example.harbourtransit',
-  placeholder: false,
-};
+export function appTemplate(sdkVersion: string): ShowcaseApp {
+  return {
+    schemaVersion: SHOWCASE_SCHEMA_VERSION,
+    id: 'harbour-transit',
+    name: 'Harbour Transit',
+    subtitle: 'Live departures and offline timetables',
+    platforms: ['iphone', 'ipad', 'android-phone', 'android-tablet'],
+    sdkVersion,
+    description:
+      'What the app is and who it is for, in your own words. Up to 1000 characters.\n\nBlank lines become paragraphs. Plain text only: it is not rendered as markdown, so a link written here stays a link nobody can click.',
+    website: 'https://example.com/harbour-transit',
+    appStore: 'https://apps.apple.com/gb/app/harbour-transit/id123456789',
+    playStore: 'https://play.google.com/store/apps/details?id=com.example.harbourtransit',
+    placeholder: false,
+  };
+}
