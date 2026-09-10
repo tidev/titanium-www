@@ -8,6 +8,7 @@ import { latestSdkVersion, sdkIndex } from './docs/registry.ts';
 import { versionsWithNotes } from './docs/release-notes.ts';
 import { canonicalPath, indexedVersions } from './docs/versions.ts';
 import { branchList, MAIN_BRANCH } from './downloads/registry.ts';
+import { listedApps } from './showcase/read.ts';
 import { SITE_URL } from './site.ts';
 import type { MetadataRoute } from 'next';
 
@@ -56,6 +57,7 @@ export function sitemapEntries(): MetadataRoute.Sitemap {
     ...modules(),
     ...downloads(),
     ...directory(),
+    ...showcase(),
     ...blog(),
   ];
 }
@@ -87,8 +89,36 @@ function site(): MetadataRoute.Sitemap {
 function directory(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/directory`, changeFrequency: 'daily', priority: 0.6 },
+    // The submission page. Monthly and low, but listed: "how do I get listed as
+    // a Titanium developer" is a real query, and this is the page that answers
+    // it.
+    { url: `${SITE_URL}/directory/submit`, changeFrequency: 'monthly', priority: 0.3 },
     ...listedProfiles().map((profile) => ({
       url: `${SITE_URL}/directory/${profile.id}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    })),
+  ];
+}
+
+/**
+ * The app showcase and its entries (TI-54).
+ *
+ * The index is daily because its order is: the rota reorders at the nightly
+ * rebuild. Nothing expires here, so unlike the directory above, an entry leaves
+ * this file only when somebody removes it.
+ *
+ * `listedApps()` is the same set `generateStaticParams` builds pages from, so
+ * the sitemap cannot name a URL that 404s - which matters most while the worked
+ * examples are showing, since they stop having pages the moment a real entry
+ * merges.
+ */
+function showcase(): MetadataRoute.Sitemap {
+  return [
+    { url: `${SITE_URL}/showcase`, changeFrequency: 'daily', priority: 0.6 },
+    { url: `${SITE_URL}/showcase/submit`, changeFrequency: 'monthly', priority: 0.3 },
+    ...listedApps().map((app) => ({
+      url: `${SITE_URL}/showcase/${app.id}`,
       changeFrequency: 'monthly' as const,
       priority: 0.4,
     })),

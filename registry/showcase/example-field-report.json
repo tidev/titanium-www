@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "example-field-report",
+  "name": "Field Report",
+  "subtitle": "A worked example, not a real app",
+  "platforms": ["iphone", "ipad"],
+  "sdkVersion": "12.7.0.GA",
+  "description": "This entry is an example, and it stops being shown the day the first real app is merged.\n\nIt shows the shape of an app that was built for one organisation and never sold publicly: inspectors record site visits offline, attach photographs, and sync when they are back in range. There is no store link because there is no store listing, which is true of a great deal of the work Titanium has been used for. The website link is what makes an entry like this checkable.",
+  "website": "https://example.com/field-report",
+  "placeholder": true
+}

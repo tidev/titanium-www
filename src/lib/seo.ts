@@ -130,3 +130,54 @@ export function blogPosting(post: Article): object {
     ...(post.cover ? { image: `${SITE_URL}${post.cover}` } : {}),
   };
 }
+
+/** What `softwareApplication` needs of a showcase entry. A subset of `lib/showcase/app`. */
+type ShowcaseEntry = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  platforms: readonly string[];
+  appStore?: string;
+  playStore?: string;
+  website?: string;
+};
+
+/**
+ * One showcase app, as `SoftwareApplication` (TI-54).
+ *
+ * The ticket asks that entries be individually indexable, and this is the half
+ * of that a page cannot express in prose: what the thing is, which operating
+ * systems it runs on, and where it can be got. The other half is the page
+ * itself, which has its own URL and its own canonical.
+ *
+ * **No `offers` and no `aggregateRating`**, which are exactly the two fields
+ * Google wants before it will draw a rich result for this type. We do not know
+ * an app's price and have never rated one, and inventing either to earn a
+ * bigger search listing would be marking up a claim nobody made. Valid,
+ * machine-readable and modest is the right trade.
+ *
+ * `operatingSystem` is derived from the platform list rather than stored, so it
+ * cannot disagree with the badges the page draws from the same field.
+ */
+export function softwareApplication(app: ShowcaseEntry): object {
+  const os = [
+    app.platforms.some((p) => p === 'iphone' || p === 'ipad') && 'iOS',
+    app.platforms.some((p) => p.startsWith('android')) && 'Android',
+  ].filter((name) => !!name);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: app.name,
+    description: app.description,
+    applicationCategory: 'MobileApplication',
+    operatingSystem: os.join(', '),
+    image: `${SITE_URL}${app.icon}`,
+    url: `${SITE_URL}/showcase/${app.id}`,
+    ...(app.appStore || app.playStore
+      ? { installUrl: [app.appStore, app.playStore].filter((url) => !!url) }
+      : {}),
+    ...(app.website ? { sameAs: app.website } : {}),
+  };
+}

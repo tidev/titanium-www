@@ -1,5 +1,4 @@
 import { Browse } from '@/components/directory/browse';
-import { HowToList } from '@/components/directory/submit';
 import { orderedProfiles } from '@/lib/directory/read';
 import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -42,51 +41,32 @@ export const metadata: Metadata = {
 
 export default function DirectoryIndex() {
   const profiles = orderedProfiles();
-  const agencies = profiles.filter((p) => p.kind === 'agency').length;
-  const individuals = profiles.length - agencies;
-  const examples = profiles.some((p) => p.placeholder);
-
-  // The renewal claim below is only true of listings that actually renew, and
-  // `neverExpires` is an opt-out from exactly that. Every listing page is
-  // careful to say so on the exempt ones; the index would otherwise make the
-  // opposite claim about the same listing on the page before it.
-  const allRenewed = profiles.every((p) => !p.neverExpires);
 
   return (
     <div className="max-w-5xl py-10">
       <h1 className="text-3xl font-semibold tracking-tight">Developer directory</h1>
       <p className="mt-3 max-w-2xl text-text-muted">
-        Developers and companies available for Titanium work, listed at their own request. Whether
-        you need an app built, a native module written, or an existing Titanium codebase kept
-        running, these are the people who do it.
+        Developers and companies available for Titanium work. Whether you need an app built, a
+        native module written, or an existing Titanium codebase kept running, these are the people
+        who do it.
       </p>
-      <p className="mt-3 max-w-2xl text-sm text-text-subtle">
-        {examples ? (
-          <>
-            Nobody is listed yet. The entries below are worked examples, marked as such, and they
-            will disappear as soon as the first real listing lands.
-          </>
-        ) : (
-          <>
-            {individuals} individual{individuals === 1 ? '' : 's'} and {agencies} agenc
-            {agencies === 1 ? 'y' : 'ies'}
-            {allRenewed
-              ? ', each of whom confirmed within the last three months that they are available'
-              : '. Most confirmed within the last three months that they are available; the few exempt from renewal say so on their own page'}
-            . Listings are shown in a rotating order that changes daily, so no name, and no amount
-            of renaming, buys a place at the top.
-          </>
-        )}
-      </p>
-      <p className="mt-3 max-w-2xl text-sm text-text-subtle">
-        A listing is not a recommendation. TiDev checks that an entry is a real person or company
-        offering real Titanium work, and nothing further. Take the usual care you would with anyone
-        you have not worked with.
+      {/* One line, above the results rather than below them. The person this
+          is addressed to arrived intending to list themselves and should not
+          have to read the whole directory first; everybody else reads six
+          words and moves on. The prose it used to carry is at
+          `/directory/submit`. */}
+      <p className="mt-3 text-sm text-text-subtle">
+        Available for Titanium work?{' '}
+        <a
+          href="/directory/submit"
+          className="text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+        >
+          Get listed
+        </a>
+        .
       </p>
 
       <Browse profiles={profiles} />
-
-      <HowToList className="mt-12" />
     </div>
   );
 }

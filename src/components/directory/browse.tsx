@@ -5,21 +5,22 @@ import {
   KindBadge,
   Picture,
   PlaceholderBadge,
-  SpecialismChips,
+  SpecialtyChips,
   Where,
 } from './badges';
+import { ExternalIcon } from '@/components/ui/external-link';
 import { Select } from '@/components/ui/select';
 import {
   AVAILABILITY_LABELS,
   AVAILABILITY_ORDER,
   KIND_LABELS,
   matches,
-  SPECIALISM_LABELS,
-  SPECIALISM_ORDER,
+  SPECIALTY_LABELS,
+  SPECIALTY_ORDER,
   type AvailabilityFilter,
   type KindFilter,
   type Profile,
-  type SpecialismFilter,
+  type SpecialtyFilter,
 } from '@/lib/directory/profile';
 import { useMemo, useState } from 'react';
 
@@ -57,20 +58,20 @@ const AVAILABILITIES: { value: AvailabilityFilter; label: string }[] = [
   })),
 ];
 
-const SPECIALISMS: { value: SpecialismFilter; label: string }[] = [
-  { value: 'all', label: 'Any specialism' },
-  ...SPECIALISM_ORDER.map((s) => ({ value: s as SpecialismFilter, label: SPECIALISM_LABELS[s] })),
+const SPECIALTIES: { value: SpecialtyFilter; label: string }[] = [
+  { value: 'all', label: 'Any specialty' },
+  ...SPECIALTY_ORDER.map((s) => ({ value: s as SpecialtyFilter, label: SPECIALTY_LABELS[s] })),
 ];
 
 export function Browse({ profiles }: { profiles: Profile[] }) {
   const [query, setQuery] = useState('');
   const [kind, setKind] = useState<KindFilter>('all');
   const [availability, setAvailability] = useState<AvailabilityFilter>('all');
-  const [specialism, setSpecialism] = useState<SpecialismFilter>('all');
+  const [specialty, setSpecialty] = useState<SpecialtyFilter>('all');
 
   const shown = useMemo(
-    () => profiles.filter((p) => matches(p, { kind, availability, specialism, query })),
-    [profiles, kind, availability, specialism, query]
+    () => profiles.filter((p) => matches(p, { kind, availability, specialty, query })),
+    [profiles, kind, availability, specialty, query]
   );
 
   return (
@@ -99,20 +100,14 @@ export function Browse({ profiles }: { profiles: Profile[] }) {
             onChange={setAvailability}
           />
           <Select
-            label="Specialism"
+            label="Specialty"
             hideLabel
-            options={SPECIALISMS}
-            value={specialism}
-            onChange={setSpecialism}
+            options={SPECIALTIES}
+            value={specialty}
+            onChange={setSpecialty}
           />
         </div>
       </div>
-
-      {/* Announced rather than only drawn: filtered down to nothing, a screen
-          reader user gets no other signal that anything happened. */}
-      <p aria-live="polite" className="mt-4 text-sm text-text-subtle">
-        {shown.length} of {profiles.length} listing{profiles.length === 1 ? '' : 's'}
-      </p>
 
       <ul className="mt-4 grid gap-4 sm:grid-cols-2">
         {shown.map((profile) => (
@@ -123,11 +118,9 @@ export function Browse({ profiles }: { profiles: Profile[] }) {
       {!shown.length && (
         <p className="mt-8 text-sm text-text-muted">
           Nobody listed matches that. Try one filter at a time, or ask in{' '}
-          <a
-            href="https://github.com/tidev/titanium-sdk/discussions"
-            className="text-link hover:underline"
-          >
-            Discussions
+          <a href="https://tidev.slack.com" className="text-link hover:underline">
+            Slack
+            <ExternalIcon />
           </a>
           .
         </p>
@@ -171,7 +164,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
       <p className="mt-2 text-sm text-text-muted">{profile.summary}</p>
 
       <div className="mt-3">
-        <SpecialismChips profile={profile} />
+        <SpecialtyChips profile={profile} />
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">

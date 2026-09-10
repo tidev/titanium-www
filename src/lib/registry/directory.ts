@@ -1,3 +1,4 @@
+import { EntryIdExcluding, IsoDay, NoEmail, PublicUrl } from './fields.ts';
 import { z } from 'zod';
 
 /**
@@ -20,7 +21,8 @@ import { z } from 'zod';
  * **No reachable email address, anywhere.** A published `mailto:` is a gift to
  * scrapers, and the person who pays for it is the listee. Every URL has to be
  * `http(s)`, and every field a person writes prose into is checked for an
- * address in the text. See `PublicUrl` and `NoEmail`.
+ * address in the text. Both rules live in `./fields.ts`, which the app
+ * showcase shares: see `PublicUrl` and `NoEmail`.
  *
  * **A listing states an end date.** `expiresAt` is required unless the listing
  * opts out with `neverExpires`, and it cannot be set further than three months
@@ -29,67 +31,19 @@ import { z } from 'zod';
  * of people who were available in 2019 is not.
  */
 
-/** Bumped when the on-disk shape changes incompatibly, as with the module schemas. */
-export const DIRECTORY_SCHEMA_VERSION = 1;
+/**
+ * Bumped when the on-disk shape changes incompatibly, as with the module
+ * schemas.
+ *
+ * 2: `specialisms` became `specialties`. The schema is strict, so a listing
+ * written against 1 fails with "unrecognised key" rather than silently losing
+ * the field - rename it and nothing else has to change, since the values
+ * themselves are untouched.
+ */
+export const DIRECTORY_SCHEMA_VERSION = 2;
 
 /** How far ahead of the day it is written an `expiresAt` may be set. */
 export const LISTING_DAYS = 92;
-
-/**
- * An address in running text.
- *
- * Deliberately loose about what a valid address is, because the question here
- * is not "would this deliver" but "would a scraper collect it". Anything shaped
- * like `local@domain.tld` would.
- */
-const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
-
-/**
- * Is this an `http(s)` URL?
- *
- * `new URL()` throws on anything it cannot parse, and zod runs every check in a
- * chain even after an earlier one has failed - so an unparseable string reaches
- * this refinement whether or not `z.url()` has already rejected it, and an
- * unguarded throw escapes `safeParse` entirely. A listing whose URL is missing
- * its scheme (`example.com/enquiries`, far and away the commonest way to get
- * this field wrong) would crash `pnpm check:registry` with a raw stack trace
- * before it printed which file was at fault, and take the rest of the registry
- * walk down with it. Unparseable is simply not an http(s) URL, so say so.
- */
-function isHttpUrl(value: string): boolean {
-  try {
-    return /^https?:$/.test(new URL(value).protocol);
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Rejects everything but `http(s)`.
- *
- * `z.url()` alone does not: it parses with `new URL()`, which accepts
- * `mailto:someone@example.com`, `tel:` and `javascript:` as perfectly valid
- * URLs. Verified against the installed zod rather than assumed. So the one rule
- * this whole file exists to enforce would pass validation without this line.
- */
-const PublicUrl = z
-  .url()
-  .max(300)
-  .refine(isHttpUrl, {
-    message: 'must be an http(s) URL. Link to a page you control, never a mailto: or tel: address',
-  })
-  .refine((value) => !EMAIL.test(value), {
-    message: 'must not contain an email address, not even in a query string',
-  });
-
-const NoEmail = (max: number) =>
-  z
-    .string()
-    .min(1)
-    .max(max)
-    .refine((value) => !EMAIL.test(value), {
-      message: 'must not contain an email address. Link to a contact page instead',
-    });
 
 /**
  * A time zone the runtime can actually resolve.
@@ -136,12 +90,6 @@ const Timezone = z
     message: 'is not a time zone this runtime recognises. Check the spelling against the IANA list',
   });
 
-/** `YYYY-MM-DD`. A day, not an instant: the expiry window is three months wide. */
-const IsoDay = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'must be a YYYY-MM-DD date')
-  .refine((value) => !Number.isNaN(Date.parse(`${value}T00:00:00Z`)), 'must be a real date');
-
 export const ProfileKindSchema = z.enum(['individual', 'agency']);
 export type ProfileKind = z.infer<typeof ProfileKindSchema>;
 
@@ -154,14 +102,14 @@ export type Availability = z.infer<typeof AvailabilitySchema>;
  *
  * Free text here would make the filter menu unbounded and immediately gameable:
  * the first person to write "Titanium, titanium, TITANIUM, Titanium SDK" as
- * four specialisms appears under four headings. A fixed list also means two
+ * four specialties appears under four headings. A fixed list also means two
  * people who do the same work are findable by the same term, which a free-text
  * field never delivers.
  *
  * Adding a value is a pull request against this file, reviewed like any other.
  * `skills` below is where the free text goes: shown, never filtered on.
  */
-export const SpecialismSchema = z.enum([
+export const SpecialtySchema = z.enum([
   'alloy',
   'app-store-release',
   'ci-cd',
@@ -175,7 +123,7 @@ export const SpecialismSchema = z.enum([
   'security',
   'training',
 ]);
-export type Specialism = z.infer<typeof SpecialismSchema>;
+export type Specialty = z.infer<typeof SpecialtySchema>;
 
 const LinkSchema = z.strictObject({
   label: NoEmail(40),
@@ -200,10 +148,7 @@ export const DeveloperProfileSchema = z
      * `scripts/validate-registry.ts` checks that, because nothing in a schema
      * can see the name of the file it is parsing.
      */
-    id: z
-      .string()
-      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be a lowercase kebab-case slug')
-      .max(60),
+    id: EntryIdExcluding(['submit']),
 
     name: NoEmail(80),
     kind: ProfileKindSchema,
@@ -220,9 +165,9 @@ export const DeveloperProfileSchema = z
     timezone: Timezone,
 
     availability: z.array(AvailabilitySchema).min(1).max(3),
-    specialisms: z.array(SpecialismSchema).min(1).max(8),
+    specialties: z.array(SpecialtySchema).min(1).max(8),
 
-    /** Free text, shown but never filtered on. See `SpecialismSchema`. */
+    /** Free text, shown but never filtered on. See `SpecialtySchema`. */
     skills: z.array(NoEmail(30)).max(12).default([]),
 
     /**
@@ -293,4 +238,50 @@ export function expiryProblem(profile: DeveloperProfile, now: Date): string | nu
     return `expiresAt ${profile.expiresAt} is more than ${LISTING_DAYS} days out (no later than ${day})`;
   }
   return null;
+}
+
+/**
+ * A complete, valid listing, rendered on `/directory/submit` for a submitter to
+ * copy.
+ *
+ * Here rather than in the page because a template that drifts from its schema
+ * is worse than no template: it teaches somebody to write a file that CI then
+ * rejects. Living beside the shape means `./directory.test.ts` parses it
+ * through `DeveloperProfileSchema` on every run, so a field renamed without
+ * updating this fails the build - which is exactly what happened to
+ * `specialisms`.
+ *
+ * Not the worked example from `registry/directory/`, which would be the obvious
+ * source and is the wrong one: those carry `placeholder` and `neverExpires`,
+ * and a submitter copying them would mark themselves as an example exempt from
+ * the renewal this directory runs on.
+ *
+ * `expiresAt` is computed rather than written down, so the page never shows a
+ * date in the past. The nightly rebuild keeps it moving, and 90 days leaves
+ * room under the {@link LISTING_DAYS} cap for the days between a reader copying
+ * this and actually opening the pull request.
+ */
+export function listingTemplate(on: Date): DeveloperProfile {
+  const expires = new Date(on.getTime() + 90 * 86_400_000);
+
+  return {
+    schemaVersion: DIRECTORY_SCHEMA_VERSION,
+    id: 'jo-example',
+    name: 'Jo Example',
+    kind: 'individual',
+    summary: 'Titanium contractor. Alloy apps, SDK upgrades, and iOS modules.',
+    location: 'Remote, EU only',
+    timezone: 'Europe/Berlin',
+    availability: ['part-time', 'contract'],
+    specialties: ['alloy', 'sdk-upgrades', 'native-modules-ios'],
+    skills: ['JavaScript', 'TypeScript', 'Swift'],
+    contact: { label: 'Contact', url: 'https://example.com/contact' },
+    links: [
+      { label: 'Website', url: 'https://example.com' },
+      { label: 'GitHub', url: 'https://github.com/jo-example' },
+    ],
+    expiresAt: expires.toISOString().slice(0, 10),
+    neverExpires: false,
+    placeholder: false,
+  };
 }

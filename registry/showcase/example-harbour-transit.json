@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "example-harbour-transit",
+  "name": "Harbour Transit",
+  "subtitle": "A worked example, not a real app",
+  "platforms": ["iphone", "ipad", "android-phone", "android-tablet"],
+  "sdkVersion": "13.3.1.GA",
+  "description": "This entry is an example, and it stops being shown the day the first real app is merged.\n\nIt shows the shape of a consumer app on both stores and all four form factors: live departures, a saved-journeys list, and offline timetables. The store links point at real store hostnames with ids that do not exist, because the schema checks that an App Store link is on the App Store - a store badge is a promise about where a tap lands.",
+  "website": "https://example.com/harbour-transit",
+  "appStore": "https://apps.apple.com/app/id000000000",
+  "playStore": "https://play.google.com/store/apps/details?id=com.example.harbourtransit",
+  "placeholder": true
+}

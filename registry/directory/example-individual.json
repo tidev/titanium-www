@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "example-individual",
   "name": "Example Individual",
   "kind": "individual",
@@ -7,7 +7,7 @@
   "location": "Remote, Europe",
   "timezone": "Europe/Berlin",
   "availability": ["part-time", "contract"],
-  "specialisms": ["alloy", "sdk-upgrades", "native-modules-ios", "code-review"],
+  "specialties": ["alloy", "sdk-upgrades", "native-modules-ios", "code-review"],
   "skills": ["JavaScript", "TypeScript", "Swift", "Kotlin"],
   "contact": {
     "label": "Contact form",

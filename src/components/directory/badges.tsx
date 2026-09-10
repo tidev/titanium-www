@@ -2,8 +2,8 @@ import {
   AVAILABILITY_LABELS,
   initials,
   KIND_LABELS,
-  SPECIALISM_LABELS,
-  SPECIALISM_ORDER,
+  SPECIALTY_LABELS,
+  SPECIALTY_ORDER,
   type Profile,
 } from '@/lib/directory/profile';
 
@@ -128,11 +128,11 @@ export function AvailabilityChips({ profile }: { profile: Profile }) {
 }
 
 /**
- * Specialisms, in the vocabulary's own order rather than the order they were
+ * Specialties, in the vocabulary's own order rather than the order they were
  * written in, so two listings claiming the same work read the same way.
  */
-export function SpecialismChips({ profile }: { profile: Profile }) {
-  const ordered = SPECIALISM_ORDER.filter((s) => profile.specialisms.includes(s));
+export function SpecialtyChips({ profile }: { profile: Profile }) {
+  const ordered = SPECIALTY_ORDER.filter((s) => profile.specialties.includes(s));
   return (
     <ul className="flex flex-wrap gap-1.5">
       {ordered.map((s) => (
@@ -140,7 +140,7 @@ export function SpecialismChips({ profile }: { profile: Profile }) {
           key={s}
           className="rounded-full border border-border px-2 py-0.5 text-xs text-text-muted"
         >
-          {SPECIALISM_LABELS[s]}
+          {SPECIALTY_LABELS[s]}
         </li>
       ))}
     </ul>
