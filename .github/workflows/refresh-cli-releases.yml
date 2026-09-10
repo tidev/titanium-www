@@ -1,0 +1,79 @@
+name: 'Refresh CLI Releases'
+
+# Recaptures `registry/cli/releases.json` when tidev/titanium-cli ships.
+#
+# The landing page and /downloads name the current CLI version, and the
+# compatibility page works out the minimum CLI for each SDK release from the
+# same file. All three are static, so a CLI release changes nothing here until
+# something recaptures - which is what this is.
+#
+# Dispatched rather than scheduled, unlike refresh-community-modules. That one
+# watches a search index which drifts hourly with nothing to signal it; a CLI
+# release is a discrete event that the publishing repository already knows
+# about. If the dispatch ever fails, the job goes red in titanium-cli, where the
+# person who just shipped is looking.
+#
+# The capture is not part of `pnpm build`: TI-25 requires the build to read the
+# filesystem and nothing else, and `scripts/assert-offline.ts` enforces it.
+on:
+  repository_dispatch:
+    types: [refresh-cli-releases]
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-cli-releases
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Recapture the CLI releases
+        run: pnpm registry:cli
+        env:
+          # Reads the releases of a public repository, so the run's own token is
+          # enough. It is required rather than optional because runner IPs share
+          # the anonymous quota.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # The generated file is a public API response shape, so a malformed one
+      # must not be committed.
+      - name: Validate the registry
+        run: pnpm check:registry
+
+      # A new CLI can change the minimum CLI the compatibility page prints:
+      # `minimumCli` names the oldest CLI whose Node floor clears the SDK's, so
+      # a release that is the first to clear an SDK's floor becomes the answer
+      # where there was none. Regenerated here because `pnpm docs:compat:check`
+      # runs in CI, and a partial left behind would fail the next unrelated
+      # pull request instead of this run.
+      - name: Regenerate the compatibility partials
+        run: pnpm docs:compat
+
+      # `fetchedAt` moves on every capture, so this commits even when no release
+      # was added. That is the right trade on a dispatch that fires a few times
+      # a year: the file says when it was last read, and a run that changed
+      # nothing is visible as such in the diff.
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: |
+            Refresh the Titanium CLI releases${{ github.event.client_payload.release && format(' for {0}', github.event.client_payload.release) || '' }}
+          file_pattern: registry/cli/releases.json content/docs/_partials/toolchain.md
