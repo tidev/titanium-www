@@ -2,6 +2,7 @@ import { AssetLinks } from '@/components/downloads/asset-links';
 import { InstallCommand } from '@/components/downloads/install-command';
 import { hasReleaseNote } from '@/lib/docs/release-notes';
 import { isCompiled } from '@/lib/docs/versions';
+import { latestCli } from '@/lib/downloads/cli';
 import { formatDate, installCommand } from '@/lib/downloads/format';
 import { branchList, CHANNELS, latestRelease, releases } from '@/lib/downloads/registry';
 import { SITE_URL } from '@/lib/site';
@@ -14,6 +15,12 @@ import Link from 'next/link';
  * Replaces the downloads-www home page, which was the install instructions and
  * nothing else - the latest GA was named in the command but not downloadable
  * without a second click.
+ *
+ * Two products are named on this page and both are versioned, so each is
+ * labelled with the one it belongs to. The CLI's version sits with the command
+ * that installs it and links to its GitHub release, which is where its notes
+ * are written; the SDK's sits in the release box and links to the note page
+ * here, because the SDK's own release bodies are empty (`docs/release-notes.md`).
  */
 
 export const metadata: Metadata = {
@@ -25,6 +32,7 @@ export const metadata: Metadata = {
 
 export default function DownloadsOverview() {
   const latest = latestRelease();
+  const cli = latestCli();
   const releaseCount = CHANNELS.reduce((total, channel) => total + releases(channel).length, 0);
   const branches = branchList();
   // Counted at build time and not re-checked on the reader's clock, unlike the
@@ -59,6 +67,24 @@ export default function DownloadsOverview() {
             <div className="mt-2">
               <InstallCommand command="npm i -g titanium" label="Copy the npm install command" />
             </div>
+            {/* What that command gets you today. npm resolves `titanium` to
+                whatever is newest, so naming the version here is the only way
+                to know what you are about to install - and the only place on
+                the site the CLI's own release notes are reachable from. */}
+            {cli && (
+              <p className="mt-2 text-xs text-text-subtle">
+                Titanium CLI <span className="font-mono text-text-muted">{cli.version}</span>,
+                released <time dateTime={cli.date.slice(0, 10)}>{formatDate(cli.date)}</time> ·{' '}
+                <a
+                  href={cli.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                >
+                  Release notes
+                </a>
+              </p>
+            )}
           </li>
           <li>
             <p className="text-sm font-medium">2. Install the SDK</p>
@@ -79,7 +105,7 @@ export default function DownloadsOverview() {
 
       <section aria-labelledby="latest">
         <h2 id="latest" className="text-xl font-semibold tracking-tight">
-          Latest release
+          Latest SDK release
         </h2>
 
         {latest ? (

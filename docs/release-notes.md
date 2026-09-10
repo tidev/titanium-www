@@ -18,9 +18,34 @@ reading `Titanium.UI.Window` at 12.6.0 looks for what changed in 12.6.0. A flat
 lists releases and `/blog` already carries the announcements, so a third
 top-level surface would have competed with both.
 
+Two unpinned spellings redirect to the newest note, in `next.config.ts`:
+
+```
+/docs/sdk/latest/release-notes  ->  /docs/sdk/<newest>/release-notes
+/docs/sdk/release-notes         ->  /docs/sdk/<newest>/release-notes
+```
+
+Neither can be a page. A note describes one release and is never revised, so
+there is nothing for an unversioned copy to render that is not already at a
+version - unlike the reference, where `/docs/sdk/Titanium.UI.Window` is the
+canonical address of the current one (TI-79).
+
+They resolve to the newest version that _has_ a note rather than to the newest
+release. Those are the same version until a release ships and its notes have not
+been captured yet, and in that window this lands on the last real note instead
+of a 404.
+
 Pointing at the GitHub releases instead was never an option. All 71 GA release
 bodies were read: 51 are empty and the other 20 hold nothing but a link back to
 the old site.
+
+**The Titanium CLI is the other way round**, which is why it is not here.
+`tidev/titanium-cli` writes a real body for every release, so GitHub is the
+source of truth for those and the site links out to them - from the landing page
+and from `/downloads`, beside the command that installs it. `registry/cli/releases.json`
+carries the version, date and URL, captured by `pnpm registry:cli`; nothing about
+the CLI is rendered as a page here. The two products are labelled by name
+wherever a version appears, since they are on different numbers.
 
 ## Where the content comes from
 

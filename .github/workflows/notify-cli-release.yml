@@ -1,0 +1,46 @@
+name: Notify CLI Release
+
+# Called by tidev/titanium-cli when it publishes a release.
+#
+# The counterpart to notify-api-docs.yml, and here for the same reason: the
+# event name and the target repository are this site's to change, so they live
+# in this repository rather than in the caller. A rename is then one edit here
+# instead of a pull request against titanium-cli.
+#
+# No payload. `pnpm registry:cli` reads every release from GitHub and every
+# version from npm on its own, so there is nothing for the caller to tell it -
+# unlike the API docs, where the payload is what stops the regen checking out
+# seventeen repositories to find out what moved.
+#
+# Call it *after* the npm publish, not beside it. The capture reads
+# `engines.node` from the packument, and a release that reaches this before npm
+# has the tarball is recorded with a date and a URL but no Node range, which is
+# what `minimumCli` reads.
+on:
+  workflow_call:
+    secrets:
+      dispatch-token:
+        description: 'Token with write access to tidev/titaniumsdk.com'
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      # The `github` context in a reusable workflow refers to the caller, so
+      # this names the release without the caller passing it.
+      - name: Repository dispatch
+        uses: peter-evans/repository-dispatch@v4
+        with:
+          token: ${{ secrets.dispatch-token }}
+          repository: tidev/titaniumsdk.com
+          event-type: refresh-cli-releases
+          # Carried for the run summary and the commit message only. The capture
+          # does not read it: it takes the whole release history every time, so
+          # a dispatch that names the wrong version still writes the right file.
+          client-payload: |
+            {
+              "repo": "${{ github.repository }}",
+              "release": "${{ github.event.release.tag_name }}"
+            }

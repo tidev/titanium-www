@@ -5,10 +5,10 @@ import {
   renderToolchain,
 } from '../src/lib/docs/compat.ts';
 import { latestSdkVersion } from '../src/lib/docs/registry.ts';
-import { CliReleasesSchema, SCHEMA_VERSION } from '../src/lib/registry/index.ts';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readCliReleases } from '../src/lib/downloads/cli.ts';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { existsSync } from 'node:fs';
-import { dirname, join, relative } from 'node:path';
+import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
@@ -16,7 +16,6 @@ import { fileURLToPath } from 'node:url';
  *
  *   node scripts/generate-compat.ts           write them
  *   node scripts/generate-compat.ts --check   fail if what is committed is stale
- *   node scripts/generate-compat.ts --refresh read npm for CLI releases first
  *
  * ## Why partials rather than a component
  *
@@ -38,75 +37,31 @@ import { fileURLToPath } from 'node:url';
  * Both inputs are files in this repository, so this is offline and
  * deterministic: the same commit generates the same bytes.
  *
- * ## Why the CLI list is captured rather than fetched
+ * ## Why the CLI list is read rather than fetched
  *
  * Deciding the minimum CLI needs every published `titanium` release and the
- * Node each declares, which lives in the npm packument. This script runs inside
- * `pnpm build`, so fetching it here would put npm on the critical path of every
- * deploy and make one commit render differently on two days. It is captured to
- * `registry/cli/releases.json` instead, the same shape of decision as capturing
- * release notes rather than reading GitHub at build.
+ * Node each declares. This script runs inside `pnpm build`, so fetching that
+ * would put npm on the critical path of every deploy and make one commit render
+ * differently on two days. It is captured to `registry/cli/releases.json` by
+ * `pnpm registry:cli` instead, the same shape of decision as capturing release
+ * notes rather than reading GitHub at build.
  *
- * `--refresh` is the fetch, run deliberately when a new CLI ships. Nothing else
- * in this script touches the network.
+ * Nothing in this script touches the network.
  */
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PARTIALS = join(ROOT, 'content/docs/_partials');
 
 const check = process.argv.includes('--check');
-const refresh = process.argv.includes('--refresh');
 
-const CLI_RELEASES = join(ROOT, 'registry/cli/releases.json');
-const NPM = 'https://registry.npmjs.org';
-
-/**
- * Read every `titanium` release and the Node it declares, and keep the two
- * fields this page uses.
- *
- * The abbreviated packument is asked for by `Accept`: the full document carries
- * dist metadata for every version and is an order of magnitude larger for no
- * gain here.
- */
-async function refreshCliReleases(): Promise<void> {
-  const res = await fetch(`${NPM}/titanium`, {
-    headers: { accept: 'application/vnd.npm.install-v1+json' },
-  });
-  if (!res.ok) throw new Error(`npm answered ${res.status} for titanium`);
-
-  const body = (await res.json()) as { versions?: Record<string, { engines?: { node?: string } }> };
-  const releases = Object.entries(body.versions ?? {})
-    .map(([version, info]) => ({
-      version,
-      ...(info.engines?.node ? { node: info.engines.node } : {}),
-    }))
-    .sort((a, b) => a.version.localeCompare(b.version));
-  if (!releases.length) throw new Error('the titanium packument listed no versions');
-
-  const value = CliReleasesSchema.parse({
-    schemaVersion: SCHEMA_VERSION,
-    fetchedAt: new Date().toISOString(),
-    source: { registry: NPM, package: 'titanium' },
-    releases,
-  });
-  mkdirSync(dirname(CLI_RELEASES), { recursive: true });
-  writeFileSync(CLI_RELEASES, `${JSON.stringify(value, null, 2)}\n`);
-  console.log(`registry/cli/releases.json: ${releases.length} CLI release(s)`);
-}
-
-if (refresh) await refreshCliReleases();
-
-if (!existsSync(CLI_RELEASES)) {
+const cliReleases = readCliReleases();
+if (!cliReleases) {
   console.error(
     'registry/cli/releases.json is missing, so the minimum Titanium CLI cannot be worked out.\n' +
-      'Run: pnpm docs:compat --refresh'
+      'Run: pnpm registry:cli'
   );
   process.exit(1);
 }
-
-const cliReleases = CliReleasesSchema.parse(
-  JSON.parse(readFileSync(CLI_RELEASES, 'utf8'))
-).releases;
 
 const version = latestSdkVersion();
 if (!version) {
@@ -147,7 +102,11 @@ const files: { name: string; body: string }[] = [
   },
   {
     name: 'toolchain.md',
-    body: renderToolchain(toolchains, cliReleases, banner('registry/sdk/*/toolchain.json')),
+    body: renderToolchain(
+      toolchains,
+      cliReleases.releases,
+      banner('registry/sdk/*/toolchain.json')
+    ),
   },
 ];
 
