@@ -14,13 +14,13 @@ document is that those are different things wearing different badges.
 
 | Badge      | Means                                                                            | Lives in                                      |
 | ---------- | -------------------------------------------------------------------------------- | --------------------------------------------- |
-| Official   | TiDev maintains it. Releases are verified and the API reference is compiled here | `scripts/docgen/sources.json`                 |
-| Community  | TiDev has reviewed the repository and vouches for it. Nothing is hosted here     | `registry/modules/verified.json`              |
-| Unverified | Found by its `titanium` topic. Nobody has looked at it                           | `registry/modules/community.json`, by default |
+| Official   | TiDev maintains it. Releases are verified and the API reference is compiled here             | `scripts/docgen/sources.json`                 |
+| Community  | TiDev has reviewed the repository and vouches for it. Nothing is hosted here                 | `registry/modules/verified.json`              |
+| Unverified | Found by its `titanium`, `titanium-modules` or `titanium-sdk` topic. Nobody has looked at it | `registry/modules/community.json`, by default |
 
 **Being listed is not an endorsement.** The bar for appearing at all is a
-`titanium` topic and a platform directory. That is a search result, and the
-Unverified badge says so.
+`titanium`, `titanium-modules` or `titanium-sdk` topic and a platform directory.
+That is a search result, and the Unverified badge says so.
 
 The test when you are unsure which tier: _has a person looked at this
 repository and would we tell someone to use it?_ If not, it is Unverified. The
@@ -146,8 +146,9 @@ Unverified: nobody has looked at them, one at a time, and the badge says so.
 active maintainer". Verification and blocking are that person's call.
 
 There is no submission process, and that is deliberate. Discovery is automatic
-through the `titanium` topic, so there is nothing to submit: a module appears
-in the list by carrying the topic, and moves tiers when someone reviews it.
+through the `titanium`, `titanium-modules` or `titanium-sdk` topic, so there is
+nothing to submit: a module appears in the list by carrying the topic, and moves
+tiers when someone reviews it.
 Adding a form would create a queue without adding a way through it.
 
 ## What was rejected
