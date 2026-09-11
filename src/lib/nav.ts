@@ -11,18 +11,40 @@ export type NavItem = {
 };
 
 /**
- * Main sections. "Docs" is the umbrella over both guides and the API
- * reference - the API is part of the docs, not a sibling of them.
+ * The first item in the header, and the label the mobile menu repeats.
+ *
+ * "Docs" is the umbrella over both guides and the API reference - the API is
+ * part of the docs, not a sibling of them - and in the header it is a grouped
+ * item so both halves are one hover away rather than a click into the guides
+ * and a search for the reference.
  */
-export const primaryNav: NavItem[] = [
-  { href: '/docs', label: 'Docs' },
+export const DOCS_LABEL = 'Docs';
+
+/**
+ * Everything under Docs. The guides first, because `/docs` is where a cold
+ * reader should land; the reference second, for the one who already knows
+ * what they are looking for.
+ */
+export const docsNav: NavItem[] = [
+  { href: '/docs', label: 'Guides' },
+  { href: '/docs/sdk', label: 'API reference' },
+];
+
+/** The remaining main sections, each a plain link. */
+export const sectionNav: NavItem[] = [
   { href: '/downloads', label: 'Downloads' },
   { href: '/modules', label: 'Modules' },
   { href: '/blog', label: 'Blog', also: { href: '/blog/feed.xml', label: 'RSS' } },
 ];
 
 /**
- * The one grouped item in the header, and the label the mobile menu repeats.
+ * Main sections as one flat list, for the footer, where Docs is a link like
+ * the others rather than a menu.
+ */
+export const primaryNav: NavItem[] = [{ href: '/docs', label: DOCS_LABEL }, ...sectionNav];
+
+/**
+ * The last grouped item in the header, and the label the mobile menu repeats.
  *
  * Named here rather than typed into both, because the two have to agree: a
  * phone user reading "Community" in a list and a desktop user reading it on a

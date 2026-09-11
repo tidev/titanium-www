@@ -1,10 +1,17 @@
-import { CommunityMenu } from './community-menu';
 import { MobileNav } from './mobile-nav';
+import { NavMenu } from './nav-menu';
 import { NAV_ITEM_CLASS } from './site-nav-item';
 import { ThemeToggle } from './theme-toggle';
 import { TitaniumLogo } from './titanium-logo';
 import { SiteSearch } from '@/components/search/site-search';
-import { GITHUB_ORG_URL, primaryNav } from '@/lib/nav';
+import {
+  COMMUNITY_LABEL,
+  communityNav,
+  DOCS_LABEL,
+  docsNav,
+  GITHUB_ORG_URL,
+  sectionNav,
+} from '@/lib/nav';
 import Link from 'next/link';
 
 export function SiteHeader() {
@@ -20,18 +27,24 @@ export function SiteHeader() {
 
         <nav aria-label="Main" className="hidden md:block">
           <ul className="flex items-center gap-1">
-            {primaryNav.map((item) => (
+            {/* First, and grouped: the guides and the API reference are the two
+                halves of one section, and a reader should not have to open the
+                guides to find the way to the reference. */}
+            <li>
+              <NavMenu label={DOCS_LABEL} items={docsNav} />
+            </li>
+            {sectionNav.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className={NAV_ITEM_CLASS}>
                   {item.label}
                 </Link>
               </li>
             ))}
-            {/* Last, and the only grouped item. What is under it is the site's
-                people rather than its software, so it reads as a coda to the
-                four sections rather than as a fifth one. */}
+            {/* Last. What is under it is the site's people rather than its
+                software, so it reads as a coda to the sections rather than as
+                another one. */}
             <li>
-              <CommunityMenu />
+              <NavMenu label={COMMUNITY_LABEL} items={communityNav} />
             </li>
           </ul>
         </nav>

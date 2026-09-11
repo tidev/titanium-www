@@ -15,7 +15,7 @@
  *
  * Its own file rather than an export from `site-header.tsx`, which is a server
  * component: importing a constant out of it would pull the header, the search
- * box and the theme toggle into the client bundle behind `community-menu.tsx`.
+ * box and the theme toggle into the client bundle behind `nav-menu.tsx`.
  */
 export const NAV_ITEM_CLASS =
   'flex items-center rounded-md px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';

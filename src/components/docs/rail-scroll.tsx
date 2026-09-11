@@ -18,7 +18,11 @@ import { useEffect, useLayoutEffect } from 'react';
  *
  * On a first visit there is nothing to restore, and the rail centres whatever
  * it marks as current instead - which for a 284-row tree is usually below the
- * fold. That is the one case where jumping is the right answer.
+ * fold. The same jump happens when a restored position leaves the current row
+ * out of sight: arriving at the API reference from the header while the rail
+ * was left deep in a namespace would otherwise show a sidebar with nothing
+ * marked on it. Browsing between neighbours keeps the position, because the
+ * next row is already in view and nothing moves.
  */
 export function RailScroll({ selector, storageKey }: { selector: string; storageKey: string }) {
   // The pathname is not read; it is the dependency that re-runs this when a
@@ -39,12 +43,14 @@ export function RailScroll({ selector, storageKey }: { selector: string; storage
       // setup page and 328 with the API tree open, so an offset saved on one
       // is out of range on the other.
       box.scrollTop = saved;
-    } else {
-      const current = box.querySelector('[aria-current="page"]');
-      if (current) {
-        const offset = current.getBoundingClientRect().top - box.getBoundingClientRect().top;
-        box.scrollTop += offset - box.clientHeight / 2;
-      }
+    }
+
+    const current = box.querySelector('[aria-current="page"]');
+    if (current) {
+      const frame = box.getBoundingClientRect();
+      const row = current.getBoundingClientRect();
+      const inView = row.top >= frame.top && row.bottom <= frame.bottom;
+      if (!inView) box.scrollTop += row.top - frame.top - box.clientHeight / 2;
     }
 
     // One write per frame at most. A rail scroll fires per pixel otherwise, and

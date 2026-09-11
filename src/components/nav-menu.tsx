@@ -1,12 +1,12 @@
 'use client';
 
 import { NAV_ITEM_CLASS } from './site-nav-item';
-import { COMMUNITY_LABEL, communityNav, isExternal } from '@/lib/nav';
+import { isExternal, type NavItem } from '@/lib/nav';
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 /**
- * The one dropdown in the header.
+ * A dropdown in the header: Docs and Community are both one of these.
  *
  * ## A disclosure, not a `menu`
  *
@@ -35,7 +35,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
  *     otherwise be tabbing through a hidden list.
  *
  * Below `md` this is not rendered at all - the drawer in `mobile-nav.tsx` lists
- * Community as a heading with its links under it - so the tap path is for the
+ * each group as a heading with its links under it - so the tap path is for the
  * touch-capable laptops and tablets that land on the desktop layout.
  */
 
@@ -49,7 +49,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
  */
 const CLOSE_DELAY_MS = 150;
 
-export function CommunityMenu() {
+export function NavMenu({ label, items }: { label: string; items: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const wrapper = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -135,7 +135,7 @@ export function CommunityMenu() {
         // needs. See `./site-nav-item.ts` for why they share one string.
         className={`${NAV_ITEM_CLASS} gap-1`}
       >
-        {COMMUNITY_LABEL}
+        {label}
         {/* Static. It marks the item as having something under it; it is not a
             state indicator, and `aria-expanded` is already the one that is. */}
         <svg
@@ -160,7 +160,7 @@ export function CommunityMenu() {
         hidden={!open}
         className="absolute left-0 top-full z-50 mt-1 min-w-52 rounded-md border border-border bg-surface p-1 shadow-lg"
       >
-        {communityNav.map((item) => {
+        {items.map((item) => {
           const className =
             'block rounded px-3 py-2 text-sm text-text-muted transition-colors hover:bg-surface-raised hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
           return (
