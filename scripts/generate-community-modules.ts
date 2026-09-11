@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
  * regenerated in March 2024. Same search it used, because that search is the
  * de-facto registration mechanism: there is no module registry to publish to,
  * so a module is discoverable exactly when its repository carries the
- * `titanium`, `titanium-modules` or `titanium-sdk` topic. Nothing else about a
+ * `titanium`, `titanium-module` or `titanium-sdk` topic. Nothing else about a
  * community module can be known without cloning it.
  *
  * What this cannot produce, and why these are not the same thing as the
@@ -39,7 +39,7 @@ const checkOnly = process.argv.includes('--check');
 /**
  * The topics that register a module.
  *
- * `titanium` is the query module-search-www used, unchanged. `titanium-modules`
+ * `titanium` is the query module-search-www used, unchanged. `titanium-module`
  * and `titanium-sdk` are the topics a good share of authors picked instead, so a
  * repo carrying any of them is listed. `in:topics` is doing the real work; the
  * language filters only keep each result set inside the search API's
@@ -50,7 +50,7 @@ const checkOnly = process.argv.includes('--check');
  * up in several result sets and is listed once, keyed on its slug.
  */
 const LANGUAGES = 'language:objc language:swift language:java language:kotlin language:javascript';
-const QUERIES = ['titanium', 'titanium-modules', 'titanium-sdk'].map(
+const QUERIES = ['titanium', 'titanium-module', 'titanium-sdk'].map(
   (topic) => `${topic} in:topics ${LANGUAGES}`
 );
 
