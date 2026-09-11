@@ -41,7 +41,7 @@ export function excludedBecause(
   // A backstop, not an active rule: GitHub's repository search omits forks
   // unless the query says `fork:true`, and ours does not - the first real run
   // dropped 0 of 302 candidates here. It stays because that is a property of
-  // the query rather than of the data, so a future edit to QUERY could start
+  // the query rather than of the data, so a future edit to QUERIES could start
   // admitting them, and because a fork is nearly always somebody's patch of a
   // module already listed.
   if (repo.fork) return 'fork';

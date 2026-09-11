@@ -299,7 +299,8 @@ export const CommunityModuleSchema = z.strictObject({
 
 export const CommunityIndexSchema = z.strictObject({
   $comment: z.string(),
-  source: z.strictObject({ query: z.string(), repos: z.number().int().nonnegative() }),
+  /** The GitHub searches whose union produced `modules`, one per topic. */
+  source: z.strictObject({ queries: z.array(z.string()).min(1), repos: z.number().int().nonnegative() }),
   /** Most starred first. */
   modules: z.array(CommunityModuleSchema),
 });
