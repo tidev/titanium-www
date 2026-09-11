@@ -170,8 +170,8 @@ export function ModuleLayout({
         {children}
       </article>
 
-      <div className="hidden py-10 xl:col-start-2 xl:row-start-1 xl:block">
-        <LatestRelease index={index} className={rail ? '' : 'sticky top-20'} />
+      <div className="hidden py-4 xl:col-start-2 xl:row-start-1 xl:block">
+        <LatestRelease index={index} className={rail ? '' : 'sticky top-25'} />
         {rail}
       </div>
     </div>
