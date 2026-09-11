@@ -17,9 +17,16 @@ import { useEffect, useRef, useState } from 'react';
  * Native <dialog> rather than a hand-rolled drawer: showModal() traps focus,
  * handles Esc, and makes the rest of the page inert without extra code.
  */
-/** The rows under a group heading, which are a size down from the sections. */
-const ITEM =
-  'block rounded-md px-3 py-2 text-sm text-text-muted hover:bg-surface-raised hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+/**
+ * One row. Every destination in the drawer is the same size and colour: a phone
+ * menu reads as one list of places to go, and setting the grouped entries a
+ * size down made them look like secondary links to pages that are anything but.
+ */
+const ROW =
+  'block rounded-md py-2.5 text-base font-medium hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+
+/** Every row carries the same padding; a group's indent comes from its list. */
+const ITEM = `${ROW} px-3`;
 
 /**
  * A heading rather than a collapsed menu. On a phone the drawer already
@@ -27,6 +34,12 @@ const ITEM =
  * save space nobody is short of - and the label is not a link on any layout,
  * which is easier to say plainly here than in a disclosure the reader has to
  * open to find out.
+ *
+ * The rule down the left is a pseudo-element rather than a `border-l`, because
+ * a border runs the full height of its box: each row carries 10px of padding
+ * above its text, so a bordered list drew a line overshooting the first and
+ * last labels by that much at either end. `inset-y-2` pulls it back to the text
+ * it is there to bracket.
  */
 function Group({ label, items, close }: { label: string; items: NavItem[]; close: () => void }) {
   return (
@@ -35,7 +48,7 @@ function Group({ label, items, close }: { label: string; items: NavItem[]; close
         {label}
       </h2>
 
-      <ul className="flex flex-col gap-1">
+      <ul className="relative ml-3 flex flex-col gap-1 pl-1 before:absolute before:inset-y-2 before:left-0 before:w-px before:bg-border before:content-['']">
         {items.map((item) => (
           <li key={item.href}>
             {/* Internal entries go through Link, as the sections do: an `a`
@@ -132,25 +145,19 @@ export function MobileNav() {
           {/* Same order as the header: Docs, the sections, Community. */}
           <Group label={DOCS_LABEL} items={docsNav} close={close} />
 
-          <hr className="my-4 border-border" />
-
-          <ul className="flex flex-col gap-1">
+          <ul className="mt-2 flex flex-col gap-1">
             {sectionNav.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={close}
-                  className="block rounded-md px-3 py-2.5 text-base font-medium hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-                >
+                <Link href={item.href} onClick={close} className={ITEM}>
                   {item.label}
                 </Link>
               </li>
             ))}
           </ul>
 
-          <hr className="my-4 border-border" />
-
-          <Group label={COMMUNITY_LABEL} items={communityNav} close={close} />
+          <div className="mt-4">
+            <Group label={COMMUNITY_LABEL} items={communityNav} close={close} />
+          </div>
         </nav>
 
         <div className="border-t border-border px-5 py-4">
