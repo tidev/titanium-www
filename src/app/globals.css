@@ -121,6 +121,11 @@
    *
    * The window group is listed in every theme block rather than hoisted, so
    * check-contrast - which parses the light and dark blocks - sees it in both.
+   *
+   * The three dots are macOS' own traffic-light colours. They are the one
+   * borrowed palette here, and deliberately so: they are what makes the block
+   * read as a window at a glance. Purely decorative and `aria-hidden`, so they
+   * carry no contrast minimum (WCAG 1.4.11) and check-contrast leaves them out.
    */
   --terminal-bg: #f8f8f8;
   --terminal-text: #1a1f23;
@@ -130,6 +135,9 @@
   --terminal-window-text: #f9fafb;
   --terminal-prompt: #62666b;
   --terminal-success: #93d7a1;
+  --terminal-dot-close: #ff5f57;
+  --terminal-dot-minimize: #febc2e;
+  --terminal-dot-zoom: #28c840;
   color-scheme: light;
 }
 
@@ -162,6 +170,9 @@
     --terminal-window-text: #f9fafb;
     --terminal-prompt: #62666b;
     --terminal-success: #93d7a1;
+    --terminal-dot-close: #ff5f57;
+    --terminal-dot-minimize: #febc2e;
+    --terminal-dot-zoom: #28c840;
     color-scheme: dark;
   }
 }
@@ -194,6 +205,9 @@
   --terminal-window-text: #f9fafb;
   --terminal-prompt: #62666b;
   --terminal-success: #93d7a1;
+  --terminal-dot-close: #ff5f57;
+  --terminal-dot-minimize: #febc2e;
+  --terminal-dot-zoom: #28c840;
   color-scheme: dark;
 }
 
@@ -209,6 +223,9 @@
   --color-terminal-text-subtle: var(--terminal-text-subtle);
   --color-terminal-prompt: var(--terminal-prompt);
   --color-terminal-success: var(--terminal-success);
+  --color-terminal-dot-close: var(--terminal-dot-close);
+  --color-terminal-dot-minimize: var(--terminal-dot-minimize);
+  --color-terminal-dot-zoom: var(--terminal-dot-zoom);
   --color-field: var(--field);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
