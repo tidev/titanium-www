@@ -1,7 +1,15 @@
 'use client';
 
 import { ThemeToggle } from './theme-toggle';
-import { COMMUNITY_LABEL, communityNav, isExternal, primaryNav } from '@/lib/nav';
+import {
+  COMMUNITY_LABEL,
+  communityNav,
+  DOCS_LABEL,
+  docsNav,
+  isExternal,
+  sectionNav,
+  type NavItem,
+} from '@/lib/nav';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -9,9 +17,45 @@ import { useEffect, useRef, useState } from 'react';
  * Native <dialog> rather than a hand-rolled drawer: showModal() traps focus,
  * handles Esc, and makes the rest of the page inert without extra code.
  */
-/** The Community rows, which are a size down from the sections above them. */
+/** The rows under a group heading, which are a size down from the sections. */
 const ITEM =
   'block rounded-md px-3 py-2 text-sm text-text-muted hover:bg-surface-raised hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+
+/**
+ * A heading rather than a collapsed menu. On a phone the drawer already
+ * scrolls, so hiding a few links behind a tap would only add an interaction to
+ * save space nobody is short of - and the label is not a link on any layout,
+ * which is easier to say plainly here than in a disclosure the reader has to
+ * open to find out.
+ */
+function Group({ label, items, close }: { label: string; items: NavItem[]; close: () => void }) {
+  return (
+    <>
+      <h2 className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-text-subtle">
+        {label}
+      </h2>
+
+      <ul className="flex flex-col gap-1">
+        {items.map((item) => (
+          <li key={item.href}>
+            {/* Internal entries go through Link, as the sections do: an `a`
+                would reload the whole application to reach a page the router
+                already has. */}
+            {isExternal(item.href) ? (
+              <a href={item.href} onClick={close} target="_blank" rel="noreferrer" className={ITEM}>
+                {item.label}
+              </a>
+            ) : (
+              <Link href={item.href} onClick={close} className={ITEM}>
+                {item.label}
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
 export function MobileNav() {
   const ref = useRef<HTMLDialogElement>(null);
@@ -85,8 +129,13 @@ export function MobileNav() {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Main">
+          {/* Same order as the header: Docs, the sections, Community. */}
+          <Group label={DOCS_LABEL} items={docsNav} close={close} />
+
+          <hr className="my-4 border-border" />
+
           <ul className="flex flex-col gap-1">
-            {primaryNav.map((item) => (
+            {sectionNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
@@ -101,39 +150,7 @@ export function MobileNav() {
 
           <hr className="my-4 border-border" />
 
-          {/* A heading rather than a collapsed menu. On a phone the drawer
-              already scrolls, so hiding four links behind a tap would only add
-              an interaction to save space nobody is short of - and the label is
-              not a link on any layout, which is easier to say plainly here than
-              in a disclosure the reader has to open to find out. */}
-          <h2 className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-text-subtle">
-            {COMMUNITY_LABEL}
-          </h2>
-
-          <ul className="flex flex-col gap-1">
-            {communityNav.map((item) => (
-              <li key={item.href}>
-                {/* Internal entries go through Link, as the list above does:
-                    an `a` would reload the whole application to reach a page
-                    the router already has. */}
-                {isExternal(item.href) ? (
-                  <a
-                    href={item.href}
-                    onClick={close}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={ITEM}
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <Link href={item.href} onClick={close} className={ITEM}>
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
+          <Group label={COMMUNITY_LABEL} items={communityNav} close={close} />
         </nav>
 
         <div className="border-t border-border px-5 py-4">
