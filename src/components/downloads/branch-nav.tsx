@@ -10,7 +10,7 @@ import Link from 'next/link';
  */
 export function BranchNav({ branches, current }: { branches: BranchSummary[]; current: string }) {
   return (
-    <nav aria-label="Branches" className="lg:sticky lg:top-20">
+    <nav aria-label="Branches" className="lg:sticky lg:top-25">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-text-subtle">Branches</h2>
       <ul className="mt-3 flex flex-wrap gap-1.5 lg:flex-col lg:gap-0.5">
         {branches.map((branch) => {
