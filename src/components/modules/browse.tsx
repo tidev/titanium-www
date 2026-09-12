@@ -2,6 +2,7 @@
 
 import { SourceBadge, SOURCE_STRIPE, LatestPerPlatform, PlatformChips } from './badges';
 import { Select } from '@/components/ui/select';
+import { capture } from '@/lib/analytics';
 import { formatDate } from '@/lib/docs/format';
 import {
   listingPlatforms,
@@ -79,6 +80,9 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
   const [source, setSource] = useState<SourceFilter>('all');
   const [sort, setSort] = useState<SortKey>('default');
 
+  const applyFilter = (filter: 'source' | 'platform' | 'sort', value: string) =>
+    capture('module_filter_applied', { filter, value });
+
   const ordered = useMemo(() => orderListings(modules, sort), [modules, sort]);
 
   const shown = useMemo(() => {
@@ -121,7 +125,10 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
             hideLabel
             options={SOURCES}
             value={source}
-            onChange={setSource}
+            onChange={(value) => {
+              setSource(value);
+              applyFilter('source', value);
+            }}
           />
           {/* Unlabelled for the same reason as the menu before it: "All
               platforms" says what it is. */}
@@ -130,7 +137,10 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
             hideLabel
             options={PLATFORMS}
             value={platform}
-            onChange={setPlatform}
+            onChange={(value) => {
+              setPlatform(value);
+              applyFilter('platform', value);
+            }}
           />
           {/* Sort has no self-describing option - "Default" could mean
               anything on its own - so it keeps a marker, just not a word. */}
@@ -139,7 +149,10 @@ export function Browse({ modules }: { modules: ModuleListing[] }) {
             icon={<SortIcon />}
             options={SORTS}
             value={sort}
-            onChange={setSort}
+            onChange={(value) => {
+              setSort(value);
+              applyFilter('sort', value);
+            }}
           />
         </div>
       </div>

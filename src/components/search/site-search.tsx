@@ -2,6 +2,7 @@
 
 import { type Detail, resultDetail } from './result-detail.ts';
 import { buildSymbolTable, lookupSymbols, type SymbolPayload } from './symbols.ts';
+import { capture, captureBeforeLeaving } from '@/lib/analytics';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 /**
@@ -194,6 +195,16 @@ export function SiteSearch() {
   // Flattened in group order, so arrow keys walk what the eye sees.
   const ordered = GROUPS.flatMap((g) => hits.filter((h) => h.kind === g.kind));
 
+  /**
+   * Enter navigates with `window.location.assign` on the next line, so this one
+   * goes out as a beacon. The anchor below is a normal link click and uses the
+   * batched path, which the browser gives time to drain.
+   */
+  const captureSearchResultSelection = (kind: Kind, leaving = false) =>
+    (leaving ? captureBeforeLeaving : capture)('site_search_result_selected', {
+      result_kind: kind,
+    });
+
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (!ordered.length) return;
     if (e.key === 'ArrowDown') {
@@ -205,7 +216,10 @@ export function SiteSearch() {
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const hit = ordered[active];
-      if (hit) window.location.assign(hit.url);
+      if (hit) {
+        captureSearchResultSelection(hit.kind, true);
+        window.location.assign(hit.url);
+      }
     }
   };
 
@@ -333,6 +347,7 @@ export function SiteSearch() {
                           aria-selected={i === active}
                           href={hit.url}
                           onMouseEnter={() => setActive(i)}
+                          onClick={() => captureSearchResultSelection(hit.kind)}
                           className={`block border-l-2 px-4 py-2.5 ${
                             i === active
                               ? 'border-link bg-surface'

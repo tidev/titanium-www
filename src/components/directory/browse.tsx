@@ -10,6 +10,7 @@ import {
 } from './badges';
 import { ExternalIcon } from '@/components/ui/external-link';
 import { Select } from '@/components/ui/select';
+import { capture } from '@/lib/analytics';
 import {
   AVAILABILITY_LABELS,
   AVAILABILITY_ORDER,
@@ -69,6 +70,9 @@ export function Browse({ profiles }: { profiles: Profile[] }) {
   const [availability, setAvailability] = useState<AvailabilityFilter>('all');
   const [specialty, setSpecialty] = useState<SpecialtyFilter>('all');
 
+  const applyFilter = (filter: 'kind' | 'availability' | 'specialty', value: string) =>
+    capture('directory_filter_applied', { filter, value });
+
   const shown = useMemo(
     () => profiles.filter((p) => matches(p, { kind, availability, specialty, query })),
     [profiles, kind, availability, specialty, query]
@@ -91,20 +95,35 @@ export function Browse({ profiles }: { profiles: Profile[] }) {
         {/* One group, so the three wrap together rather than one at a time.
             Same reasoning as the module browse row. */}
         <div className="flex min-w-full flex-wrap items-center gap-3 sm:min-w-max">
-          <Select label="Listing kind" hideLabel options={KINDS} value={kind} onChange={setKind} />
+          <Select
+            label="Listing kind"
+            hideLabel
+            options={KINDS}
+            value={kind}
+            onChange={(value) => {
+              setKind(value);
+              applyFilter('kind', value);
+            }}
+          />
           <Select
             label="Availability"
             hideLabel
             options={AVAILABILITIES}
             value={availability}
-            onChange={setAvailability}
+            onChange={(value) => {
+              setAvailability(value);
+              applyFilter('availability', value);
+            }}
           />
           <Select
             label="Specialty"
             hideLabel
             options={SPECIALTIES}
             value={specialty}
-            onChange={setSpecialty}
+            onChange={(value) => {
+              setSpecialty(value);
+              applyFilter('specialty', value);
+            }}
           />
         </div>
       </div>

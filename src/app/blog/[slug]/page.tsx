@@ -106,7 +106,7 @@ export default async function BlogPost({ params }: PageProps<'/blog/[slug]'>) {
         </ul>
       )}
 
-      <Share post={post} />
+      <Share slug={post.slug} title={post.title} social={post.social} />
     </article>
   );
 }

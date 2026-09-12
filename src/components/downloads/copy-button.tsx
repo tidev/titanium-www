@@ -1,5 +1,6 @@
 'use client';
 
+import { capture } from '@/lib/analytics';
 import { useEffect, useState } from 'react';
 
 /**
@@ -35,6 +36,7 @@ export function CopyButton({
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      capture('command_copied');
     } catch {
       // No clipboard on an insecure origin, and permission can be denied
       // outright. The command is on screen either way, so failing quietly is
