@@ -226,6 +226,31 @@ export default function ContributePage() {
             </a>
           </p>
         </section>
+
+        {/* Last, beside the CLA, because the two are the same kind of thing: the
+            terms of taking part, which a reader wants after they know what
+            taking part would mean and not before. The CLA covers the code, this
+            covers everyone - it applies to the repositories, the events and the
+            chat alike, so it is not scoped to the section above. */}
+        <section aria-labelledby="conduct" className="mt-12">
+          <h2 id="conduct" className="text-xl font-semibold tracking-tight">
+            Code of Conduct
+          </h2>
+          <p className="mt-2 max-w-3xl text-text-muted">
+            Everyone taking part in the Titanium community agrees to the Code of Conduct, whether
+            they are contributing to a repository, at a TiDev event, or talking in the community
+            chat. It is short, and it is worth reading before you start.
+          </p>
+          <p className="mt-5">
+            <a
+              href="/code-of-conduct"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:border-border-strong"
+            >
+              Read the Code of Conduct
+              <Chevron />
+            </a>
+          </p>
+        </section>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { TitaniumMark } from './titanium-logo';
 import {
-  communityNav,
+  communityFooterNav,
   isExternal,
   primaryNav,
   socialNav,
@@ -54,7 +54,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <LinkColumn title="Documentation" items={primaryNav} />
-          <LinkColumn title="Community" items={communityNav} />
+          <LinkColumn title="Community" items={communityFooterNav} />
           <LinkColumn title="Follow" items={socialNav} />
           <LinkColumn title="Support" items={supportNav} />
         </div>

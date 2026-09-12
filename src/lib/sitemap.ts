@@ -67,6 +67,9 @@ function site(): MetadataRoute.Sitemap {
   return [
     { url: `${SITE_URL}/`, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/contribute`, changeFrequency: 'monthly', priority: 0.5 },
+    // TiDev's document, hosted here because this is where its readers are.
+    // Yearly: it has not changed since it was written, and it is not meant to.
+    { url: `${SITE_URL}/code-of-conduct`, changeFrequency: 'yearly', priority: 0.3 },
     // The human page. `/registry/` with the slash is the JSON API, which
     // robots.txt disallows; see DISALLOW in lib/seo.
     { url: `${SITE_URL}/registry`, changeFrequency: 'monthly', priority: 0.3 },
