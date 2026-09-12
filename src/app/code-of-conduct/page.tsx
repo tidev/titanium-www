@@ -65,14 +65,6 @@ export default function CodeOfConductPage() {
         </h1>
 
         <Prose markdown={body} className="mt-8" />
-
-        <p className="mt-10 border-t border-border pt-6 text-sm text-text-subtle">
-          This document is maintained by TiDev in{' '}
-          <a href={SOURCE_URL} className="text-link hover:underline">
-            tidev/organization-docs
-          </a>
-          .
-        </p>
       </div>
     </div>
   );
