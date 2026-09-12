@@ -6,7 +6,7 @@
       "titanium-module in:topics language:objc language:swift language:java language:kotlin language:javascript",
       "titanium-sdk in:topics language:objc language:swift language:java language:kotlin language:javascript"
     ],
-    "repos": 115
+    "repos": 143
   },
   "modules": [
     {
@@ -53,6 +53,21 @@
       "stars": 96,
       "archived": false,
       "pushedAt": "2023-01-09T22:15:55Z"
+    },
+    {
+      "id": "tidev/ti.imagefactory",
+      "name": "ti.imagefactory",
+      "owner": "tidev",
+      "ownerUrl": "https://github.com/tidev",
+      "url": "https://github.com/tidev/ti.imagefactory",
+      "description": "The ImageFactory Module for Appcelerator Titanium",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "stars": 67,
+      "archived": false,
+      "pushedAt": "2025-10-25T12:04:34Z"
     },
     {
       "id": "caffeinalab/ti.goosh",
@@ -288,6 +303,21 @@
       "stars": 24,
       "archived": false,
       "pushedAt": "2017-06-14T14:51:03Z"
+    },
+    {
+      "id": "m1ga/ti.dfp",
+      "name": "ti.dfp",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.dfp",
+      "description": "Doubleclick for Publishers (DFP) module for Titanium Mobile",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "stars": 22,
+      "archived": false,
+      "pushedAt": "2021-09-22T19:56:47Z"
     },
     {
       "id": "hansemannn/ti.onepassword",
@@ -724,6 +754,20 @@
       "pushedAt": "2017-12-27T13:20:28Z"
     },
     {
+      "id": "m1ga/ti.blurview",
+      "name": "ti.blurview",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.blurview",
+      "description": "Android BlurView module for Titanium SDK",
+      "platforms": [
+        "android"
+      ],
+      "stars": 7,
+      "archived": false,
+      "pushedAt": "2025-11-13T15:48:49Z"
+    },
+    {
       "id": "m1ga/ti.vonage",
       "name": "ti.vonage",
       "owner": "m1ga",
@@ -753,6 +797,20 @@
       "pushedAt": "2023-05-17T04:35:21Z"
     },
     {
+      "id": "tidev/appcelerator.social-share",
+      "name": "appcelerator.social-share",
+      "owner": "tidev",
+      "ownerUrl": "https://github.com/tidev",
+      "url": "https://github.com/tidev/appcelerator.social-share",
+      "description": "A collection of API's to Social Share",
+      "platforms": [
+        "ios"
+      ],
+      "stars": 7,
+      "archived": false,
+      "pushedAt": "2024-03-06T21:48:36Z"
+    },
+    {
       "id": "hansemannn/ti.barcodescanner",
       "name": "ti.barcodescanner",
       "owner": "hansemannn",
@@ -780,6 +838,20 @@
       "stars": 6,
       "archived": false,
       "pushedAt": "2026-04-19T16:01:56Z"
+    },
+    {
+      "id": "m1ga/ti.codescanner",
+      "name": "ti.codescanner",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.codescanner",
+      "description": "Titanium module for the MLKit \"Google code scanner\" - Scan codes without any permission",
+      "platforms": [
+        "android"
+      ],
+      "stars": 6,
+      "archived": false,
+      "pushedAt": "2025-08-30T11:39:49Z"
     },
     {
       "id": "pinio/tiads",
@@ -882,6 +954,48 @@
       "pushedAt": "2026-01-01T17:24:31Z"
     },
     {
+      "id": "m1ga/ti-crypt",
+      "name": "ti-crypt",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti-crypt",
+      "description": "Asymmetric Encryption with RSA (private/public key)",
+      "platforms": [
+        "android"
+      ],
+      "stars": 5,
+      "archived": false,
+      "pushedAt": "2022-01-04T15:47:00Z"
+    },
+    {
+      "id": "m1ga/ti.documentscanner_legacy",
+      "name": "ti.documentscanner_legacy",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.documentscanner_legacy",
+      "description": "Android module for Appcelerator Titanium to scan and crop documents",
+      "platforms": [
+        "android"
+      ],
+      "stars": 5,
+      "archived": false,
+      "pushedAt": "2023-05-23T13:43:24Z"
+    },
+    {
+      "id": "m1ga/ti.exoplayer",
+      "name": "ti.exoplayer",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.exoplayer",
+      "description": "Ti.Exoplayer - Audio/Video player for Android",
+      "platforms": [
+        "android"
+      ],
+      "stars": 5,
+      "archived": false,
+      "pushedAt": "2025-09-17T11:44:12Z"
+    },
+    {
       "id": "m1ga/ti.imagecrop",
       "name": "ti.imagecrop",
       "owner": "m1ga",
@@ -894,6 +1008,20 @@
       "stars": 5,
       "archived": false,
       "pushedAt": "2025-10-22T11:16:34Z"
+    },
+    {
+      "id": "m1ga/ti.inappupdate",
+      "name": "ti.inappupdate",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.inappupdate",
+      "description": "Android in-app update for Appcelerator Titanium",
+      "platforms": [
+        "android"
+      ],
+      "stars": 5,
+      "archived": false,
+      "pushedAt": "2025-09-12T06:43:29Z"
     },
     {
       "id": "m1ga/ti.osm",
@@ -1012,6 +1140,47 @@
       "pushedAt": "2025-05-13T13:30:20Z"
     },
     {
+      "id": "m1ga/ti.googlepay",
+      "name": "ti.googlepay",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.googlepay",
+      "description": "ti.googlepay",
+      "platforms": [
+        "android"
+      ],
+      "stars": 4,
+      "archived": false,
+      "pushedAt": "2022-10-25T12:55:29Z"
+    },
+    {
+      "id": "m1ga/ti.rangebar",
+      "name": "ti.rangebar",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.rangebar",
+      "platforms": [
+        "android"
+      ],
+      "stars": 4,
+      "archived": false,
+      "pushedAt": "2020-06-06T18:22:59Z"
+    },
+    {
+      "id": "m1ga/ti.thermalprinter",
+      "name": "ti.thermalprinter",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.thermalprinter",
+      "description": "ESC/POS thermal printer library for Titanium (Android) ",
+      "platforms": [
+        "android"
+      ],
+      "stars": 4,
+      "archived": false,
+      "pushedAt": "2022-07-21T15:57:23Z"
+    },
+    {
       "id": "mobilehero-archive/titanium-icloud",
       "name": "titanium-icloud",
       "owner": "mobilehero-archive",
@@ -1126,6 +1295,47 @@
       "stars": 3,
       "archived": false,
       "pushedAt": "2026-01-22T14:38:37Z"
+    },
+    {
+      "id": "m1ga/ti.lines",
+      "name": "ti.lines",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.lines",
+      "description": "Draw simple lines, graphs and slicced circle in Titanium SDK",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "stars": 3,
+      "archived": false,
+      "pushedAt": "2025-08-30T11:41:51Z"
+    },
+    {
+      "id": "m1ga/ti.popover",
+      "name": "ti.popover",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.popover",
+      "platforms": [
+        "android"
+      ],
+      "stars": 3,
+      "archived": false,
+      "pushedAt": "2026-02-23T21:18:51Z"
+    },
+    {
+      "id": "m1ga/ti.svg",
+      "name": "ti.svg",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.svg",
+      "platforms": [
+        "android"
+      ],
+      "stars": 3,
+      "archived": false,
+      "pushedAt": "2023-01-26T11:40:06Z"
     },
     {
       "id": "mobilehero-archive/titanium-applesignin",
@@ -1288,6 +1498,33 @@
       "pushedAt": "2016-11-22T14:08:50Z"
     },
     {
+      "id": "m1ga/ti.bottomsheet",
+      "name": "ti.bottomsheet",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.bottomsheet",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "stars": 2,
+      "archived": false,
+      "pushedAt": "2026-09-10T20:56:19Z"
+    },
+    {
+      "id": "m1ga/ti.flexbox",
+      "name": "ti.flexbox",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.flexbox",
+      "platforms": [
+        "android"
+      ],
+      "stars": 2,
+      "archived": false,
+      "pushedAt": "2022-11-20T20:35:56Z"
+    },
+    {
       "id": "m1ga/ti.game",
       "name": "ti.game",
       "owner": "m1ga",
@@ -1301,6 +1538,35 @@
       "stars": 2,
       "archived": false,
       "pushedAt": "2026-09-02T10:42:31Z"
+    },
+    {
+      "id": "m1ga/ti.rootcheck",
+      "name": "ti.rootcheck",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.rootcheck",
+      "description": "Root check module for Titanium",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "stars": 2,
+      "archived": false,
+      "pushedAt": "2026-08-28T18:34:30Z"
+    },
+    {
+      "id": "m1ga/ti.webviewpdf",
+      "name": "ti.webviewpdf",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.webviewpdf",
+      "description": "Create a PDF from a WebView - Titanium SDK",
+      "platforms": [
+        "android"
+      ],
+      "stars": 2,
+      "archived": false,
+      "pushedAt": "2022-11-03T11:31:09Z"
     },
     {
       "id": "mobilehero-archive/titanium-deeply",
@@ -1359,6 +1625,20 @@
       "stars": 2,
       "archived": false,
       "pushedAt": "2019-09-02T12:51:16Z"
+    },
+    {
+      "id": "tidev/ti.framemetrics",
+      "name": "ti.framemetrics",
+      "owner": "tidev",
+      "ownerUrl": "https://github.com/tidev",
+      "url": "https://github.com/tidev/ti.framemetrics",
+      "description": "Use the Android N FrameMetrics API in Axway Titanium",
+      "platforms": [
+        "android"
+      ],
+      "stars": 2,
+      "archived": false,
+      "pushedAt": "2025-10-25T11:52:55Z"
     },
     {
       "id": "Astrovic/titanium-huawei-analytics",
@@ -1459,6 +1739,32 @@
       "pushedAt": "2023-07-19T20:28:55Z"
     },
     {
+      "id": "m1ga/ti.nearby",
+      "name": "ti.nearby",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.nearby",
+      "platforms": [
+        "android"
+      ],
+      "stars": 1,
+      "archived": false,
+      "pushedAt": "2022-04-24T20:20:43Z"
+    },
+    {
+      "id": "m1ga/ti.pagetransform",
+      "name": "ti.pagetransform",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.pagetransform",
+      "platforms": [
+        "android"
+      ],
+      "stars": 1,
+      "archived": false,
+      "pushedAt": "2021-11-27T15:36:47Z"
+    },
+    {
       "id": "m1ga/ti.panorama",
       "name": "ti.panorama",
       "owner": "m1ga",
@@ -1486,6 +1792,19 @@
       "stars": 1,
       "archived": false,
       "pushedAt": "2025-08-29T12:32:50Z"
+    },
+    {
+      "id": "m1ga/ti.viewanimation",
+      "name": "ti.viewanimation",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.viewanimation",
+      "platforms": [
+        "android"
+      ],
+      "stars": 1,
+      "archived": false,
+      "pushedAt": "2021-11-07T23:00:03Z"
     },
     {
       "id": "mobilehero-archive/titanium-coremotion",
@@ -1602,6 +1921,19 @@
       "pushedAt": "2018-08-20T11:24:23Z"
     },
     {
+      "id": "m1ga/ti.accounts",
+      "name": "ti.accounts",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.accounts",
+      "platforms": [
+        "android"
+      ],
+      "stars": 0,
+      "archived": false,
+      "pushedAt": "2022-02-15T14:21:36Z"
+    },
+    {
       "id": "m1ga/ti.apng",
       "name": "ti.apng",
       "owner": "m1ga",
@@ -1616,18 +1948,58 @@
       "pushedAt": "2021-07-17T14:29:29Z"
     },
     {
-      "id": "m1ga/ti.conekta",
-      "name": "ti.conekta",
+      "id": "m1ga/ti.bingmap",
+      "name": "ti.bingmap",
       "owner": "m1ga",
       "ownerUrl": "https://github.com/m1ga",
-      "url": "https://github.com/m1ga/ti.conekta",
-      "description": "Conekta payment module for Titanium SDK (Android)",
+      "url": "https://github.com/m1ga/ti.bingmap",
+      "description": "Bing maps for Titanium",
       "platforms": [
         "android"
       ],
       "stars": 0,
       "archived": false,
-      "pushedAt": "2023-09-16T17:56:11Z"
+      "pushedAt": "2022-06-21T07:30:03Z"
+    },
+    {
+      "id": "m1ga/ti.file",
+      "name": "ti.file",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.file",
+      "platforms": [
+        "android"
+      ],
+      "stars": 0,
+      "archived": false,
+      "pushedAt": "2022-10-10T19:32:42Z"
+    },
+    {
+      "id": "m1ga/ti.glassfy",
+      "name": "ti.glassfy",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.glassfy",
+      "platforms": [
+        "android"
+      ],
+      "stars": 0,
+      "archived": false,
+      "pushedAt": "2023-03-11T17:23:01Z"
+    },
+    {
+      "id": "m1ga/ti.mqtt",
+      "name": "ti.mqtt",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.mqtt",
+      "description": "MQTT client for Titanium",
+      "platforms": [
+        "android"
+      ],
+      "stars": 0,
+      "archived": false,
+      "pushedAt": "2026-05-25T10:21:33Z"
     },
     {
       "id": "m1ga/ti.padelCourt",
@@ -1643,6 +2015,20 @@
       "stars": 0,
       "archived": false,
       "pushedAt": "2026-09-02T11:08:33Z"
+    },
+    {
+      "id": "m1ga/ti.pdftools",
+      "name": "ti.pdftools",
+      "owner": "m1ga",
+      "ownerUrl": "https://github.com/m1ga",
+      "url": "https://github.com/m1ga/ti.pdftools",
+      "description": "PDF Tools for Titanium (Android)",
+      "platforms": [
+        "android"
+      ],
+      "stars": 0,
+      "archived": false,
+      "pushedAt": "2022-08-30T10:26:50Z"
     },
     {
       "id": "mobilehero-archive/titanium-googlesignin",
