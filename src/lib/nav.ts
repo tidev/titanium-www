@@ -93,6 +93,21 @@ export const communityNav: NavItem[] = [
   },
 ];
 
+/**
+ * The Community column in the footer: the menu's four, plus the code of conduct.
+ *
+ * Footer-only, and a separate list rather than a fifth entry in `communityNav`,
+ * because that array is also the header menu and the row of buttons on the
+ * landing page. Both of those are places to go and do something - a showcase to
+ * read, a directory to be listed in, a Slack to join, a way to help - and a
+ * document that sets out what is expected of you is not one of them. It belongs
+ * where a site's terms belong, at the bottom of every page.
+ */
+export const communityFooterNav: NavItem[] = [
+  ...communityNav,
+  { href: '/code-of-conduct', label: 'Code of Conduct' },
+];
+
 export const GITHUB_ORG_URL = 'https://github.com/tidev';
 
 /**
