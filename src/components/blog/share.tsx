@@ -1,3 +1,6 @@
+'use client';
+
+import { captureBeforeLeaving } from '@/lib/analytics';
 import type { Post } from '@/lib/blog/posts';
 import { SITE_URL } from '@/lib/site';
 
@@ -13,9 +16,9 @@ import { SITE_URL } from '@/lib/site';
  * carries its own `Blog:` line, so the URL is only appended to the title
  * fallback - appending it to both would post the link twice.
  */
-export function Share({ post }: { post: Post }) {
-  const url = `${SITE_URL}/blog/${post.slug}`;
-  const text = encodeURIComponent(post.social ?? `${post.title}\n\n${url}`);
+export function Share({ slug, title, social }: Pick<Post, 'slug' | 'title' | 'social'>) {
+  const url = `${SITE_URL}/blog/${slug}`;
+  const text = encodeURIComponent(social ?? `${title}\n\n${url}`);
 
   const targets = [
     {
@@ -45,6 +48,9 @@ export function Share({ post }: { post: Post }) {
           rel="noopener noreferrer"
           aria-label={`Share on ${t.name}`}
           title={`Share on ${t.name}`}
+          onClick={() =>
+            captureBeforeLeaving('blog_post_shared', { platform: t.name.toLowerCase() })
+          }
           className="inline-flex size-8 items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:border-border-strong hover:text-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <svg viewBox="0 0 24 24" aria-hidden className="size-4 fill-current">

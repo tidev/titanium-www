@@ -2,6 +2,7 @@
 
 import { BuiltWith, Icon, PlaceholderBadge, PlatformChips } from './badges';
 import { Select } from '@/components/ui/select';
+import { capture } from '@/lib/analytics';
 import {
   matches,
   PLATFORM_LABELS,
@@ -57,7 +58,10 @@ export function Browse({ apps }: { apps: App[] }) {
           hideLabel
           options={PLATFORMS}
           value={platform}
-          onChange={setPlatform}
+          onChange={(value) => {
+            setPlatform(value);
+            capture('showcase_filter_applied', { filter: 'platform', value });
+          }}
         />
       </div>
 

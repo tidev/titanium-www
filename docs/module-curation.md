@@ -12,10 +12,10 @@ document is that those are different things wearing different badges.
 
 **Three tiers, and only one of them says anything about the code.**
 
-| Badge      | Means                                                                            | Lives in                                      |
-| ---------- | -------------------------------------------------------------------------------- | --------------------------------------------- |
-| Official   | TiDev maintains it. Releases are verified and the API reference is compiled here             | `scripts/docgen/sources.json`                 |
-| Community  | TiDev has reviewed the repository and vouches for it. Nothing is hosted here                 | `registry/modules/verified.json`              |
+| Badge      | Means                                                                                       | Lives in                                      |
+| ---------- | ------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| Official   | TiDev maintains it. Releases are verified and the API reference is compiled here            | `scripts/docgen/sources.json`                 |
+| Community  | TiDev has reviewed the repository and vouches for it. Nothing is hosted here                | `registry/modules/verified.json`              |
 | Unverified | Found by its `titanium`, `titanium-module` or `titanium-sdk` topic. Nobody has looked at it | `registry/modules/community.json`, by default |
 
 **Being listed is not an endorsement.** The bar for appearing at all is a

@@ -1,4 +1,7 @@
+'use client';
+
 import { OsIcon } from './os-icon';
+import { captureBeforeLeaving } from '@/lib/analytics';
 import { formatSize, OS_LABELS, sortAssets } from '@/lib/downloads/format';
 import type { Asset } from '@/lib/registry';
 
@@ -15,6 +18,12 @@ export function AssetLinks({ assets }: { assets: Asset[] }) {
         <li key={asset.url}>
           <a
             href={asset.url}
+            onClick={() =>
+              captureBeforeLeaving('sdk_download_started', {
+                platform: asset.os,
+                archive_size_bytes: asset.size,
+              })
+            }
             // items-center, not items-baseline: an svg has no baseline of its
             // own, so baseline alignment would drop the mark to sit on the
             // text's descender line.
