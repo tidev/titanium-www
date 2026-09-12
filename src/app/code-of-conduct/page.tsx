@@ -42,9 +42,6 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/code-of-conduct` },
 };
 
-/** Where the copy is maintained, and where a change to it has to be proposed. */
-const SOURCE_URL = 'https://github.com/tidev/organization-docs/blob/main/CODE_OF_CONDUCT.md';
-
 /**
  * Read at build time, like every other file this site renders from.
  *
